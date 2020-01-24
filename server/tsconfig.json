@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+    },
+  },
+  "exclude": [
+    "test",
+    "dist",
+    "ecosystem.config.js"
+  ]
+}
