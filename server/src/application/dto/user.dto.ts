@@ -10,3 +10,7 @@ export type UpdateUserRoleDto = {
   id: string | number,
   role: UserRole,
 };
+
+export type DeleteUserDto = {
+  id: string | number;
+}
