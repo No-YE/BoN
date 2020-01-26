@@ -12,6 +12,9 @@
       "~/*": [
         "./*"
       ],
+      "@lib/*": [
+        "./infrastructure/lib/*"
+      ]
     },
   },
   "exclude": [

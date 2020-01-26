@@ -1,4 +1,4 @@
-import { UserRole } from '~/lib/type';
+import { UserRole } from '~/infrastructure/type';
 import { Post } from './post.entity';
 import { Base } from './base.entity';
 
