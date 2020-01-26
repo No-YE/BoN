@@ -1,5 +1,6 @@
 import { UserRole } from '~/lib/type';
 import { Post } from './post.entity';
+import { Base } from './base.entity';
 
 export type User = {
   id: number;
@@ -9,4 +10,4 @@ export type User = {
   posts: Array<Post>;
   createdAt: Date;
   updatedAt: Date;
-};
+} & Base;

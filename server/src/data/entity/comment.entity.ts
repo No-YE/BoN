@@ -1,9 +1,7 @@
-import { Post } from "./post.entity";
+import { Post } from './post.entity';
+import { Base } from './base.entity';
 
 export type Comment = {
-  id: number;
   content: string;
   post: Post;
-  createdAt: Date;
-  updatedAt: Date;
-};
+} & Base;

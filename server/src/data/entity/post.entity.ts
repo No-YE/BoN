@@ -1,4 +1,5 @@
-import { User } from "./user.entity";
+import { User } from './user.entity';
+import { Base } from './base.entity';
 
 export type Post = {
   id: string;
@@ -8,4 +9,4 @@ export type Post = {
   comments: Array<Comment>;
   createdAt: Date;
   updatedAt: Date;
-}
+} & Base;
