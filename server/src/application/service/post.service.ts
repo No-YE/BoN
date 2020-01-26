@@ -26,4 +26,14 @@ export function makePostService(postRepository: PostRepository) {
 
     return right(updateResult.value);
   }
+
+  async function deletePost(post: Post): Promise<Either<Error, boolean>> {
+    const deleteResult = await postRepository.deletePost(post);
+
+    if (isLeft(deleteResult)) {
+      return left(deleteResult.value);
+    }
+
+    return right(deleteResult.value);
+  }
 };
