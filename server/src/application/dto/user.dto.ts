@@ -5,3 +5,8 @@ export type CreateUserDto = {
   email: string,
   role: UserRole,
 };
+
+export type UpdateUserRoleDto = {
+  id: string | number,
+  role: UserRole,
+};
