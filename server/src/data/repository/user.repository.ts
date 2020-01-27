@@ -11,4 +11,7 @@ export type UserRepository = {
   readonly deleteUser: (user: {
     id: string | number,
   }) => Promise<Either<Error, boolean>>;
+  readonly findUser: (user: {
+    id: string | number,
+  }) => Promise<Either<Error, Array<User>>>;
 };

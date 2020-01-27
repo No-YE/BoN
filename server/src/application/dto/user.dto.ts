@@ -14,3 +14,7 @@ export type UpdateUserRoleDto = {
 export type DeleteUserDto = {
   id: string | number;
 }
+
+export type FindUserDto = {
+  id: string | number;
+}

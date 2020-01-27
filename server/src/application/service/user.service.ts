@@ -1,5 +1,5 @@
 import { UserRepository } from '~/data/repository/user.repository';
-import { CreateUserDto, UpdateUserRoleDto, DeleteUserDto } from '../dto/user.dto';
+import { CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto } from '../dto/user.dto';
 import { Either, isLeft, left, right } from '~/infrastructure/lib/either';
 import { User } from '~/data/entity';
 
@@ -8,6 +8,7 @@ export function makeUserService(userRepository: UserRepository) {
     createUser,
     updateUserRole,
     deleteUser,
+    findUser,
   };
 
   async function createUser(dto: CreateUserDto): Promise<Either<Error, User>> {
@@ -38,5 +39,15 @@ export function makeUserService(userRepository: UserRepository) {
     }
 
     return right(deleteResult.value);
+  }
+
+  async function findUser(dto: FindUserDto): Promise<Either<Error, Array<User>>> {
+    const findResult = await userRepository.findUser({ ...dto });
+
+    if (isLeft(findResult)) {
+      return left(findResult.value);
+    }
+
+    return right(findResult.value);
   }
 }
