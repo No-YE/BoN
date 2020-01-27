@@ -6,10 +6,12 @@ import { CraetePostDto, UpdatePostDto, DeletePostDto } from '../dto/post.dto';
 export function makePostService(postRepository: PostRepository) {
   return {
     createPost,
+    updatePost,
+    deletePost,
   };
 
   async function createPost(dto: CraetePostDto): Promise<Either<Error, Post>> {
-    const createResult = await postRepository.createPost(undefined);
+    const createResult = await postRepository.createPost({ ...dto });
     
     if (isLeft(createResult)) {
       return left(createResult.value)
@@ -19,7 +21,7 @@ export function makePostService(postRepository: PostRepository) {
   }
 
   async function updatePost(dto: UpdatePostDto): Promise<Either<Error, boolean>> {
-    const updateResult = await postRepository.updatePost(undefined);
+    const updateResult = await postRepository.updatePost({ ...dto });
 
     if (isLeft(updateResult)) {
       return left(updateResult.value);
@@ -29,7 +31,7 @@ export function makePostService(postRepository: PostRepository) {
   }
 
   async function deletePost(dto: DeletePostDto): Promise<Either<Error, boolean>> {
-    const deleteResult = await postRepository.deletePost(undefined);
+    const deleteResult = await postRepository.deletePost({ ...dto });
 
     if (isLeft(deleteResult)) {
       return left(deleteResult.value);
