@@ -21,8 +21,7 @@ export function makeUserService(userRepository: UserRepository) {
   }
 
   async function updateUserRole(dto: UpdateUserRoleDto): Promise<Either<Error, boolean>> {
-    const { id, role } = dto;
-    const updateRoleResult = await userRepository.updateRole(id, role);
+    const updateRoleResult = await userRepository.updateRole({ ...dto });
 
     if (isLeft(updateRoleResult)) {
       return left(updateRoleResult.value);
@@ -32,7 +31,7 @@ export function makeUserService(userRepository: UserRepository) {
   }
 
   async function deleteUser(dto: DeleteUserDto): Promise<Either<Error, boolean>> {
-    const deleteResult = await userRepository.deleteUser(dto.id);
+    const deleteResult = await userRepository.deleteUser({ ...dto });
 
     if (isLeft(deleteResult)) {
       return left(deleteResult.value);
