@@ -1,22 +1,18 @@
-import { isLeft, left, Either, right } from '@lib/either';
+import {
+  isLeft, left, Either, right,
+} from '@lib/either';
 import { PostRepository } from '~/data/repository/post.repository';
 import { Post } from '~/data/entity';
-import { CraetePostDto, UpdatePostDto, DeletePostDto, findPostsDto, findPostDto } from '../dto/post.dto';
+import {
+  CraetePostDto, UpdatePostDto, DeletePostDto, findPostsDto, findPostDto,
+} from '../dto/post.dto';
 
-export function makePostService(postRepository: PostRepository) {
-  return {
-    createPost,
-    updatePost,
-    deletePost,
-    findPosts,
-    findPost,
-  };
-
+export default function makePostService(postRepository: PostRepository) {
   async function createPost(dto: CraetePostDto): Promise<Either<Error, Post>> {
     const createResult = await postRepository.createPost({ ...dto });
-    
+
     if (isLeft(createResult)) {
-      return left(createResult.value)
+      return left(createResult.value);
     }
 
     return right(createResult.value);
@@ -61,4 +57,12 @@ export function makePostService(postRepository: PostRepository) {
 
     return right(findResult.value);
   }
-};
+
+  return {
+    createPost,
+    updatePost,
+    deletePost,
+    findPosts,
+    findPost,
+  };
+}

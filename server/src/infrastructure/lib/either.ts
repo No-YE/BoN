@@ -1,13 +1,13 @@
 export type Either<L, R> = Left<L> | Right<R>;
 
 type Left<L> = {
-  readonly value: L,
-  readonly tag: 'left',
+  readonly value: L;
+  readonly tag: 'left';
 };
 
 type Right<R> = {
-  readonly value: R,
-  readonly tag: 'right',
+  readonly value: R;
+  readonly tag: 'right';
 };
 
 export function left<L>(value: L): Either<L, never> {

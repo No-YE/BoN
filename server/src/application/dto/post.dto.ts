@@ -1,26 +1,24 @@
-import { Post } from "~/data/entity";
-
 export type CraetePostDto = {
-  title: string,
-  content: string,
-  userId: number | string,
+  title: string;
+  content: string;
+  userId: number | string;
 };
 
 export type UpdatePostDto = {
-  title: string,
-  content: string,
+  title: string;
+  content: string;
 };
 
 export type DeletePostDto = {
-  id: string | number,
+  id: string | number;
 };
 
 export type findPostsDto = {
-  offset: number,
-  limit: number,
-  query: string,
+  offset: number;
+  limit: number;
+  query: string;
 };
 
 export type findPostDto = {
-  id: string | number,
-}
+  id: string | number;
+};
