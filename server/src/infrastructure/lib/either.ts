@@ -31,3 +31,18 @@ export function isLeft<L, R>(either: Either<L, R>): either is Left<L> {
 export function isRight<L, R>(either: Either<L, R>): either is Right<R> {
   return either.tag === 'right';
 }
+
+export function match<T, L, R>(
+  either: Either<L, R>,
+  leftFunc: (left: L) => T,
+  rightFunc: (right: R) => T,
+): T {
+  switch (either.tag) {
+    case 'left':
+      return leftFunc(either.value);
+    case 'right':
+      return rightFunc(either.value);
+    default:
+      return undefined;
+  }
+}

@@ -3,7 +3,7 @@ import {
   CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto,
 } from '../dto/user.dto';
 import {
-  Either, isLeft, left, right,
+  Either, left, right, match,
 } from '~/infrastructure/lib/either';
 import { User } from '~/data/entity';
 
@@ -11,41 +11,41 @@ export default function makeUserService(userRepository: UserRepository) {
   async function createUser(dto: CreateUserDto): Promise<Either<Error, User>> {
     const createResult = await userRepository.createUser({ ...dto });
 
-    if (isLeft(createResult)) {
-      return left(createResult.value);
-    }
-
-    return right(createResult.value);
+    return match<Either<Error, User>, Error, User>(
+      createResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function updateUserRole(dto: UpdateUserRoleDto): Promise<Either<Error, boolean>> {
     const updateRoleResult = await userRepository.updateRole({ ...dto });
 
-    if (isLeft(updateRoleResult)) {
-      return left(updateRoleResult.value);
-    }
-
-    return right(updateRoleResult.value);
+    return match<Either<Error, boolean>, Error, boolean>(
+      updateRoleResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function deleteUser(dto: DeleteUserDto): Promise<Either<Error, boolean>> {
     const deleteResult = await userRepository.deleteUser({ ...dto });
 
-    if (isLeft(deleteResult)) {
-      return left(deleteResult.value);
-    }
-
-    return right(deleteResult.value);
+    return match<Either<Error, boolean>, Error, boolean>(
+      deleteResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function findUser(dto: FindUserDto): Promise<Either<Error, Array<User>>> {
     const findResult = await userRepository.findUser({ ...dto });
 
-    if (isLeft(findResult)) {
-      return left(findResult.value);
-    }
-
-    return right(findResult.value);
+    return match<Either<Error, Array<User>>, Error, Array<User>>(
+      findResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   return {

@@ -1,5 +1,5 @@
 import {
-  isLeft, left, Either, right,
+  left, Either, right, match,
 } from '@lib/either';
 import { PostRepository } from '~/data/repository/post.repository';
 import { Post } from '~/data/entity';
@@ -11,51 +11,51 @@ export default function makePostService(postRepository: PostRepository) {
   async function createPost(dto: CraetePostDto): Promise<Either<Error, Post>> {
     const createResult = await postRepository.createPost({ ...dto });
 
-    if (isLeft(createResult)) {
-      return left(createResult.value);
-    }
-
-    return right(createResult.value);
+    return match<Either<Error, Post>, Error, Post>(
+      createResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function updatePost(dto: UpdatePostDto): Promise<Either<Error, boolean>> {
     const updateResult = await postRepository.updatePost({ ...dto });
 
-    if (isLeft(updateResult)) {
-      return left(updateResult.value);
-    }
-
-    return right(updateResult.value);
+    return match<Either<Error, boolean>, Error, boolean>(
+      updateResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function deletePost(dto: DeletePostDto): Promise<Either<Error, boolean>> {
     const deleteResult = await postRepository.deletePost({ ...dto });
 
-    if (isLeft(deleteResult)) {
-      return left(deleteResult.value);
-    }
-
-    return right(deleteResult.value);
+    return match<Either<Error, boolean>, Error, boolean>(
+      deleteResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function findPosts(dto: findPostsDto): Promise<Either<Error, [Array<Post>, number]>> {
     const findResult = await postRepository.findPosts({ ...dto });
 
-    if (isLeft(findResult)) {
-      return left(findResult.value);
-    }
-
-    return right(findResult.value);
+    return match<Either<Error, [Array<Post>, number]>, Error, [Array<Post>, number]>(
+      findResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   async function findPost(dto: findPostDto): Promise<Either<Error, Post>> {
     const findResult = await postRepository.findPost({ ...dto });
 
-    if (isLeft(findResult)) {
-      return left(findResult.value);
-    }
-
-    return right(findResult.value);
+    return match<Either<Error, Post>, Error, Post>(
+      findResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
   }
 
   return {
