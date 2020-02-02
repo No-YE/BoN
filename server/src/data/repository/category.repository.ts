@@ -14,4 +14,6 @@ export type CategoryRepository = {
   readonly deleteCategory: (category: {
     id: string | number;
   }) => Promise<Either<Error, boolean>>;
+
+  readonly findCategories: () => Promise<Either<Error, Array<Category>>>;
 };

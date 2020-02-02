@@ -36,6 +36,16 @@ export default function makeCategoryService(categoryRepository: CategoryReposito
     );
   }
 
+  async function findCategories(): Promise<Either<Error, Array<Category>>> {
+    const findResult = await categoryRepository.findCategories();
+
+    return match<Either<Error, Array<Category>>, Error, Array<Category>>(
+      findResult,
+      (l) => left(l),
+      (r) => right(r),
+    );
+  }
+
   return {
     createCategory,
     updateCategory,
