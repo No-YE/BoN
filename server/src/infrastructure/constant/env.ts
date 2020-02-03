@@ -1,5 +1,5 @@
 import 'dotenv/config';
-['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'])['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'])import _ from 'lodash';
+import _ from 'lodash';
 import { Either, left, right } from '../lib/either';
 
 function checkEnv(env: string): boolean {
