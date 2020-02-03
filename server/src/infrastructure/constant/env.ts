@@ -2,23 +2,23 @@ import 'dotenv/config';
 import _ from 'lodash';
 import { Either, left, right } from '../lib/either';
 
-function checkEnv(env: string): boolean {
-  const envValue = process.env[env];
+export type GoogleEnv = {
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+};
 
-  return envValue !== undefined;
-}
-
-export function getGoogle(): Either<Error, object> {
+export function getGoogleEnv(): Either<Error, GoogleEnv> {
   const envs = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'];
   const filtedEnvs = _
-    .chain(['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'])
-    .map((env) => checkEnv(env))
-    .filter((env) => env)
+    .chain(envs)
+    .map((env) => process.env[env])
+    .filter((env) => env !== undefined)
     .value();
 
   return envs.length !== filtedEnvs.length ? left(new Error()) : right({
-    clientId: checkEnv('GOOGLE_CLIENT_ID'),
-    clientSecret: checkEnv('GOOGLE_CLIENT_SECRET'),
-    redirectUri: checkEnv('GOOGLE_REDIRECT_URI'),
+    clientId: filtedEnvs[0],
+    clientSecret: filtedEnvs[1],
+    redirectUri: filtedEnvs[2],
   });
 }
