@@ -9,10 +9,35 @@ import {
 } from '~/infrastructure/lib/either';
 import { pipe } from '~/infrastructure/lib/pipe';
 import { User } from '~/data/entity';
-import { getGoogleEnv, GoogleEnv } from '~/infrastructure/constant/env';
+import { GoogleEnv, getGoogleEnv } from '~/infrastructure/constant/env';
 
 async function getEmailFromCode(code: string): Promise<Either<Error, string>> {
-  const getEmail = pipe<
+  const getIdTokenFromGoogle = (errorOrEnvs: Either<Error, GoogleEnv>) => match(
+    errorOrEnvs,
+    (l) => Promise.resolve(left(l)),
+    async (envs) => {
+      const { clientId, clientSecret, redirectUri } = envs;
+      const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+      const { tokens } = await client.getToken(code);
+
+      return tokens.id_token === undefined ? left(new Error()) : right(tokens.id_token);
+    },
+  );
+
+  const getEmailFromIdToken = async (errorOrIdTokenPromise: Promise<Either<Error, string>>) => {
+    const errorOrIdToken = await errorOrIdTokenPromise;
+
+    return match(
+      errorOrIdToken,
+      (l) => left(l),
+      (idToken) => {
+        const decodedToken = decode(idToken) as { emails?: string };
+        return decodedToken.emails === undefined ? left(new Error()) : right(decodedToken.emails);
+      },
+    );
+  };
+
+  return pipe<
   string,
   Either<Error, GoogleEnv>,
   Promise<Either<Error, string>>,
@@ -20,32 +45,9 @@ async function getEmailFromCode(code: string): Promise<Either<Error, string>> {
   >(
     code,
     getGoogleEnv,
-    (errorOrEnvs: Either<Error, GoogleEnv>) => match(
-      errorOrEnvs,
-      (l) => Promise.resolve(left(l)),
-      async (envs) => {
-        const { clientId, clientSecret, redirectUri } = envs;
-        const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
-        const { tokens } = await client.getToken(code);
-
-        return tokens.id_token === undefined ? left(new Error()) : right(tokens.id_token);
-      },
-    ),
-    async (errorOrIdTokenPromise: Promise<Either<Error, string>>) => {
-      const errorOrIdToken = await errorOrIdTokenPromise;
-
-      return match(
-        errorOrIdToken,
-        (l) => left(l),
-        (idToken) => {
-          const decodedToken = decode(idToken) as { emails?: string };
-          return decodedToken.emails === undefined ? left(new Error()) : right(decodedToken.emails);
-        },
-      );
-    },
+    getIdTokenFromGoogle,
+    getEmailFromIdToken,
   );
-
-  return getEmail;
 }
 
 export default function makeUserService(userRepository: UserRepository) {

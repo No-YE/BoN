@@ -40,24 +40,15 @@ export function pipe(
     case 1:
       return a(t);
     case 2:
-      return a(t).then((bArg) => b(bArg));
+      return b(a(t));
     case 3:
-      return a(t).then((bArg) => b(bArg)).then((cArg) => c(cArg));
+      return c(b(a(t)));
     case 4:
-      return a(t).then((bArg) => b(bArg)).then((cArg) => c(cArg)).then((dArg) => d(dArg));
+      return d(c(b(a(t))));
     case 5:
-      return a(t)
-        .then((bArg) => b(bArg))
-        .then((cArg) => c(cArg))
-        .then((dArg) => d(dArg))
-        .then((eArg) => e(eArg));
+      return e(d(c(b(a(t)))));
     case 6:
-      return a(t)
-        .then((bArg) => b(bArg))
-        .then((cArg) => c(cArg))
-        .then((dArg) => d(dArg))
-        .then((eArg) => e(eArg))
-        .then((fArg) => f(fArg));
+      return f(e(d(c(b(a(t))))));
     default:
       return undefined;
   }
