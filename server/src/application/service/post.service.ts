@@ -39,7 +39,8 @@ export default function makePostService(postRepository: PostRepository) {
   }
 
   async function findPosts(dto: findPostsDto): Promise<Either<Error, [Array<Post>, number]>> {
-    const findResult = await postRepository.findPosts({ ...dto });
+    const { offset, limit, query } = dto;
+    const findResult = await postRepository.findPosts({ offset, limit, query });
 
     return match<Either<Error, [Array<Post>, number]>, Error, [Array<Post>, number]>(
       findResult,
