@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import _ from 'lodash';
+import R from 'ramda/';
 import { Either, left, right } from '../lib/either';
 
 export type GoogleEnv = {
@@ -10,11 +10,11 @@ export type GoogleEnv = {
 
 export function getGoogleEnv(): Either<Error, GoogleEnv> {
   const envs = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'];
-  const filtedEnvs = _
-    .chain(envs)
-    .map((env) => process.env[env])
-    .filter((env) => env !== undefined)
-    .value();
+
+  const filtedEnvs = R.pipe(
+    R.map((env: string) => process.env[env]),
+    R.filter((env: string | undefined) => env !== undefined),
+  )(envs);
 
   return envs.length !== filtedEnvs.length ? left(new Error()) : right({
     clientId: filtedEnvs[0],
