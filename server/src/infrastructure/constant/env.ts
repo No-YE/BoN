@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import R from 'ramda/';
-import { Either, left, right } from '../lib/either';
+import _ from 'lodash/fp';
+import { Either, left, right, ap } from 'fp-ts/lib/Either';
 
 export type GoogleEnv = {
   clientId: string;
@@ -8,17 +8,26 @@ export type GoogleEnv = {
   redirectUri: string;
 };
 
-export function getGoogleEnv(): Either<Error, GoogleEnv> {
-  const envs = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'];
+function getEnv(key: string): Either<Error, string> {
+  const env = process.env[key];
+  return env === undefined ? left(new Error()) : right(env);
+}
 
-  const filtedEnvs = R.pipe(
-    R.map((env: string) => process.env[env]),
-    R.filter((env: string | undefined) => env !== undefined),
-  )(envs);
-
-  return envs.length !== filtedEnvs.length ? left(new Error()) : right({
-    clientId: filtedEnvs[0],
-    clientSecret: filtedEnvs[1],
-    redirectUri: filtedEnvs[2],
+const combineGoogleEnv = ((clientId: string) => {
+  return ((clientSecret: string) => {
+    return ((redirectUri: string) => {
+      return {
+        clientId,
+        clientSecret,
+        redirectUri,
+      };
+    });
   });
+});
+
+export function getGoogleEnv(): Either<Error, GoogleEnv> {
+  return ap(getEnv('GOOGLE_REDIRECT_URI'))
+    (ap(getEnv('GOOGLE_CLIENT_SECRET'))
+    (ap(getEnv('GOOGLE_CLIENT_ID'))
+    (right(combineGoogleEnv))));
 }
