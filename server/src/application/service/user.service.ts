@@ -39,44 +39,20 @@ function getEmailFromCode(code: string): TaskEither<Error, string> {
 }
 
 export default function makeUserService(userRepository: UserRepository) {
-  async function createUser(dto: CreateUserDto): Promise<Either<Error, User>> {
-    const createResult = await userRepository.createUser({ ...dto });
-
-    return match<Either<Error, User>, Error, User>(
-      createResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function createUser(dto: CreateUserDto): TaskEither<Error, User> {
+    return userRepository.createUser({ ...dto });
   }
 
-  async function updateUserRole(dto: UpdateUserRoleDto): Promise<Either<Error, boolean>> {
-    const updateRoleResult = await userRepository.updateRole({ ...dto });
-
-    return match<Either<Error, boolean>, Error, boolean>(
-      updateRoleResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, boolean> {
+    return userRepository.updateRole({ ...dto });
   }
 
-  async function deleteUser(dto: DeleteUserDto): Promise<Either<Error, boolean>> {
-    const deleteResult = await userRepository.deleteUser({ ...dto });
-
-    return match<Either<Error, boolean>, Error, boolean>(
-      deleteResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function deleteUser(dto: DeleteUserDto): TaskEither<Error, boolean> {
+    return userRepository.deleteUser({ ...dto });
   }
 
-  async function findUser(dto: FindUserDto): Promise<Either<Error, Array<User>>> {
-    const findResult = await userRepository.findUser({ ...dto });
-
-    return match<Either<Error, Array<User>>, Error, Array<User>>(
-      findResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function findUser(dto: FindUserDto): TaskEither<Error, Array<User>> {
+    return userRepository.findUser({ ...dto });
   }
 
   function signin(dto: SigninDto): boolean {
@@ -85,7 +61,7 @@ export default function makeUserService(userRepository: UserRepository) {
     return method === 'GET' && role !== undefined;
   }
 
-  async function signinCallback(dto: SigninCallbackDto): Promise<Either<Error, void>> {
+  async function signinCallback(dto: SigninCallbackDto) {
     return;
   }
 

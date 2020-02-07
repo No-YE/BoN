@@ -1,4 +1,4 @@
-import { Either } from '@lib/either';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Comment } from '../entity';
 
 export type CommentRepository = {
@@ -6,20 +6,20 @@ export type CommentRepository = {
     content: string;
     postId: string | number;
     userId: string | number;
-  }) => Promise<Either<Error, Comment>>;
+  }) => TaskEither<Error, Comment>;
 
   readonly updateComment: (comment: {
     content: string;
     postId: string | number;
-  }) => Promise<Either<Error, boolean>>;
+  }) => TaskEither<Error, boolean>;
 
   readonly deleteComment: (comment: {
     id: string | number;
     userId: string | number;
-  }) => Promise<Either<Error, boolean>>;
+  }) => TaskEither<Error, boolean>;
 
   readonly findComments: (comment: {
     offset: number;
     limit: number;
-  }) => Promise<Either<Error, Array<Comment>>>;
+  }) => TaskEither<Error, Array<Comment>>;
 };

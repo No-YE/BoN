@@ -1,4 +1,4 @@
-import { Either } from '@lib/either';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Post } from '../entity';
 
 export type PostRepository = {
@@ -6,24 +6,24 @@ export type PostRepository = {
     title: string;
     content: string;
     userId: string | number;
-  }) => Promise<Either<Error, Post>>;
+  }) => TaskEither<Error, Post>;
 
   readonly updatePost: (post: {
     title: string;
     content: string;
-  }) => Promise<Either<Error, boolean>>;
+  }) => TaskEither<Error, boolean>;
 
   readonly deletePost: (post: {
     id: string | number;
-  }) => Promise<Either<Error, boolean>>;
+  }) => TaskEither<Error, boolean>;
 
   readonly findPosts: (posts: {
     offset: number;
     limit: number;
     query: string;
-  }) => Promise<Either<Error, [Array<Post>, number]>>;
+  }) => TaskEither<Error, [Array<Post>, number]>;
 
   readonly findPost: (post: {
     id: string | number;
-  }) => Promise<Either<Error, Post>>;
+  }) => TaskEither<Error, Post>;
 };

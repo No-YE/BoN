@@ -1,54 +1,29 @@
-import {
-  left, right, match, Either,
-} from '@lib/either';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { CategoryRepository } from '~/data/repository/category.repository';
 import { CreateCategoryDto, UpdateCategoryDto, DeleteCategoryDto } from '../dto/category.dto';
 import { Category } from '~/data/entity';
 
 export default function makeCategoryService(categoryRepository: CategoryRepository) {
-  async function createCategory(dto: CreateCategoryDto): Promise<Either<Error, Category>> {
-    const createResult = await categoryRepository.createCategory({ ...dto });
-
-    return match<Either<Error, Category>, Error, Category>(
-      createResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function createCategory(dto: CreateCategoryDto): TaskEither<Error, Category> {
+    return categoryRepository.createCategory({ ...dto });
   }
 
-  async function updateCategory(dto: UpdateCategoryDto): Promise<Either<Error, boolean>> {
-    const updateResult = await categoryRepository.updateCategory({ ...dto });
-
-    return match<Either<Error, boolean>, Error, boolean>(
-      updateResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function updateCategory(dto: UpdateCategoryDto): TaskEither<Error, boolean> {
+    return categoryRepository.updateCategory({ ...dto });
   }
 
-  async function deleteCategory(dto: DeleteCategoryDto): Promise<Either<Error, boolean>> {
-    const deleteResult = await categoryRepository.deleteCategory({ ...dto });
-
-    return match<Either<Error, boolean>, Error, boolean>(
-      deleteResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function deleteCategory(dto: DeleteCategoryDto): TaskEither<Error, boolean> {
+    return categoryRepository.deleteCategory({ ...dto });
   }
 
-  async function findCategories(): Promise<Either<Error, Array<Category>>> {
-    const findResult = await categoryRepository.findCategories();
-
-    return match<Either<Error, Array<Category>>, Error, Array<Category>>(
-      findResult,
-      (l) => left(l),
-      (r) => right(r),
-    );
+  function findCategories(): TaskEither<Error, Array<Category>> {
+    return categoryRepository.findCategories();
   }
 
   return {
     createCategory,
     updateCategory,
     deleteCategory,
+    findCategories,
   };
 }
