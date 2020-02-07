@@ -11,6 +11,7 @@ import {
 } from '../dto/user.dto';
 import { User } from '~/data/entity';
 import { GoogleEnv, getGoogleEnv } from '~/infrastructure/constant/env';
+import { UserRole } from '~/infrastructure/type';
 
 function getEmailFromCode(code: string): TaskEither<Error, string> {
   const getTokenFromGoogle = (envs: GoogleEnv): TaskEither<Error, any> => {
@@ -61,8 +62,22 @@ export default function makeUserService(userRepository: UserRepository) {
     return method === 'GET' && role !== undefined;
   }
 
-  async function signinCallback(dto: SigninCallbackDto) {
-    return;
+  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, {
+    id: string | number;
+    email: string;
+    role: UserRole;
+  }> {
+    const { code } = dto;
+
+    return pipe(
+      getEmailFromCode(code),
+      chain((email: string) => right<Error, object>({ email })),
+      chain(userRepository.findUserByEmail),
+      chain((user: User) => {
+        const { id, email, role } = user;
+        return right({ id, email, role });
+      }),
+    );
   }
 
   return {
@@ -70,14 +85,7 @@ export default function makeUserService(userRepository: UserRepository) {
     updateUserRole,
     deleteUser,
     findUser,
+    signin,
+    signinCallback,
   };
 }
-
-const obj = {
-  a: 1,
-  getA(): number {
-    return this.a;
-  },
-};
-
-obj['getA']();
