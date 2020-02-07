@@ -1,52 +1,40 @@
 import { google } from 'googleapis';
 import { decode } from 'jsonwebtoken';
+import {
+  TaskEither, left, right, chain,
+} from 'fp-ts/lib/TaskEither';
+import Either from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/lib/pipeable';
 import { UserRepository } from '~/data/repository/user.repository';
 import {
   CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninDto, SigninCallbackDto,
 } from '../dto/user.dto';
-import {
-  Either, left, right, match,
-} from '~/infrastructure/lib/either';
-import { pipe } from '~/infrastructure/lib/pipe';
 import { User } from '~/data/entity';
 import { GoogleEnv, getGoogleEnv } from '~/infrastructure/constant/env';
 
-async function getEmailFromCode(code: string): Promise<Either<Error, string>> {
-  const getIdTokenFromGoogle = (errorOrEnvs: Either<Error, GoogleEnv>) => match(
-    errorOrEnvs,
-    (l) => Promise.resolve(left(l)),
-    async (envs) => {
+function getEmailFromCode(code: string): TaskEither<Error, string> {
+  const getTokenFromGoogle = (envs: GoogleEnv): TaskEither<Error, any> => {
+    return async () => {
       const { clientId, clientSecret, redirectUri } = envs;
       const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
-      const { tokens } = await client.getToken(code);
+      const res = await client.getToken(code);
+      return Either.right(res.tokens);
+    };
+  }
 
-      return tokens.id_token === undefined ? left(new Error()) : right(tokens.id_token);
-    },
-  );
+  const getIdTokenFromCredential = (tokens: any) => {
+    return tokens.id_token ? right(tokens.id_token) : left(new Error());
+  }
 
-  const getEmailFromIdToken = async (errorOrIdTokenPromise: Promise<Either<Error, string>>) => {
-    const errorOrIdToken = await errorOrIdTokenPromise;
-
-    return match(
-      errorOrIdToken,
-      (l) => left(l),
-      (idToken) => {
-        const decodedToken = decode(idToken) as { emails?: string };
-        return decodedToken.emails === undefined ? left(new Error()) : right(decodedToken.emails);
-      },
-    );
+  const getEmailFromIdToken = (idToken: string): TaskEither<Error, string> => {
+    const decodedIdToken = decode(idToken) as { emails?: string };
+    return decodedIdToken.emails ? left(new Error()) : right(decodedIdToken.emails);
   };
 
-  return pipe<
-  string,
-  Either<Error, GoogleEnv>,
-  Promise<Either<Error, string>>,
-  Promise<Either<Error, string>>
-  >(
-    code,
-    getGoogleEnv,
-    getIdTokenFromGoogle,
-    getEmailFromIdToken,
+  return pipe(
+    chain(getTokenFromGoogle)(getGoogleEnv()),
+    chain(getIdTokenFromCredential),
+    chain(getEmailFromIdToken),
   );
 }
 
@@ -108,3 +96,12 @@ export default function makeUserService(userRepository: UserRepository) {
     findUser,
   };
 }
+
+const obj = {
+  a: 1,
+  getA(): number {
+    return this.a;
+  },
+};
+
+obj['getA']();

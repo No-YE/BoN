@@ -1,6 +1,5 @@
 import 'dotenv/config';
-import _ from 'lodash/fp';
-import { Either, left, right, ap } from 'fp-ts/lib/Either';
+import { TaskEither, left, right, ap } from 'fp-ts/lib/TaskEither';
 
 export type GoogleEnv = {
   clientId: string;
@@ -8,7 +7,7 @@ export type GoogleEnv = {
   redirectUri: string;
 };
 
-function getEnv(key: string): Either<Error, string> {
+function getEnv(key: string): TaskEither<Error, string> {
   const env = process.env[key];
   return env === undefined ? left(new Error()) : right(env);
 }
@@ -25,7 +24,7 @@ const combineGoogleEnv = ((clientId: string) => {
   });
 });
 
-export function getGoogleEnv(): Either<Error, GoogleEnv> {
+export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
   return ap(getEnv('GOOGLE_REDIRECT_URI'))
     (ap(getEnv('GOOGLE_CLIENT_SECRET'))
     (ap(getEnv('GOOGLE_CLIENT_ID'))
