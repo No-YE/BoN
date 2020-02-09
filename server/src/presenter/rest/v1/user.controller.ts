@@ -17,7 +17,8 @@ function signinCallbackValidate<T>(obj: T): TaskEither<Error, { code: string; }>
   return result.error ? left<Error, SchemaType>(result.error) : right<Error, SchemaType>(result.value as SchemaType);
 }
 
-export default function makeUserController(router: Router, userRepository: UserRepository) {
+export default function makeUserController(userRepository: UserRepository) {
+  const router = Router();
   const userService = makeUserService(userRepository);
 
   async function googleSignin(req, res: Response, next: NextFunction) {
