@@ -3,7 +3,7 @@ import { decode } from 'jsonwebtoken';
 import {
   TaskEither, left, right, chain, map,
 } from 'fp-ts/lib/TaskEither';
-import Either from 'fp-ts/lib/Either';
+import * as Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { UserRepository } from '~/data/repository/user.repository';
 import {
