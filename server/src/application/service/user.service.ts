@@ -1,17 +1,27 @@
 import { google } from 'googleapis';
 import { decode } from 'jsonwebtoken';
 import {
-  TaskEither, left, right, chain,
+  TaskEither, left, right, chain, map,
 } from 'fp-ts/lib/TaskEither';
 import Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { UserRepository } from '~/data/repository/user.repository';
 import {
-  CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninDto, SigninCallbackDto,
+  CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
 import { User } from '~/data/entity';
 import { GoogleEnv, getGoogleEnv } from '~/infrastructure/constant/env';
-import { UserRole } from '~/infrastructure/type';
+import { UserSession } from '~/infrastructure/type';
+
+function generateAuthUrl(envs: GoogleEnv): string {
+  const { clientId, clientSecret, redirectUri } = envs;
+  const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+  
+  return client.generateAuthUrl({
+    access_type: 'offline',
+    scope: ['email', 'profile'],
+  });
+}
 
 function getEmailFromCode(code: string): TaskEither<Error, string> {
   const getTokenFromGoogle = (envs: GoogleEnv): TaskEither<Error, any> => {
@@ -56,17 +66,11 @@ export default function makeUserService(userRepository: UserRepository) {
     return userRepository.findUser({ ...dto });
   }
 
-  function signin(dto: SigninDto): boolean {
-    const { method, role } = dto;
-
-    return method === 'GET' && role !== undefined;
+  function signin(): TaskEither<Error, string> {
+    return map(generateAuthUrl)(getGoogleEnv())
   }
 
-  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, {
-    id: string | number;
-    email: string;
-    role: UserRole;
-  }> {
+  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, UserSession> {
     const { code } = dto;
 
     return pipe(

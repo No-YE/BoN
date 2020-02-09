@@ -19,12 +19,6 @@ export type FindUserDto = {
   id: string | number;
 };
 
-export type SigninDto = {
-  method: string;
-  type: string;
-  role?: UserRole;
-};
-
 export type SigninCallbackDto = {
   code: string;
 };

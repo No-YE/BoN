@@ -9,9 +9,7 @@
     "sourceMap": true,
     "allowJs": true,
     "paths": {
-      "~/*": [
-        "./*"
-      ],
+      "~/*": ["./*"],
       "@lib/*": [
         "./infrastructure/lib/*"
       ]
