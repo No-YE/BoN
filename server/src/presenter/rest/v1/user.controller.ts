@@ -21,7 +21,7 @@ export default function makeUserController(userRepository: UserRepository) {
   const router = Router();
   const userService = makeUserService(userRepository);
 
-  async function googleSignin(req, res: Response, next: NextFunction) {
+  async function googleSignin(req: any, res: Response, next: NextFunction) {
     fold<Error, string, void>(
       (error) => of(next(error)),
       (url) => of(res.redirect(url)),
@@ -35,7 +35,7 @@ export default function makeUserController(userRepository: UserRepository) {
       fold(
         (error) => of(next(error)),
         (user) => {
-          req.session.user = user;
+          req.session!.user = user;
           return of(res.redirect('/'));
         },
       ),

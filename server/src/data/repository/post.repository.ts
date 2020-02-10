@@ -20,7 +20,7 @@ export type PostRepository = {
   readonly findPosts: (posts: {
     offset: number;
     limit: number;
-    query: string;
+    query?: string;
   }) => TaskEither<Error, [Array<Post>, number]>;
 
   readonly findPost: (post: {

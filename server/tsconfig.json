@@ -6,6 +6,7 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "esModuleInterop": true,
+    "strict": true,
     "sourceMap": true,
     "allowJs": true,
     "paths": {

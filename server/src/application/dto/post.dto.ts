@@ -15,12 +15,12 @@ export type DeletePostDto = {
   id: string | number;
 };
 
-export type findPostsDto = Partial<{
+export type findPostsDto = {
   offset: number;
   limit: number;
-  query: string;
-  categoryIds: Array<string | number>;
-}>;
+  query?: string;
+  categoryIds?: Array<string | number>;
+};
 
 export type findPostDto = {
   id: string | number;

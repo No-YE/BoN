@@ -38,7 +38,7 @@ function getEmailFromCode(code: string): TaskEither<Error, string> {
   }
 
   const getEmailFromIdToken = (idToken: string): TaskEither<Error, string> => {
-    const decodedIdToken = decode(idToken) as { emails?: string };
+    const decodedIdToken = decode(idToken) as { emails: string };
     return decodedIdToken.emails ? left(new Error()) : right(decodedIdToken.emails);
   };
 
@@ -75,12 +75,13 @@ export default function makeUserService(userRepository: UserRepository) {
 
     return pipe(
       getEmailFromCode(code),
-      chain((email: string) => right<Error, object>({ email })),
+      chain((email: string) => right<Error, { email: string }>({ email })),
       chain(userRepository.findUserByEmail),
-      chain((user: User) => {
-        const { id, email, role } = user;
-        return right({ id, email, role });
-      }),
+      chain((user: User) => right({
+        id: user.id!,
+        email: user.email!,
+        role: user.role!,
+      })),
     );
   }
 
