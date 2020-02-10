@@ -1,5 +1,5 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { UserRole } from '~/infrastructure/type';
+import { UserRole } from '~/type';
 import { User } from '../entity';
 
 export type UserRepository = {

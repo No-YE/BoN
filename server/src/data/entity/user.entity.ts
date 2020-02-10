@@ -1,4 +1,4 @@
-import { UserRole } from '~/infrastructure/type';
+import { UserRole } from '~/type';
 import { Base } from './base.entity';
 
 export type User = {

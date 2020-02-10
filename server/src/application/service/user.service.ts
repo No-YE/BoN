@@ -11,7 +11,7 @@ import {
 } from '../dto/user.dto';
 import { User } from '~/data/entity';
 import { GoogleEnv, getGoogleEnv } from '~/infrastructure/constant/env';
-import { UserSession } from '~/infrastructure/type';
+import { UserSession } from '~/type';
 
 function generateAuthUrl(envs: GoogleEnv): string {
   const { clientId, clientSecret, redirectUri } = envs;

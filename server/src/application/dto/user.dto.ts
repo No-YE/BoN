@@ -1,4 +1,4 @@
-import { UserRole } from '~/infrastructure/type';
+import { UserRole } from '~/type';
 
 export type CreateUserDto = {
   name: string;
