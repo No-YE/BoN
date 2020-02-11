@@ -1,5 +1,4 @@
 import { UserSession } from './user-session.type';
-import { _Context } from './context.type';
 
 declare global {
   namespace Express {
@@ -7,6 +6,4 @@ declare global {
       user?: UserSession;
     }
   }
-
-  export interface Context extends _Context {}
 }
