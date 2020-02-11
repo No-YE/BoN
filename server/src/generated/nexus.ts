@@ -15,8 +15,8 @@ declare global {
 
 export interface NexusGenInputs {
   PostsWhereInput: { // input type
-    limit?: number | null; // Int
-    offset?: number | null; // Int
+    limit: number; // Int!
+    offset: number; // Int!
   }
 }
 

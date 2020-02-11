@@ -9,8 +9,8 @@ type Post {
 }
 
 input PostsWhereInput {
-  limit: Int = 20
-  offset: Int = 0
+  limit: Int! = 20
+  offset: Int! = 0
 }
 
 type Query {
