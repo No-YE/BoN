@@ -17,10 +17,21 @@ export type PostRepository = {
     id: string | number;
   }) => TaskEither<Error, boolean>;
 
-  readonly findPosts: (posts: {
+  readonly searchPosts: (posts: {
     offset: number;
     limit: number;
-    query?: string;
+    query: string;
+  }) => TaskEither<Error, [Array<Post>, number]>;
+
+  readonly findNewPosts: (posts: {
+    offset: number;
+    limit: number;
+  }) => TaskEither<Error, [Array<Post>, number]>;
+
+  readonly findPostsByCategory: (post: {
+    offset: number,
+    limit: number,
+    categoryId: string | number;
   }) => TaskEither<Error, [Array<Post>, number]>;
 
   readonly findPost: (post: {

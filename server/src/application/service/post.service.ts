@@ -2,7 +2,7 @@ import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { PostRepository } from '~/data/repository/post.repository';
 import { Post } from '~/data/entity';
 import {
-  CraetePostDto, UpdatePostDto, DeletePostDto, findPostsDto, findPostDto,
+  CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostsByCategory, FindPostDto,
 } from '../dto/post.dto';
 
 export default function makePostService(postRepository: PostRepository) {
@@ -18,12 +18,22 @@ export default function makePostService(postRepository: PostRepository) {
     return postRepository.deletePost({ ...dto });
   }
 
-  function findPosts(dto: findPostsDto): TaskEither<Error, [Array<Post>, number]> {
+  function searchPosts(dto: SearchPostsDto): TaskEither<Error, [Array<Post>, number]> {
     const { offset, limit, query } = dto;
-    return postRepository.findPosts({ offset, limit, query });
+    return postRepository.searchPosts({ offset, limit, query });
   }
 
-  function findPost(dto: findPostDto): TaskEither<Error, Post> {
+  function findNewPosts(dto: FindNewPostsDto): TaskEither<Error, [Array<Post>, number]> {
+    const { offset, limit } = dto;
+    return postRepository.findNewPosts({ offset, limit });
+  }
+
+  function findPostsByCategory(dto: FindPostsByCategory): TaskEither<Error, [Array<Post>, number]> {
+    const { offset, limit, categoryId } = dto;
+    return postRepository.findPostsByCategory({ offset, limit, categoryId });
+  }
+
+  function findPost(dto: FindPostDto): TaskEither<Error, Post> {
     return postRepository.findPost({ ...dto });
   }
   
@@ -31,7 +41,9 @@ export default function makePostService(postRepository: PostRepository) {
     createPost,
     updatePost,
     deletePost,
-    findPosts,
+    searchPosts,
+    findNewPosts,
+    findPostsByCategory,
     findPost,
   };
 }

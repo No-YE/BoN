@@ -24,8 +24,8 @@ export const QueryFiledPosts = queryField('posts', {
       required: false,
     }),
   },
-  resolve(_parent, args, context) {
-    console.log(args);
+  resolve(_parent, args, { loader }) {
+    
     return {
       id: '123'
     }

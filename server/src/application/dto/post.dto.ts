@@ -15,13 +15,23 @@ export type DeletePostDto = {
   id: string | number;
 };
 
-export type findPostsDto = {
+export type SearchPostsDto = {
   offset: number;
   limit: number;
-  query?: string;
-  categoryIds?: Array<string | number>;
+  query: string;
 };
 
-export type findPostDto = {
+export type FindNewPostsDto = {
+  offset: number;
+  limit: number;
+};
+
+export type FindPostsByCategory = {
+  offset: number;
+  limit: number;
+  categoryId: string | number;
+};
+
+export type FindPostDto = {
   id: string | number;
 };
