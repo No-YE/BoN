@@ -3,6 +3,8 @@ import {
 } from 'sequelize';
 import db from './db';
 import { Post } from '~/data/entity';
+import UserModel from './user.model';
+import CategoryModel from './category.model';
 
 type PostModel = Post & typeof Model;
 type PostModelStatic = typeof Model & {
@@ -33,4 +35,8 @@ const PostAttribute: Partial<PostModelAttributes> = {
   },
 };
 
-export const PostModel = <PostModelStatic>db.define('Posts', PostAttribute as PostModelAttributes);
+const PostModel = <PostModelStatic>db.define('Posts', PostAttribute as PostModelAttributes);
+PostModel.belongsTo(UserModel);
+PostModel.hasMany(CategoryModel);
+
+export default PostModel;

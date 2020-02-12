@@ -3,6 +3,7 @@ import {
 } from 'sequelize';
 import db from './db';
 import { Category } from '~/data/entity';
+import PostModel from './post.model';
 
 type CategoryModel = Category & typeof Model;
 type CategoryModelStatic = typeof Model & {
@@ -25,4 +26,7 @@ const CategoryAttribute: Partial<CategoryModelAttributes> = {
   },
 };
 
-export const CategoryModel = <CategoryModelStatic>db.define('Categorys', CategoryAttribute as CategoryModelAttributes);
+const CategoryModel = <CategoryModelStatic>db.define('Categorys', CategoryAttribute as CategoryModelAttributes);
+CategoryModel.belongsTo(PostModel);
+
+export default CategoryModel;

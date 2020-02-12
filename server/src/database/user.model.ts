@@ -3,6 +3,7 @@ import {
 } from 'sequelize';
 import db from './db';
 import { User } from '~/data/entity';
+import PostModel from './post.model';
 
 type UserModel = User & typeof Model;
 type UserModelStatic = typeof Model & {
@@ -39,4 +40,7 @@ const userAttribute: Partial<UserModelAttributes> = {
   },
 };
 
-export const UserModel = <UserModelStatic>db.define('Users', userAttribute as UserModelAttributes);
+const UserModel = <UserModelStatic>db.define('Users', userAttribute as UserModelAttributes);
+UserModel.hasMany(PostModel);
+
+export default UserModel;
