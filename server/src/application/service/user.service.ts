@@ -10,7 +10,7 @@ import {
   CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
 import { User } from '~/data/entity';
-import { GoogleEnv, getGoogleEnv } from '~/infrastructure/constant/env';
+import { GoogleEnv, getGoogleEnv } from '~/constant/env';
 import { UserSession } from '~/type';
 
 function generateAuthUrl(envs: GoogleEnv): string {
