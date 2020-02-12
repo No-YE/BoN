@@ -6,6 +6,6 @@ export type Post = {
   title: string;
   content: string;
   user: User;
-  category: Category;
+  categories: Array<Category>;
   comments?: Array<Comment>;
 } & Base;
