@@ -3,7 +3,12 @@ import { UserRole } from '~/type';
 import { User } from '../entity';
 
 export type UserRepository = {
-  readonly createUser: (user: User) => TaskEither<Error, User>;
+  readonly createUser: (user: {
+    name: string;
+    socialId: string;
+    email: string;
+    role: string;
+  }) => TaskEither<Error, User>;
 
   readonly updateRole: (user: {
     id: string | number;

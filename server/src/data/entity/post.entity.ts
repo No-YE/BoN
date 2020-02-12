@@ -7,5 +7,5 @@ export type Post = {
   content: string;
   user: User;
   categories: Array<Category>;
-  comments?: Array<Comment>;
+  comments: Array<Comment>;
 } & Base;
