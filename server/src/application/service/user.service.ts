@@ -51,7 +51,7 @@ function getEmailFromCode(code: string): TaskEither<Error, string> {
 
 export default function makeUserService(userRepository: UserRepository) {
   function createUser(dto: CreateUserDto): TaskEither<Error, User> {
-    return userRepository.createUser({ ...dto });
+    return userRepository.createUser({ ...dto, socialId: '' });
   }
 
   function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, boolean> {
