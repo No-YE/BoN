@@ -6,7 +6,7 @@ import { Post } from '~/data/entity';
 type PostModel = Post & typeof Model;
 
 export type PostModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): PostModel;  
+  new (values?: object, options?: BuildOptions): PostModel;
 };
 
 export type PostModelAttributes = {
@@ -15,9 +15,9 @@ export type PostModelAttributes = {
 
 export const postAttribute: Partial<PostModelAttributes> = {
   id: {
-   type: DataTypes.BIGINT.UNSIGNED,
-   primaryKey: true,
-   autoIncrement: true,
+    type: DataTypes.BIGINT.UNSIGNED,
+    primaryKey: true,
+    autoIncrement: true,
   },
   title: {
     type: DataTypes.STRING,

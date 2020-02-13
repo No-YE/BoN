@@ -6,7 +6,7 @@ import { Category } from '~/data/entity';
 type CategoryModel = Category & typeof Model;
 
 export type CategoryModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): CategoryModel;  
+  new (values?: object, options?: BuildOptions): CategoryModel;
 };
 
 export type CategoryModelAttributes = {

@@ -5,7 +5,7 @@ import { User } from '~/data/entity';
 
 type UserModel = User & typeof Model;
 
-export  type UserModelStatic = typeof Model & {
+export type UserModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): UserModel;
 };
 

@@ -7,8 +7,10 @@ import { categoryAttribute, CategoryModelAttributes, CategoryModelStatic } from 
 import { getMysqlEnv, MysqlEnv } from '../constant/env';
 
 export default function makeSequelize(): TaskEither<Error, Sequelize> {
-  function getSequelize(mysqlEnv: MysqlEnv) {
-    const { database, host, password, port, user } = mysqlEnv;
+  function getSequelize(mysqlEnv: MysqlEnv): Sequelize {
+    const {
+      database, host, password, port, user,
+    } = mysqlEnv;
 
     return new Sequelize(database, user, password, {
       host,
@@ -30,10 +32,13 @@ export default function makeSequelize(): TaskEither<Error, Sequelize> {
     });
   }
 
-  function setAssociate(sequelize: Sequelize) {
-    const UserModel = <UserModelStatic>sequelize.define('User', userAttribute as UserModelAttributes);
-    const PostModel = <PostModelStatic>sequelize.define('Post', postAttribute as PostModelAttributes);
-    const CategoryModel = <CategoryModelStatic>sequelize.define('Category', categoryAttribute as CategoryModelAttributes);
+  function setAssociate(sequelize: Sequelize): Sequelize {
+    const UserModel = sequelize.define('User', userAttribute as UserModelAttributes) as UserModelStatic;
+    const PostModel = sequelize.define('Post', postAttribute as PostModelAttributes) as PostModelStatic;
+    const CategoryModel = sequelize.define(
+      'Category',
+      categoryAttribute as CategoryModelAttributes,
+    )as CategoryModelStatic;
 
     UserModel.hasMany(PostModel);
     PostModel.belongsTo(UserModel);
