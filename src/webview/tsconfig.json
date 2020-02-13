@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "noEmit": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": []
+}
