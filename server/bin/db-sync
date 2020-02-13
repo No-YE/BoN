@@ -1,9 +1,18 @@
 #!/usr/bin/env node
-const sequelize = require('../dist/database/db');
+const { fold } = require('fp-ts/lib/Either');
+const makeSequelize = require('../dist/database/db');
 
 (async () => {
   try {
-    await sequelize.default.sync();
+    await fold(
+      (error) => {
+        throw error;
+      },
+      async (sequelize) => {
+        await sequelize.sync();
+      },
+    )(await makeSequelize.default()());
+    
     console.log('success');
     process.exit(0);
   } catch (error) {

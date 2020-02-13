@@ -8,9 +8,10 @@ export type GoogleEnv = {
 };
 
 export type MysqlEnv = {
+  database: string;
   host: string;
   user: string;
-  port: string;
+  port: number;
   password: string;
 };
 
@@ -19,18 +20,25 @@ function getEnv(key: string): TaskEither<Error, string> {
   return env === undefined ? left(new Error()) : right(env);
 }
 
-const combineGoogleEnv = ((clientId: string) => ((clientSecret: string) => ((redirectUri: string) => ({
+function getEnvAsNumber(key: string): TaskEither<Error, number> {
+  const env = process.env[key];
+  const value = Number(env);
+  return value === NaN ? left(new Error()) : right(value);
+}
+
+const combineGoogleEnv = ((clientId: string) => (clientSecret: string) => (redirectUri: string) => ({
   clientId,
   clientSecret,
   redirectUri,
-}))));
+}));
 
-const combineMysqlEnv = ((host: string) => ((user: string) => ((port: string) => ((password: string) => ({
+const combineMysqlEnv = ((database: string) => (host: string) => (user: string) => (port: number) => (password: string) => ({
+  database,
   host,
   user,
   port,
   password,
-})))));
+}));
 
 export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
   return ap(getEnv('GOOGLE_REDIRECT_URI'))
@@ -41,8 +49,9 @@ export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
 
 export function getMysqlEnv(): TaskEither<Error, MysqlEnv> {
   return ap(getEnv('MYSQL_PASSWORD'))
-    (ap(getEnv('MYSQL_PORT'))
+    (ap(getEnvAsNumber('MYSQL_PORT'))
     (ap(getEnv('MYSQL_USER'))
     (ap(getEnv('MYSQL_HOST'))
-    (right(combineMysqlEnv)))));
+    (ap(getEnv('MYSQL_DATABASE'))
+    (right(combineMysqlEnv))))));
 }
