@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+const sequelize = require('../dist/database/db');
+
+(async () => {
+  try {
+    await sequelize.default.sync();
+    console.log('success');
+    process.exit(0);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+})();
