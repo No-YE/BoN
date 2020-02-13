@@ -31,6 +31,7 @@
     },
     "rules": {
       "max-len": ["error", { "code": 120 }],
-      "no-console": "off"
+      "no-console": "off",
+      "spaced-comment": ["error", "never", { "block": { "balanced": true } }]
     }
 }

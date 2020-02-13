@@ -2,9 +2,19 @@
   "extends": "../../tsconfig.json",
   "compileOnSave": false,
   "compilerOptions": {
+    "jsx": "preserve",
     "target": "es5",
     "module": "esnext",
-    "noEmit": true
+    "noEmit": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": [
     "next-env.d.ts",
