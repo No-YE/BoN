@@ -1,0 +1,60 @@
+{
+  "name": "bon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node -r tsconfig-paths/register src/app.ts",
+    "watch": "tsc -w --skipLibCheck",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/No-YE/BoN.git"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.2",
+    "@types/express-session": "^1.15.16",
+    "@types/moment-timezone": "^0.5.12",
+    "@types/node": "^12.12.27",
+    "@types/sequelize": "^4.28.8",
+    "@types/winston": "^2.4.4",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-airbnb-typescript": "^6.3.1",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.0",
+    "ts-node": "^8.5.4",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^3.7.3"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.0",
+    "@types/jsonwebtoken": "^8.3.7",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "fp-ts": "^2.4.4",
+    "googleapis": "^47.0.0",
+    "graphql-playground-middleware-express": "^1.7.12",
+    "hot-shots": "^6.8.5",
+    "jsonwebtoken": "^8.5.1",
+    "moment-timezone": "^0.5.27",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.4",
+    "typesafe-joi": "^2.1.0",
+    "winston": "^3.2.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/No-YE/BoN/issues"
+  },
+  "homepage": "https://github.com/No-YE/BoN#readme"
+}
