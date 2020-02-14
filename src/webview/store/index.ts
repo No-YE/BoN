@@ -1,24 +1,27 @@
 import { useStaticRendering } from 'mobx-react-lite';
 import { useContext, Context, createContext } from 'react';
-import { DrawItem } from '../type/DrawItem';
+import { Category } from '../type/Category';
 
 const isServer = typeof window === 'undefined';
 useStaticRendering(isServer);
 
 interface Store {
-  draws: Array<DrawItem> | null;
+  categories: Array<Category> | null;
 }
 
 export class RootStore implements Partial<Store> {
-  draws: DrawItem[] | null;
+  categories: Array<Category> | null;
 
   constructor(storeState: Partial<Store>) {
-    this.draws = storeState?.draws || null;
+    this.categories = storeState?.categories || null;
   }
 
   nextInit() {
-    this.draws = [
-      { name: 'abc' },
+    this.categories = [
+      { id: 1, name: 'typescript' },
+      { id: 2, name: 'grpc' },
+      { id: 3, name: '잡다한 것들' },
+      { id: 4, name: '일상' },
     ];
   }
 }

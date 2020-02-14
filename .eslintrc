@@ -32,6 +32,7 @@
     "rules": {
       "max-len": ["error", { "code": 120 }],
       "no-console": "off",
-      "spaced-comment": ["error", "never", { "block": { "balanced": true } }]
+      "spaced-comment": ["error", "never", { "block": { "balanced": true } }],
+      "react/prop-types": 0
     }
 }
