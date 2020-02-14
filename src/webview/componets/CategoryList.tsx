@@ -37,7 +37,7 @@ interface Props extends WithStyles<typeof styles> {
   variant?: 'permanent' | 'persistent' | 'temporary';
 }
 
-const Copy: React.FC<Props> = ({
+const CategoryList: React.FC<Props> = ({
   classes,
   open = true,
   variant = 'persistent',
@@ -87,4 +87,4 @@ const Copy: React.FC<Props> = ({
   );
 };
 
-export default withStyles(styles)(Copy);
+export default withStyles(styles)(CategoryList);

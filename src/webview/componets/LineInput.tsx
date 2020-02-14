@@ -22,7 +22,7 @@ interface Props extends WithStyles<typeof styles> {
   placeholder?: string;
 }
 
-const Copy: React.FC<Props> = ({
+const LineInput: React.FC<Props> = ({
   classes,
   placeholder = '',
 }) => {
@@ -39,4 +39,4 @@ const Copy: React.FC<Props> = ({
   );
 };
 
-export default withStyles(styles)(Copy);
+export default withStyles(styles)(LineInput);
