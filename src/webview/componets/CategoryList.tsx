@@ -9,7 +9,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import DrawerItem from './CategoryItem';
 import { useStore } from '../store';
 
-const drawWidth = 240;
+const drawWidth = 250;
 
 const styles = createStyles({
   root: {
@@ -23,6 +23,7 @@ const styles = createStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    height: 60,
   },
   drawerRightHeader: {
     display: 'flex',
@@ -45,7 +46,7 @@ const CategoryList: React.FC<Props> = ({
 }) => {
   const store = useStore();
 
-  if (!store?.categories) {
+  if (!store?.category) {
     return null;
   }
 
@@ -76,7 +77,7 @@ const CategoryList: React.FC<Props> = ({
         )}
       <Divider />
       <List>
-        {store.categories.map((draw) => (
+        {store.category.categories?.map((draw) => (
           <DrawerItem
             category={draw}
             key={draw.id}
