@@ -5,8 +5,12 @@ import SearchIcon from '@material-ui/icons/Search';
 
 const styles = createStyles({
   root: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
     borderRadius: 5,
+    height: 40,
   },
   shortRoot: {
     width: 240,
@@ -25,18 +29,16 @@ interface Props extends WithStyles<typeof styles> {
 const LineInput: React.FC<Props> = ({
   classes,
   placeholder = '',
-}) => {
-  return (
-    <div className={`${classes.root} ${classes.shortRoot}`}>
-      <IconButton>
-        <SearchIcon/>
-      </IconButton>
-      <InputBase
-        className={classes.input}
-        placeholder={placeholder}
-      />
-    </div>
-  );
-};
+}) => (
+  <div className={`${classes.root} ${classes.shortRoot}`}>
+    <IconButton>
+      <SearchIcon />
+    </IconButton>
+    <InputBase
+      className={classes.input}
+      placeholder={placeholder}
+    />
+  </div>
+);
 
 export default withStyles(styles)(LineInput);
