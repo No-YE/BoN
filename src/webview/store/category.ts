@@ -1,6 +1,18 @@
-import { Category } from '../type/Category';
+import { types } from 'mobx-state-tree';
 
-export default interface CategoryStore {
-  isOpen: boolean;
-  categories: Array<Category> | null;
-}
+const categoryItem = types
+  .model({
+    id: types.union(types.number, types.string),
+    name: types.string,
+  });
+
+export default types
+  .model({
+    isOpen: types.boolean,
+    items: types.array(categoryItem),
+  })
+  .actions((self) => ({
+    changeOpen(isOpen: boolean) {
+      self.isOpen = isOpen;
+    },
+  }));

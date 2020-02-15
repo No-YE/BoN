@@ -1,44 +1,48 @@
 import { useStaticRendering } from 'mobx-react-lite';
+import { types, Instance } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
 import CategoryStore from './category';
 
 const isServer = typeof window === 'undefined';
 useStaticRendering(isServer);
 
-interface Store {
-  category: CategoryStore | null;
-}
+const RootStore = types
+  .model({
+    category: types.maybe(CategoryStore),
+  })
+  .actions((self) => ({
+    setCategory(): void {
+      //eslint-disable-next-line no-param-reassign
+      self.category = CategoryStore.create({
+        isOpen: false,
+        items: [],
+      });
+    },
+    nextInit(): void {
+      this.setCategory();
+    },
+  }));
 
-export class RootStore implements Partial<Store> {
-  category: CategoryStore | null;
+export type Store = typeof RootStore.Type;
+type StoreState = typeof RootStore.CreationType;
 
-  constructor(storeState: Partial<Store>) {
-    this.category = storeState?.category || null;
-  }
+let store: Store;
 
-  nextInit(): void {
-    this.category = {
-      isOpen: true,
-      categories: [
-        { id: 1, name: 'typescript' },
-        { id: 2, name: 'grpc' },
-        { id: 3, name: '잡다한 것들' },
-        { id: 4, name: '일상' },
-      ],
-    };
-  }
-}
-
-let store: RootStore;
-
-export default (storeState: Partial<Store>): RootStore => {
+export function createStore(storeState: StoreState): Store {
   if (isServer) {
-    return new RootStore(storeState);
+    return RootStore.create(storeState);
   }
-  //eslint-disable-next-line no-return-assign
-  return store ?? (store = new RootStore(storeState));
-};
 
-export const StoreContext = createContext({} as Store);
+  //eslint-disable-next-line no-return-assign
+  return store || (store = RootStore.create(storeState));
+}
+
+export type StoreInstance = Instance<Store>;
+
+const StoreContext = createContext<StoreInstance>({} as StoreInstance);
+
 export const StoreProvider = StoreContext.Provider;
-export const useStore = (): Store => useContext(StoreContext);
+
+export function useStore(): StoreInstance {
+  return useContext(StoreContext);
+}

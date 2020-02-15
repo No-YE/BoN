@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { observer } from 'mobx-react-lite';
 import DrawerItem from './CategoryItem';
 import { useStore } from '../store';
 
@@ -33,27 +34,31 @@ const styles = createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
-  open?: boolean;
   anchor?: 'right' | 'left';
   variant?: 'permanent' | 'persistent' | 'temporary';
 }
 
-const CategoryList: React.FC<Props> = ({
+const CategoryList: React.FC<Props> = observer<Props>(({
   classes,
-  open = true,
   variant = 'persistent',
   anchor = 'right',
 }) => {
   const store = useStore();
 
-  if (!store?.category) {
+  if (!store.category) {
     return null;
   }
+
+  const { category } = store;
+
+  const closeOnClick = (): void => {
+    category.changeOpen(false);
+  };
 
   return (
     <Drawer
       className={classes.root}
-      open={open}
+      open={category.isOpen}
       variant={variant}
       anchor={anchor}
       classes={{
@@ -63,21 +68,21 @@ const CategoryList: React.FC<Props> = ({
       {anchor === 'left'
         ? (
           <div className={classes.drawerLeftHeader}>
-            <IconButton>
+            <IconButton onClick={closeOnClick}>
               <ChevronLeftIcon />
             </IconButton>
           </div>
         )
         : (
           <div className={classes.drawerRightHeader}>
-            <IconButton>
+            <IconButton onClick={closeOnClick}>
               <ChevronRightIcon />
             </IconButton>
           </div>
         )}
       <Divider />
       <List>
-        {store.category.categories?.map((draw) => (
+        {category.items.map((draw) => (
           <DrawerItem
             category={draw}
             key={draw.id}
@@ -86,6 +91,6 @@ const CategoryList: React.FC<Props> = ({
       </List>
     </Drawer>
   );
-};
+});
 
 export default withStyles(styles)(CategoryList);
