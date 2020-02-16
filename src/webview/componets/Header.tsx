@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, IconButton, Typography,
+  AppBar, Toolbar, IconButton, Typography, Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import LineInput from './LineInput';
@@ -9,6 +9,7 @@ import LineInput from './LineInput';
 
 const styles = createStyles({
   root: {
+    width: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -34,7 +35,7 @@ const Header: React.FC<Props> = ({
   menuOnClick = (): void => {},
   position = 'static',
 }) => (
-  <div>
+  <Box width="100%">
     <AppBar position={position} color="inherit">
       <Toolbar variant="regular" className={classes.root}>
         <div className={classes.title}>
@@ -48,7 +49,7 @@ const Header: React.FC<Props> = ({
         <LineInput placeholder="Search" />
       </Toolbar>
     </AppBar>
-  </div>
+  </Box>
 );
 
 export default withStyles(styles)(Header);

@@ -50,6 +50,7 @@
     "graphql-playground-middleware-express": "^1.7.12",
     "hot-shots": "^6.8.5",
     "jsonwebtoken": "^8.5.1",
+    "material-ui-image": "^3.2.3",
     "mobx": "^5.15.4",
     "mobx-react-lite": "^1.5.2",
     "mobx-state-tree": "^3.15.0",
