@@ -3,7 +3,7 @@ import {
 } from 'sequelize';
 import { Post } from '~/data/entity';
 
-type PostModel = Post & typeof Model;
+type PostModel = Post & Model;
 
 export type PostModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): PostModel;

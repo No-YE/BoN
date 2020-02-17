@@ -6,16 +6,17 @@ export type PostRepository = {
     title: string;
     content: string;
     userId: string | number;
-  }) => TaskEither<Error, Post>;
+  }) => TaskEither<Error, null>;
 
   readonly updatePost: (post: {
+    id: string | number;
     title: string;
     content: string;
-  }) => TaskEither<Error, boolean>;
+  }) => TaskEither<Error, null>;
 
   readonly deletePost: (post: {
     id: string | number;
-  }) => TaskEither<Error, boolean>;
+  }) => TaskEither<Error, null>;
 
   readonly searchPosts: (posts: {
     offset: number;
@@ -29,8 +30,8 @@ export type PostRepository = {
   }) => TaskEither<Error, [Array<Post>, number]>;
 
   readonly findPostsByCategory: (post: {
-    offset: number,
-    limit: number,
+    offset: number;
+    limit: number;
     categoryId: string | number;
   }) => TaskEither<Error, [Array<Post>, number]>;
 
