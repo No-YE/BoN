@@ -37,6 +37,7 @@ const FeedList: React.FC<Props> = observer<Props>(({
           summary={item.summary}
           title={item.title}
           mainImageUri={item.mainImageUri}
+          categories={item.categories}
         />
       ))}
       {feed.items.map((item) => (

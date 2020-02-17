@@ -1,4 +1,5 @@
 import { types } from 'mobx-state-tree';
+import { categoryItem } from './category';
 
 const feed = types
   .model({
@@ -6,6 +7,7 @@ const feed = types
     title: types.string,
     summary: types.string,
     mainImageUri: types.maybe(types.string),
+    categories: types.array(categoryItem),
   });
 
 export default types

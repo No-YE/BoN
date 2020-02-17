@@ -1,6 +1,6 @@
 import { types } from 'mobx-state-tree';
 
-const categoryItem = types
+export const categoryItem = types
   .model({
     id: types.union(types.number, types.string),
     name: types.string,
