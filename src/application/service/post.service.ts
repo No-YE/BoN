@@ -6,15 +6,15 @@ import {
 } from '../dto/post.dto';
 
 export default function makePostService(postRepository: PostRepository) {
-  function createPost(dto: CraetePostDto): TaskEither<Error, Post> {
+  function createPost(dto: CraetePostDto): TaskEither<Error, null> {
     return postRepository.createPost({ ...dto });
   }
 
-  function updatePost(dto: UpdatePostDto): TaskEither<Error, boolean> {
+  function updatePost(dto: UpdatePostDto): TaskEither<Error, null> {
     return postRepository.updatePost({ ...dto });
   }
 
-  function deletePost(dto: DeletePostDto): TaskEither<Error, boolean> {
+  function deletePost(dto: DeletePostDto): TaskEither<Error, null> {
     return postRepository.deletePost({ ...dto });
   }
 

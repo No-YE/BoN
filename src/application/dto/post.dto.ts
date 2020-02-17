@@ -6,6 +6,7 @@ export type CraetePostDto = {
 };
 
 export type UpdatePostDto = {
+  id: string | number;
   title: string;
   content: string;
   categoryIds: Array<string | number>;
