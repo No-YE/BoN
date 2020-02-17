@@ -36,7 +36,7 @@ export default function makePostService(postRepository: PostRepository) {
   function findPost(dto: FindPostDto): TaskEither<Error, Post> {
     return postRepository.findPost({ ...dto });
   }
-  
+
   return {
     createPost,
     updatePost,
