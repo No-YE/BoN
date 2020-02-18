@@ -1,5 +1,7 @@
 import React from 'react';
-import { Typography, withStyles, WithStyles, createStyles, Box, Chip } from '@material-ui/core';
+import {
+  Typography, withStyles, WithStyles, createStyles, Box, Chip,
+} from '@material-ui/core';
 import Image from 'material-ui-image';
 import { Category } from '../type/Category';
 
@@ -51,21 +53,21 @@ const FeedItem: React.FC<Props> = ({
         <Typography variant="h6">{title}</Typography>
         <Typography className={classes.content}>{summary}</Typography>
         <Box>
-        {categories.map((category, i) => (
-          <Chip
-            className={classes.chip}
-            key={i}
-            label={category.name}
-            size="small"
-            clickable
-            color="primary"
-          />
-        ))}
+          {categories.map((category) => (
+            <Chip
+              className={classes.chip}
+              key={category.id}
+              label={category.name}
+              size="small"
+              clickable
+              color="primary"
+            />
+          ))}
         </Box>
       </Box>
       <Box className={classes.image}>
         {mainImageUri
-          ? <Image src={mainImageUri} aspectRatio={4/3} />
+          ? <Image src={mainImageUri} aspectRatio={4 / 3} />
           : null}
       </Box>
     </Box>

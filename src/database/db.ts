@@ -5,7 +5,6 @@ import { userAttribute, UserModelAttributes, UserModelStatic } from './model/use
 import { postAttribute, PostModelAttributes, PostModelStatic } from './model/post.model';
 import { categoryAttribute, CategoryModelAttributes, CategoryModelStatic } from './model/category.model';
 import { getMysqlEnv, MysqlEnv } from '../constant/env';
-import { User } from '~/data/entity';
 
 export type Models = {
   UserModel: UserModelStatic;

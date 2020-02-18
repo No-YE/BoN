@@ -25,6 +25,7 @@ export default function makePostService(postRepository: PostRepository) {
 
   function findNewPosts(dto: FindNewPostsDto): TaskEither<Error, [Array<Post>, number]> {
     const { offset, limit } = dto;
+    console.log(dto);
     return postRepository.findNewPosts({ offset, limit });
   }
 

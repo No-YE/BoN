@@ -67,6 +67,7 @@ export default (PostModel: PostModelStatic): PostRepository => {
         offset: posts.offset,
         limit: posts.limit,
       }));
+      console.log(result);
 
       return err || !result ? left(err) : right([result.rows, result.count]);
     };

@@ -4,9 +4,9 @@ import { UserRepository } from '~/data/repository/user.repository';
 import { PostRepository } from '~/data/repository/post.repository';
 
 export default function makeRestController(repository: {
-  userRepository: UserRepository;
+  //userRepository: UserRepository;
   postRepository: PostRepository;
 }): Router {
   const router = Router();
-  return router.use('/api', makeV1Controller(repository));
+  return router.use('/v1', makeV1Controller(repository));
 }
