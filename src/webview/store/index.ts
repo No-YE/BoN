@@ -3,6 +3,8 @@ import { types, Instance } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
 import CategoryStore from './category';
 import FeedStore from './feed';
+import { getPosts } from '../lib/api/post';
+import { Feed } from '../type';
 
 const isServer = typeof window === 'undefined';
 useStaticRendering(isServer);
@@ -23,24 +25,28 @@ const RootStore = types
         ],
       });
     },
-    setFeed(): void {
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setFeeds(feeds: any): void {
       //eslint-disable-next-line no-param-reassign
       self.feed = FeedStore.create({
-        items: [
-          //eslint-disable-next-line max-len
-          {
-            id: 1,
-            title: '안심번호 마이크로서비스 개발하기',
-            summary: '안녕하세요. 당근마켓 플랫폼 개발팀 인턴 Jerry 입니다. 이번에 당근마켓의 안심번호 마이크로서비스를 개발한 이야기를 공유하려 합니다.',
-            mainImageUri: 'https://miro.medium.com/max/2452/1*GQ4TCTMaJlHJVjkYP__-3w.png',
-            categories: [{ id: 1, name: 'typescript' }],
-          },
-        ],
+        items: feeds,
       });
     },
-    nextInit(): void {
+    async nextInit(): Promise<void> {
       this.setCategory();
-      this.setFeed();
+
+      const posts = await getPosts({ offset: 0, limit: 10 });
+      this.setFeeds(posts.data[0].map((post: {
+        id: number;
+        title: string;
+        content: string;
+        createdAt: string;
+      }): Feed => ({
+        id: post.id,
+        title: post.title,
+        summary: post.content.substring(0, 200),
+        createdAt: new Date(post.createdAt),
+      })));
     },
   }));
 

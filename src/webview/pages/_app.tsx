@@ -15,7 +15,7 @@ export default class extends React.Component {
     const appProps = await App.getInitialProps(appContext);
 
     if (typeof window === 'undefined') {
-      store.nextInit();
+      await store.nextInit();
     }
 
     return {

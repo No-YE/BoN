@@ -6,6 +6,7 @@ const feed = types
     id: types.union(types.number, types.string),
     title: types.string,
     summary: types.string,
+    createdAt: types.Date,
     mainImageUri: types.maybe(types.string),
     categories: types.array(categoryItem),
   });

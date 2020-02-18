@@ -13,6 +13,8 @@ const styles = createStyles({
     color: 'rgba(0, 0, 0, 0.8)',
     fontSize: 14,
     minHeight: 60,
+    maxHeight: 80,
+    overflowY: 'hidden',
     marginBottom: 10,
   },
   image: {
@@ -35,6 +37,7 @@ interface Props extends WithStyles<typeof styles> {
   id: string | number;
   title: string;
   summary: string;
+  createdAt: Date;
   mainImageUri?: string;
   categories?: Array<Category>;
 }
@@ -45,6 +48,7 @@ const FeedItem: React.FC<Props> = ({
   title,
   summary,
   mainImageUri,
+  createdAt,
   categories = [],
 }) => (
   <Box key={id} display="flex" flexDirection="column" className={classes.root}>
@@ -65,14 +69,12 @@ const FeedItem: React.FC<Props> = ({
           ))}
         </Box>
       </Box>
-      <Box className={classes.image}>
-        {mainImageUri
-          ? <Image src={mainImageUri} aspectRatio={4 / 3} />
-          : null}
-      </Box>
+      {mainImageUri
+        ? <Box className={classes.image}><Image src={mainImageUri} aspectRatio={4 / 3} /></Box>
+        : null}
     </Box>
     <Box display="flex" flexDirection="row">
-      <Typography className={classes.metadata}>2020.02.20.17:23</Typography>
+      <Typography className={classes.metadata}>{String(createdAt)}</Typography>
     </Box>
   </Box>
 );
