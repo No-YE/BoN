@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
 import { StoreProvider, createStore, Store } from '../store';
 import 'react-markdown-editor-lite/lib/index.css';
+import '../styles/global.css';
 
 export default class extends React.Component {
   static async getInitialProps(appContext: any): Promise<any> {

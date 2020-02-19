@@ -4,15 +4,21 @@ import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import SubmitBar from '../componets/SummitBar';
 import MarkdownEditor from '../componets/MarkdownEditor';
 import { Box } from '@material-ui/core';
+import LineInput from '../componets/LineInput';
 
-const styles = createStyles({});
+const styles = createStyles({
+  root: {
+    justifyContent: "space-between",
+    height: '100%',
+  },
+});
 
 type Props = WithStyles<typeof styles>;
 
 const PageWritePost: React.FC<Props> = observer(({
   classes,
 }) => (
-  <Box display="flex" flex={1}>
+  <Box display="flex" className={classes.root} flexDirection="column" justifyContent="space-between">
     <MarkdownEditor />
     <SubmitBar />
   </Box>

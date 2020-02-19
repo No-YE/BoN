@@ -7,12 +7,8 @@ import {
 
 const styles = createStyles({
   root: {
-    position: 'absolute',
     padding: 20,
-    top: 0,
-    bottom: 60,
-    left: 0,
-    right: 0,
+    width: '100%',
   },
 });
 
@@ -27,10 +23,11 @@ const MarkdownEditor: React.FC<Props> = ({
   classes,
   onImageUpload = async () => {},
 }) => (
-  <Box className={classes.root}>
+  <Box className={classes.root} display="flex" flex={15}>
     <MdEditor
       renderHTML={(text) => mdParser.render(text)}
       onImageUpload={onImageUpload}
+      style={{ width: '100%', height: '100%' }}
     />
   </Box>
 );
