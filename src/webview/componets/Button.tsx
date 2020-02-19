@@ -3,7 +3,11 @@ import {
   withStyles, WithStyles, createStyles, Button as MaterialButton, Typography,
 } from '@material-ui/core';
 
-const styles = createStyles({});
+const styles = createStyles({
+  root: {
+    margin: 5,
+  },
+});
 
 interface Props extends WithStyles<typeof styles> {
   text: string;
@@ -12,11 +16,12 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const Button: React.FC<Props> = ({
+  classes,
   text,
   variant = 'contained',
   color = 'primary',
 }) => (
-  <MaterialButton variant={variant} color={color}>
+  <MaterialButton className={classes.root} variant={variant} color={color}>
     <Typography><b>{text}</b></Typography>
   </MaterialButton>
 )
