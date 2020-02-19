@@ -4,6 +4,7 @@ import MarkdownIt from 'markdown-it';
 import {
   withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
+import TitleInput from './TitleInput';
 
 const styles = createStyles({
   root: {
@@ -23,7 +24,8 @@ const MarkdownEditor: React.FC<Props> = ({
   classes,
   onImageUpload = async () => {},
 }) => (
-  <Box className={classes.root} display="flex" flex={15}>
+  <Box className={classes.root} display="flex" flex={15} flexDirection="column">
+    <TitleInput placeholder="제목" />
     <MdEditor
       renderHTML={(text) => mdParser.render(text)}
       onImageUpload={onImageUpload}
