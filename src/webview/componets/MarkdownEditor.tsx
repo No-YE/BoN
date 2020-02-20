@@ -5,6 +5,7 @@ import {
   withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
 import TitleInput from './TitleInput';
+import TagInput from './TagInput';
 
 const styles = createStyles({
   root: {
@@ -26,6 +27,7 @@ const MarkdownEditor: React.FC<Props> = ({
 }) => (
   <Box className={classes.root} display="flex" flex={15} flexDirection="column">
     <TitleInput placeholder="제목" />
+    <TagInput placeholder="카테고리" />
     <MdEditor
       renderHTML={(text) => mdParser.render(text)}
       onImageUpload={onImageUpload}

@@ -1,8 +1,10 @@
+/*eslint-disable no-param-reassign*/
 import { useStaticRendering } from 'mobx-react-lite';
 import { types, Instance } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
 import CategoryStore from './category';
 import FeedStore from './feed';
+import TagStore from './tag';
 import { getPosts } from '../lib/api/post';
 import { Feed } from '../type';
 
@@ -13,10 +15,10 @@ const RootStore = types
   .model({
     category: types.maybe(CategoryStore),
     feed: types.maybe(FeedStore),
+    tag: types.maybe(TagStore),
   })
   .actions((self) => ({
     setCategory(): void {
-      //eslint-disable-next-line no-param-reassign
       self.category = CategoryStore.create({
         isOpen: false,
         items: [
@@ -27,13 +29,18 @@ const RootStore = types
     },
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     setFeeds(feeds: any): void {
-      //eslint-disable-next-line no-param-reassign
       self.feed = FeedStore.create({
         items: feeds,
       });
     },
+    setTag(): void {
+      self.tag = TagStore.create({
+        items: [],
+      });
+    },
     async nextInit(): Promise<void> {
       this.setCategory();
+      this.setTag();
 
       const posts = await getPosts({ offset: 0, limit: 10 });
       this.setFeeds(posts.data[0].map((post: {
