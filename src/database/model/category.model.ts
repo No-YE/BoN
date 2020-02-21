@@ -1,28 +1,38 @@
 import {
-  DataTypes, Model, BuildOptions, ModelAttributeColumnOptions, AbstractDataTypeConstructor, AbstractDataType,
-} from 'sequelize';
+  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate,
+} from 'typeorm';
 import { Category } from '~/data/entity';
 
-type CategoryModel = Category & typeof Model;
+@Entity()
+export default class CategoryModel implements Partial<Category> {
+  @PrimaryGeneratedColumn()
+  id?: string | number;
 
-export type CategoryModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): CategoryModel;
-};
+  @Column()
+  name?: string;
 
-export type CategoryModelAttributes = {
-  [name in (keyof Category)]: ModelAttributeColumnOptions | string | AbstractDataTypeConstructor | AbstractDataType;
-};
+  @Column()
+  isActive?: boolean;
 
-export const categoryAttribute: Partial<CategoryModelAttributes> = {
-  id: {
-    type: DataTypes.BIGINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-  },
-};
+  @Column()
+  createdAt?: Date;
+
+  @Column()
+  updatedAt?: Date;
+
+  @BeforeInsert()
+  updateDateCreation(): void {
+    const currentDate = new Date();
+    this.createdAt = currentDate;
+    this.updatedAt = currentDate;
+  }
+
+  @BeforeUpdate()
+  updateDateUpdate(): void {
+    this.updatedAt = new Date();
+  }
+
+  constructor(category: Partial<Category>) {
+    Object.assign(this, category);
+  }
+}

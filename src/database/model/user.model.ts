@@ -1,41 +1,47 @@
 import {
-  DataTypes, Model, BuildOptions, ModelAttributeColumnOptions, DataType,
-} from 'sequelize';
+  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate,
+} from 'typeorm';
 import { User } from '~/data/entity';
 
-type UserModel = User & typeof Model;
+@Entity()
+export default class UserModel implements Partial<User> {
+  @PrimaryGeneratedColumn()
+  id?: string | number;
 
-export type UserModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): UserModel;
-};
+  @Column()
+  socialId?: string;
 
-export type UserModelAttributes = {
-  [name in (keyof User)]: ModelAttributeColumnOptions | DataType;
-};
+  @Column()
+  name?: string;
 
-export const userAttribute: Partial<UserModelAttributes> = {
-  id: {
-    type: DataTypes.BIGINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  email: {
-    type: DataTypes.STRING,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  role: {
-    type: DataTypes.ENUM('admin', 'operator', 'noRole'),
-    defaultValue: 'noRole',
-  },
-  socialId: {
-    type: DataTypes.BIGINT.UNSIGNED,
-    allowNull: false,
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-  },
-};
+  @Column()
+  email?: string;
+
+  @Column()
+  role?: import('../../type').UserRole;
+
+  @Column()
+  isActive?: boolean;
+
+  @Column()
+  createdAt?: Date;
+
+  @Column()
+  updatedAt?: Date;
+
+  @BeforeInsert()
+  updateDateCreation(): void {
+    const currentDate = new Date();
+    this.createdAt = currentDate;
+    this.updatedAt = currentDate;
+  }
+
+  @BeforeUpdate()
+  updateDateUpdate(): void {
+    this.updatedAt = new Date();
+  }
+
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
+  }
+}

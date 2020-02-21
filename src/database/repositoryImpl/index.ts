@@ -6,5 +6,5 @@ import { PostRepository } from '~/data/repository/post.repository';
 
 export default (): TaskEither<Error, PostRepository> => pipe(
   makeModels(),
-  map((models) => makePostRepository(models.PostModel)),
+  map((models) => makePostRepository(models.sequelize, models.PostModel, models.CategoryModel)),
 );

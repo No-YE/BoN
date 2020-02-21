@@ -1,34 +1,50 @@
 import {
-  DataTypes, Model, BuildOptions, ModelAttributeColumnOptions, AbstractDataTypeConstructor, AbstractDataType,
-} from 'sequelize';
+  Entity, BeforeUpdate, BeforeInsert, PrimaryGeneratedColumn, Column,
+} from 'typeorm';
 import { Post } from '~/data/entity';
 
-type PostModel = Post & Model;
+@Entity()
+export default class PostModel implements Partial<Post> {
+  @PrimaryGeneratedColumn()
+  id?: string | number;
 
-export type PostModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): PostModel;
-};
+  @Column()
+  title?: string;
 
-export type PostModelAttributes = {
-  [name in (keyof Post)]: ModelAttributeColumnOptions | string | AbstractDataTypeConstructor | AbstractDataType;
-};
+  @Column()
+  content?: string;
 
-export const postAttribute: Partial<PostModelAttributes> = {
-  id: {
-    type: DataTypes.BIGINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  content: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-  },
-};
+  @Column()
+  user?: import('../../data/entity').User;
+
+  @Column()
+  categories?: Array<import('../../data/entity').Category>;
+
+  @Column()
+  comments?: Array<Comment>;
+
+  @Column()
+  isActive?: boolean;
+
+  @Column()
+  createdAt?: Date;
+
+  @Column()
+  updatedAt?: Date;
+
+  @BeforeInsert()
+  updateDateCreation(): void {
+    const currentDate = new Date();
+    this.createdAt = currentDate;
+    this.updatedAt = currentDate;
+  }
+
+  @BeforeUpdate()
+  updateDateUpdate(): void {
+    this.updatedAt = new Date();
+  }
+
+  constructor(post: Partial<Post>) {
+    Object.assign(this, post);
+  }
+}

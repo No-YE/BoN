@@ -1,17 +1,40 @@
 import to from 'await-to-js';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Either, left, right } from 'fp-ts/lib/Either';
+import { Sequelize } from 'sequelize/types';
 import { PostRepository } from '~/data/repository/post.repository';
 import { Post } from '~/data/entity';
 import { PostModelStatic } from '../model/post.model';
+import { CategoryModelStatic } from '../model/category.model';
 
-export default (PostModel: PostModelStatic): PostRepository => {
-  function createPost(post: {
-    title: string;
-    content: string;
-    userId: string | number;
-  }): TaskEither<Error, null> {
+export default (
+  sequelize: Sequelize,
+  PostModel: PostModelStatic,
+  CategoryModel: CategoryModelStatic,
+): PostRepository => {
+  function createPost(
+    post: {
+      title: string;
+      content: string;
+      userId: string | number;
+    },
+    category: {
+      name: string;
+    },
+  ): TaskEither<Error, null> {
     return async (): Promise<Either<Error, null>> => {
+      const t = await sequelize.transaction();
+
+      const [categoryErr, categoryResult] = await to(CategoryModel.findOrCreate({
+        where: { ...category },
+        transaction: t,
+      }));
+
+      if (categoryErr) {
+        await t.rollback();
+        return left<Error, null>(categoryErr);
+      }
+
       const [err] = await to(PostModel.create({ ...post }));
       return err ? left(err) : right(null);
     };
