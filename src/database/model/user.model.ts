@@ -5,6 +5,10 @@ import { User } from '~/data/entity';
 
 @Entity()
 export default class UserModel implements Partial<User> {
+  static of(user: Partial<User>): UserModel {
+    return new this(user);
+  }
+
   @PrimaryGeneratedColumn()
   id?: string | number;
 

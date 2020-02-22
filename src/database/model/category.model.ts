@@ -1,10 +1,16 @@
+/*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate,
+  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToMany, JoinTable,
 } from 'typeorm';
-import { Category } from '~/data/entity';
+import { Category, Post } from '~/data/entity';
+import PostModel from './post.model';
 
 @Entity()
 export default class CategoryModel implements Partial<Category> {
+  static of(category: Partial<Category>): CategoryModel {
+    return new this(category);
+  }
+
   @PrimaryGeneratedColumn()
   id?: string | number;
 
@@ -13,6 +19,10 @@ export default class CategoryModel implements Partial<Category> {
 
   @Column()
   isActive?: boolean;
+
+  @ManyToMany((_) => PostModel)
+  @JoinTable()
+  posts?: Array<Post>;
 
   @Column()
   createdAt?: Date;
