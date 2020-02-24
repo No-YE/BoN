@@ -2,7 +2,7 @@
 import {
   Entity, BeforeUpdate, BeforeInsert, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable,
 } from 'typeorm';
-import { Post, Category } from '~/data/entity';
+import { Post, Category } from './node_modules/~/data/entity';
 import CategoryModel from './category.model';
 
 @Entity()
@@ -21,7 +21,7 @@ export default class PostModel implements Partial<Post> {
   content?: string;
 
   @Column()
-  user?: import('../../data/entity').User;
+  user?: import('../entity').User;
 
   @ManyToMany((_) => CategoryModel)
   @JoinTable()

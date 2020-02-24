@@ -1,12 +1,17 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { Post } from '../entity';
+import { Post, Category } from '../entity';
 
 export type PostRepository = {
-  readonly createPost: (post: {
-    title: string;
-    content: string;
-    userId: string | number;
-  }) => TaskEither<Error, null>;
+  readonly createPost: (
+    post: {
+      title: string;
+      content: string;
+      userId: string | number;
+    },
+    categories: Array<{
+      name: string;
+    }>,
+  ) => TaskEither<Error, null>;
 
   readonly updatePost: (post: {
     id: string | number;

@@ -2,7 +2,7 @@
 import {
   Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToMany, JoinTable,
 } from 'typeorm';
-import { Category, Post } from '~/data/entity';
+import { Category, Post } from './node_modules/~/data/entity';
 import PostModel from './post.model';
 
 @Entity()

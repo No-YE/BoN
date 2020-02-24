@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import makeV1Controller from './v1';
-import { UserRepository } from '~/data/repository/user.repository';
-import { PostRepository } from '~/data/repository/post.repository';
+import { UserRepository } from '~/database/repository/user.repository';
+import { PostRepository } from '~/database/repository/post.repository';
 
 export default function makeRestController(repository: {
   //userRepository: UserRepository;

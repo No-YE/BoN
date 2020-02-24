@@ -1,19 +1,18 @@
+/*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate,
+  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany, JoinColumn,
 } from 'typeorm';
-import { User } from '~/data/entity';
+import { UserRole } from '~/type';
+import Post from './post.entity';
 
 @Entity()
-export default class UserModel implements Partial<User> {
-  static of(user: Partial<User>): UserModel {
+export default class User {
+  static of(user: Partial<User>): User {
     return new this(user);
   }
 
   @PrimaryGeneratedColumn()
-  id?: string | number;
-
-  @Column()
-  socialId?: string;
+  id?: number;
 
   @Column()
   name?: string;
@@ -22,7 +21,10 @@ export default class UserModel implements Partial<User> {
   email?: string;
 
   @Column()
-  role?: import('../../type').UserRole;
+  socialId?: string;
+
+  @Column()
+  role?: UserRole;
 
   @Column()
   isActive?: boolean;
