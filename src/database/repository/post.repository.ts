@@ -1,46 +1,97 @@
+import { getManager, EntityManager, Like } from 'typeorm';
+import to from 'await-to-js';
+import { left, right, Either } from 'fp-ts/lib/Either';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { Post, Category } from '../aggregate';
+import Post, { Category } from '../aggregate/post';
 
-export type PostRepository = {
-  readonly createPost: (
+//eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default () => {
+  const manager = getManager();
+
+  function create(
     post: {
       title: string;
       content: string;
-      userId: string | number;
+      userId: number;
+      categories: Array<Category>;
     },
-    categories: Array<{
-      name: string;
-    }>,
-  ) => TaskEither<Error, null>;
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, null> {
+    return async (): Promise<Either<Error, null>> => {
+      const usingManager = transactionManager ?? manager;
+      const newPost = Post.of(post);
 
-  readonly updatePost: (post: {
-    id: string | number;
-    title: string;
-    content: string;
-  }) => TaskEither<Error, null>;
+      const [err] = await to(usingManager.save(newPost));
+      return err ? left<Error, null>(err) : right<Error, null>(null);
+    };
+  }
 
-  readonly deletePost: (post: {
-    id: string | number;
-  }) => TaskEither<Error, null>;
+  function update(
+    post: {
+      id: number;
+      title: string;
+      content: string;
+      categories: Array<Category>;
+    },
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, null> {
+    return async (): Promise<Either<Error, null>> => {
+      const usingManager = transactionManager ?? manager;
 
-  readonly searchPosts: (posts: {
-    offset: number;
+      const [err] = await to(usingManager.update(Post, post.id, post));
+      return err ? left<Error, null>(err) : right<Error, null>(null);
+    };
+  }
+
+  function remove(id: number, transactionManager?: EntityManager): TaskEither<Error, null> {
+    return async (): Promise<Either<Error, null>> => {
+      const usingManager = transactionManager ?? manager;
+
+      const [err] = await to(usingManager.update(Post, id, { isActive: false }));
+      return err ? left<Error, null>(err) : right<Error, null>(null);
+    };
+  }
+
+  function findRecent(options: {
+    take: number;
     limit: number;
-    query: string;
-  }) => TaskEither<Error, [Array<Post>, number]>;
+  }): TaskEither<Error, [Array<Post>, number]> {
+    return async (): Promise<Either<Error, [Array<Post>, number]>> => {
+      const [err, result] = await to<[Array<Post>, number]>(manager.findAndCount(Post, {
+        ...options,
+        order: { createdAt: 'DESC' },
+      }));
+      return err
+        ? left<Error, [Array<Post>, number]>(err)
+        : right<Error, [Array<Post>, number]>(result as [Array<Post>, number]);
+    };
+  }
 
-  readonly findNewPosts: (posts: {
-    offset: number;
-    limit: number;
-  }) => TaskEither<Error, [Array<Post>, number]>;
+  function findByQuery(
+    options: {
+      take: number;
+      limit: number;
+    },
+    query: string,
+  ): TaskEither<Error, [Array<Post>, number]> {
+    return async (): Promise<Either<Error, [Array<Post>, number]>> => {
+      const [err, result] = await to<[Array<Post>, number]>(manager.findAndCount(Post, {
+        ...options,
+        where: [
+          { title: Like(`%${query}%`) },
+        ],
+      }));
+      return err
+        ? left<Error, [Array<Post>, number]>(err)
+        : right<Error, [Array<Post>, number]>(result as [Array<Post>, number]);
+    };
+  }
 
-  readonly findPostsByCategory: (post: {
-    offset: number;
-    limit: number;
-    categoryId: string | number;
-  }) => TaskEither<Error, [Array<Post>, number]>;
-
-  readonly findPost: (post: {
-    id: string | number;
-  }) => TaskEither<Error, Post>;
+  return {
+    create,
+    update,
+    remove,
+    findRecent,
+    findByQuery,
+  };
 };

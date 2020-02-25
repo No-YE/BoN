@@ -1,6 +1,7 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, BeforeUpdate, BeforeInsert, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, JoinColumn,
+  Entity, BeforeUpdate, BeforeInsert, PrimaryGeneratedColumn,
+  Column, ManyToMany, JoinTable, OneToMany, JoinColumn, Index,
 } from 'typeorm';
 import Category from './category.entity';
 import Comment from './comment.entity';
@@ -14,6 +15,7 @@ export default class Post implements Partial<Post> {
   @PrimaryGeneratedColumn()
   id?: string | number;
 
+  @Index({ fulltext: true })
   @Column()
   title?: string;
 
@@ -31,13 +33,13 @@ export default class Post implements Partial<Post> {
   @JoinColumn()
   comments?: Array<Comment>;
 
-  @Column()
+  @Column({ default: true, nullable: true })
   isActive?: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   createdAt?: Date;
 
-  @Column()
+  @Column({ nullable: true })
   updatedAt?: Date;
 
   @BeforeInsert()
@@ -56,3 +58,8 @@ export default class Post implements Partial<Post> {
     Object.assign(this, post);
   }
 }
+
+export {
+  Category,
+  Comment,
+};
