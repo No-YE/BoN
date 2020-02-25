@@ -13,7 +13,7 @@ export type UpdatePostDto = {
 };
 
 export type DeletePostDto = {
-  id: string | number;
+  id: number;
 };
 
 export type SearchPostsDto = {

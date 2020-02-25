@@ -43,7 +43,7 @@ export default function makePostService() {
   }
 
   function deletePost(dto: DeletePostDto): TaskEither<Error, null> {
-    return postRepository.delete({ ...dto });
+    return repository.remove(dto.id);
   }
 
   function searchPosts(dto: SearchPostsDto): TaskEither<Error, [Array<Post>, number]> {
