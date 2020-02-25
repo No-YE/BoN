@@ -96,6 +96,40 @@ export default () => {
     };
   }
 
+  function findCategoryByName(name: string): TaskEither<Error, Category> {
+    return async (): Promise<Either<Error, Category>> => {
+      const [err, result] = await to<Category | undefined>(manager.findOne(Category, { name }));
+      return err
+        ? left<Error, Category>(err)
+        : (!result ? left<Error, Category>(new Error()) : right<Error, Category>(result));
+    };
+  }
+
+  function findCategoriesByName(categories: Array<{ name: string }>): TaskEither<Error, Array<Category>> {
+    async function findCategory(name: string): Promise<Category> {
+      const [err, result] = await to<Category | undefined>(manager.findOne(Category, { name }));
+
+      if (err) {
+        throw err;
+      }
+
+      if (!result) {
+        throw new Error();
+      }
+
+      return result;
+    }
+
+    return async (): Promise<Either<Error, Array<Category>>> => {
+      const [err, result] = await to<Array<Category>>(
+        Promise.all(categories.map((category) => findCategory(category.name))),
+      );
+      return err
+        ? left<Error, Array<Category>>(err)
+        : (!result ? left<Error, Array<Category>>(new Error()) : right<Error, Array<Category>>(result));
+    };
+  }
+
   return {
     create,
     update,
@@ -103,5 +137,7 @@ export default () => {
     findRecent,
     findByQuery,
     findById,
+    findCategoryByName,
+    findCategoriesByName,
   };
 };
