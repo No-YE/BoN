@@ -1,15 +1,15 @@
 export type CraetePostDto = {
   title: string;
   content: string;
-  userId: number | string;
-  categoryIds: Array<string | number>;
+  userId: number;
+  categoryNames: Array<{ name: string }>;
 };
 
 export type UpdatePostDto = {
   id: string | number;
   title: string;
   content: string;
-  categoryIds: Array<string | number>;
+  categories: Array<{ name: string }>;
 };
 
 export type DeletePostDto = {
@@ -17,22 +17,22 @@ export type DeletePostDto = {
 };
 
 export type SearchPostsDto = {
-  offset: number;
+  take: number;
   limit: number;
   query: string;
 };
 
 export type FindNewPostsDto = {
-  offset: number;
+  take: number;
   limit: number;
 };
 
 export type FindPostsByCategory = {
-  offset: number;
+  take: number;
   limit: number;
   categoryId: string | number;
 };
 
 export type FindPostDto = {
-  id: string | number;
+  id: number;
 };
