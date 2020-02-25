@@ -47,18 +47,16 @@ export default function makePostService() {
   }
 
   function searchPosts(dto: SearchPostsDto): TaskEither<Error, [Array<Post>, number]> {
-    const { offset, limit, query } = dto;
-    return postRepository.findByQuery({ offset, limit, query });
+    const { take, limit, query } = dto;
+    return repository.findByQuery({ take, limit }, query);
   }
 
   function findNewPosts(dto: FindNewPostsDto): TaskEither<Error, [Array<Post>, number]> {
-    const { offset, limit } = dto;
-    console.log(dto);
-    return postRepository.findRecent({ offset, limit });
+    return repository.findRecent({ ...dto });
   }
 
   function findPost(dto: FindPostDto): TaskEither<Error, Post> {
-    return postRepository.findById({ ...dto });
+    return repository.findById(dto.id);
   }
 
   return {
@@ -67,7 +65,6 @@ export default function makePostService() {
     deletePost,
     searchPosts,
     findNewPosts,
-    findPostsByCategory,
     findPost,
   };
 }
