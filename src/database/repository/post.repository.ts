@@ -87,11 +87,21 @@ export default () => {
     };
   }
 
+  function findById(id: number): TaskEither<Error, Post> {
+    return async (): Promise<Either<Error, Post>> => {
+      const [err, result] = await to<Post | undefined>(manager.findOne(Post, id));
+      return err
+        ? left<Error, Post>(err)
+        : (!result ? left<Error, Post>(new Error()) : right<Error, Post>(result));
+    };
+  }
+
   return {
     create,
     update,
     remove,
     findRecent,
     findByQuery,
+    findById,
   };
 };
