@@ -6,10 +6,10 @@ export type CraetePostDto = {
 };
 
 export type UpdatePostDto = {
-  id: string | number;
+  id: number;
   title: string;
   content: string;
-  categories: Array<{ name: string }>;
+  categoryNames: Array<{ name: string }>;
 };
 
 export type DeletePostDto = {
