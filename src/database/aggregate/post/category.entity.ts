@@ -16,20 +16,17 @@ export default class Category {
   @Column()
   name?: string;
 
-  @Column()
+  @Column({ default: true, nullable: true })
   isActive?: boolean;
-
-  @Column()
-  userId?: number;
 
   @ManyToMany((_) => Post)
   @JoinTable()
   posts?: Array<Post>;
 
-  @Column()
+  @Column({ nullable: true })
   createdAt?: Date;
 
-  @Column()
+  @Column({ nullable: true })
   updatedAt?: Date;
 
   @BeforeInsert()

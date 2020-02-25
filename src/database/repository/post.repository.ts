@@ -105,24 +105,30 @@ export default () => {
     };
   }
 
-  function findCategoriesByName(categories: Array<{ name: string }>): TaskEither<Error, Array<Category>> {
-    async function findCategory(name: string): Promise<Category> {
-      const [err, result] = await to<Category | undefined>(manager.findOne(Category, { name }));
+  function findOrCreateCategoriesByName(categories: Array<{ name: string }>): TaskEither<Error, Array<Category>> {
+    async function findOrCreateCategory(name: string): Promise<Category> {
+      const [findErr, findResult] = await to<Category | undefined>(manager.findOne(Category, { name }));
 
-      if (err) {
-        throw err;
+      if (findErr) {
+        throw findErr;
       }
 
-      if (!result) {
-        throw new Error();
+      if (findResult) {
+        return findResult;
       }
 
-      return result;
+      const [createErr, createResult] = await to<Category>(manager.save(Category.of({ name })));
+
+      if (createErr) {
+        throw createErr;
+      }
+
+      return createResult as Category;
     }
 
     return async (): Promise<Either<Error, Array<Category>>> => {
       const [err, result] = await to<Array<Category>>(
-        Promise.all(categories.map((category) => findCategory(category.name))),
+        Promise.all(categories.map((category) => findOrCreateCategory(category.name))),
       );
       return err
         ? left<Error, Array<Category>>(err)
@@ -138,6 +144,6 @@ export default () => {
     findByQuery,
     findById,
     findCategoryByName,
-    findCategoriesByName,
+    findOrCreateCategoriesByName,
   };
 };

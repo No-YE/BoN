@@ -16,7 +16,7 @@ export default function makePostService() {
     } = dto;
 
     return pipe(
-      repository.findCategoriesByName(categoryNames),
+      repository.findOrCreateCategoriesByName(categoryNames),
       chain((categories) => repository.create({
         title,
         content,
