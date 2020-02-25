@@ -1,9 +1,8 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, OneToMany, JoinColumn,
+  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate,
 } from 'typeorm';
 import { UserRole } from '~/type';
-import Post from './post.entity';
 
 @Entity()
 export default class User {

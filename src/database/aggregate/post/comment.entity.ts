@@ -1,30 +1,30 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToMany, JoinTable,
+  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, JoinColumn,
 } from 'typeorm';
-import Post from './post.entity';
+import Post from '.';
 
 @Entity()
-export default class Category {
-  static of(category: Partial<Category>): Category {
-    return new this(category);
+export default class Comment {
+  static of(comment: Partial<Comment>): Comment {
+    return new this(comment);
   }
 
   @PrimaryGeneratedColumn()
-  id?: string | number;
+  id?: number;
 
   @Column()
-  name?: string;
+  content?: string;
 
   @Column()
   isActive?: boolean;
 
+  @ManyToOne((_) => Post)
+  @JoinColumn()
+  post?: Post;
+
   @Column()
   userId?: number;
-
-  @ManyToMany((_) => Post)
-  @JoinTable()
-  posts?: Array<Post>;
 
   @Column()
   createdAt?: Date;
@@ -44,7 +44,7 @@ export default class Category {
     this.updatedAt = new Date();
   }
 
-  constructor(category: Partial<Category>) {
-    Object.assign(this, category);
+  constructor(comment: Partial<Comment>) {
+    Object.assign(this, comment);
   }
 }

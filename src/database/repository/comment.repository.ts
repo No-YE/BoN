@@ -1,5 +1,5 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { Comment } from '../entity';
+import { Comment } from '../aggregate';
 
 export type CommentRepository = {
   readonly createComment: (comment: {

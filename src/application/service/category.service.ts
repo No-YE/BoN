@@ -1,7 +1,7 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { CategoryRepository } from '~/database/repository/category.repository';
 import { CreateCategoryDto, UpdateCategoryDto, DeleteCategoryDto } from '../dto/category.dto';
-import { Category } from '~/database/entity';
+import { Category } from '~/database/aggregate';
 
 export default function makeCategoryService(categoryRepository: CategoryRepository) {
   function createCategory(dto: CreateCategoryDto): TaskEither<Error, Category> {

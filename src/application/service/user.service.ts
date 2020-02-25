@@ -9,7 +9,7 @@ import { UserRepository } from '~/database/repository/user.repository';
 import {
   CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
-import { User } from '~/database/entity';
+import { User } from '~/database/aggregate';
 import { GoogleEnv, getGoogleEnv } from '~/constant/env';
 import { UserSession } from '~/type';
 

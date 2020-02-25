@@ -1,5 +1,5 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { Post, Category } from '../entity';
+import { Post, Category } from '../aggregate';
 
 export type PostRepository = {
   readonly createPost: (

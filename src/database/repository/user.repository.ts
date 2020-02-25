@@ -1,6 +1,6 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { UserRole } from '~/type';
-import { User } from '../entity';
+import { User } from '../aggregate';
 
 export type UserRepository = {
   readonly createUser: (user: {

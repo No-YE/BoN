@@ -2,7 +2,7 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeUpdate, BeforeInsert,
 } from 'typeorm';
-import Post from './post.entity';
+import Post from '.';
 
 @Entity()
 export default class PostImage {

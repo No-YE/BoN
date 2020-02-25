@@ -1,6 +1,6 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { PostRepository } from '~/database/repository/post.repository';
-import { Post } from '~/database/entity';
+import { Post } from '~/database/aggregate';
 import {
   CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostsByCategory, FindPostDto,
 } from '../dto/post.dto';
