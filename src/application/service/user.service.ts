@@ -5,11 +5,11 @@ import {
 } from 'fp-ts/lib/TaskEither';
 import * as Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { UserRepository } from '~/database/repository/user.repository';
+import { UserRepository } from '~/domain/repository/user.repository';
 import {
   CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
-import { User } from '~/database/aggregate';
+import { User } from '~/domain/aggregate';
 import { GoogleEnv, getGoogleEnv } from '~/constant/env';
 import { UserSession } from '~/type';
 

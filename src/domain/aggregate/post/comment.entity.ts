@@ -1,23 +1,30 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeUpdate, BeforeInsert,
+  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, JoinColumn,
 } from 'typeorm';
-import Post from '.';
+import Post from '../post';
 
 @Entity()
-export default class PostImage {
-  static of(postImage: Partial<PostImage>): PostImage {
-    return new this(postImage);
+export default class Comment {
+  static of(comment: Partial<Comment>): Comment {
+    return new this(comment);
   }
 
   @PrimaryGeneratedColumn()
   id?: number;
 
   @Column()
-  uri?: string;
+  content?: string;
+
+  @Column()
+  isActive?: boolean;
 
   @ManyToOne((_) => Post)
+  @JoinColumn()
   post?: Post;
+
+  @Column()
+  userId?: number;
 
   @Column()
   createdAt?: Date;
@@ -37,7 +44,7 @@ export default class PostImage {
     this.updatedAt = new Date();
   }
 
-  constructor(postImage: Partial<PostImage>) {
-    Object.assign(this, postImage);
+  constructor(comment: Partial<Comment>) {
+    Object.assign(this, comment);
   }
 }

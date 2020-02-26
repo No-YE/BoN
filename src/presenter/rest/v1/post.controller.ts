@@ -6,7 +6,7 @@ import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { getPostsValidate } from '../validator/post.validator';
 import makePostService from '~/application/service/post.service';
-import { PostRepository } from '~/database/repository/post.repository';
+import { PostRepository } from '~/domain/repository/post.repository';
 
 export default function makeUserController(postRepository: PostRepository): Router {
   const router = Router();

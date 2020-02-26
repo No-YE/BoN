@@ -1,7 +1,7 @@
 import { TaskEither, chain } from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/pipeable';
-import makePostRepository from '~/database/repository/post.repository';
-import Post from '~/database/aggregate/post';
+import makePostRepository from '~/domain/repository/post.repository';
+import Post from '~/domain/aggregate/post';
 import {
   CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto,
 } from '../dto/post.dto';

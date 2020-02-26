@@ -1,6 +1,6 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
-import { CommentRepository } from '~/database/repository/comment.repository';
-import { Comment } from '~/database/aggregate';
+import { CommentRepository } from '~/domain/repository/comment.repository';
+import { Comment } from '~/domain/aggregate';
 import {
   CreateCommentDto, UpdateCommentDto, DeleteCommentDto, FindCommentsDto,
 } from '../dto/comment.dto';

@@ -4,7 +4,7 @@ import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import Joi from 'typesafe-joi';
 import makeUserService from '~/application/service/user.service';
-import { UserRepository } from '~/database/repository/user.repository';
+import { UserRepository } from '~/domain/repository/user.repository';
 
 function signinCallbackValidate<T>(obj: T): TaskEither<Error, { code: string; }> {
   const schema = Joi.object({
