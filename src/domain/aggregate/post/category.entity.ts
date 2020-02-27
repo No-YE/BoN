@@ -2,7 +2,7 @@
 import {
   Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToMany, JoinTable,
 } from 'typeorm';
-import Post from '../post';
+import Post from '.';
 
 @Entity()
 export default class Category {
