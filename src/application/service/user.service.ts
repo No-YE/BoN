@@ -5,18 +5,20 @@ import {
 } from 'fp-ts/lib/TaskEither';
 import * as Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { UserRepository } from '~/domain/repository/user.repository';
+import makeUserRepository from '~/domain/repository/user.repository';
 import {
-  CreateUserDto, UpdateUserRoleDto, DeleteUserDto, FindUserDto, SigninCallbackDto,
+  CreateUserDto, UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
-import { User } from '~/domain/aggregate';
+import User from '~/domain/aggregate/user';
 import { GoogleEnv, getGoogleEnv } from '~/constant/env';
 import { UserSession } from '~/type';
+
+type Tokens = { id_token: string };
 
 function generateAuthUrl(envs: GoogleEnv): string {
   const { clientId, clientSecret, redirectUri } = envs;
   const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
-  
+
   return client.generateAuthUrl({
     access_type: 'offline',
     scope: ['email', 'profile'],
@@ -24,23 +26,23 @@ function generateAuthUrl(envs: GoogleEnv): string {
 }
 
 function getEmailFromCode(code: string): TaskEither<Error, string> {
-  const getTokenFromGoogle = (envs: GoogleEnv): TaskEither<Error, any> => {
-    return async () => {
+  function getTokenFromGoogle(envs: GoogleEnv): TaskEither<Error, Tokens> {
+    return async (): Promise<Either.Either<Error, Tokens>> => {
       const { clientId, clientSecret, redirectUri } = envs;
       const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
       const res = await client.getToken(code);
-      return Either.right(res.tokens);
+      return Either.right(res.tokens as Tokens);
     };
   }
 
-  const getIdTokenFromCredential = (tokens: any) => {
+  function getIdTokenFromCredential(tokens: Tokens): TaskEither<Error, string> {
     return tokens.id_token ? right(tokens.id_token) : left(new Error());
   }
 
-  const getEmailFromIdToken = (idToken: string): TaskEither<Error, string> => {
+  function getEmailFromIdToken(idToken: string): TaskEither<Error, string> {
     const decodedIdToken = decode(idToken) as { emails: string };
     return decodedIdToken.emails ? left(new Error()) : right(decodedIdToken.emails);
-  };
+  }
 
   return pipe(
     chain(getTokenFromGoogle)(getGoogleEnv()),
@@ -49,38 +51,37 @@ function getEmailFromCode(code: string): TaskEither<Error, string> {
   );
 }
 
-export default function makeUserService(userRepository: UserRepository) {
-  function createUser(dto: CreateUserDto): TaskEither<Error, User> {
-    return userRepository.createUser({ ...dto, socialId: '' });
+//eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default function makeUserService() {
+  const repository = makeUserRepository();
+
+  function createUser(dto: CreateUserDto): TaskEither<Error, null> {
+    return repository.create({ ...dto, socialId: '' });
   }
 
-  function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, boolean> {
-    return userRepository.updateRole({ ...dto });
+  function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, null> {
+    return repository.update({ ...dto });
   }
 
-  function deleteUser(dto: DeleteUserDto): TaskEither<Error, boolean> {
-    return userRepository.deleteUser({ ...dto });
-  }
-
-  function findUser(dto: FindUserDto): TaskEither<Error, Array<User>> {
-    return userRepository.findUser({ ...dto });
+  function deleteUser(dto: DeleteUserDto): TaskEither<Error, null> {
+    return repository.remove(dto.id);
   }
 
   function signin(): TaskEither<Error, string> {
-    return map(generateAuthUrl)(getGoogleEnv())
+    return map(generateAuthUrl)(getGoogleEnv());
   }
 
-  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, UserSession> {
+  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, Partial<UserSession>> {
     const { code } = dto;
 
     return pipe(
       getEmailFromCode(code),
-      chain((email: string) => right<Error, { email: string }>({ email })),
-      chain(userRepository.findUserByEmail),
+      chain((email: string) => right<Error, string>(email)),
+      chain(repository.findByEmail),
       chain((user: User) => right({
-        id: user.id!,
-        email: user.email!,
-        role: user.role!,
+        id: user.id,
+        email: user.email,
+        role: user.role,
       })),
     );
   }
@@ -89,7 +90,6 @@ export default function makeUserService(userRepository: UserRepository) {
     createUser,
     updateUserRole,
     deleteUser,
-    findUser,
     signin,
     signinCallback,
   };

@@ -7,16 +7,12 @@ export type CreateUserDto = {
 };
 
 export type UpdateUserRoleDto = {
-  id: string | number;
+  id: number;
   role: UserRole;
 };
 
 export type DeleteUserDto = {
-  id: string | number;
-};
-
-export type FindUserDto = {
-  id: string | number;
+  id: number;
 };
 
 export type SigninCallbackDto = {
