@@ -10,7 +10,7 @@ import {
   CreateUserDto, UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
 import User from '~/domain/aggregate/user';
-import { GoogleEnv, getGoogleEnv } from '~/constant/env';
+import { GoogleEnv, getGoogleEnv } from '~/config/env';
 import { UserSession, UserRole } from '~/type';
 
 type Tokens = { id_token: string };
