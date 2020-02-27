@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate,
+  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Index,
 } from 'typeorm';
 import { UserRole } from '~/type';
 
@@ -16,22 +16,27 @@ export default class User {
   @Column()
   name?: string;
 
+  @Index()
   @Column()
   email?: string;
 
   @Column()
   socialId?: string;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: ['admin', 'operator', 'noRole'],
+    default: 'noRole',
+  })
   role?: UserRole;
 
-  @Column()
+  @Column({ default: true, nullable: true })
   isActive?: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   createdAt?: Date;
 
-  @Column()
+  @Column({ nullable: true })
   updatedAt?: Date;
 
   @BeforeInsert()
