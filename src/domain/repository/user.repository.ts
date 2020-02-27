@@ -61,10 +61,18 @@ export default () => {
     };
   }
 
+  function findByEmail(email: string): TaskEither<Error, User> {
+    return async (): Promise<Either<Error, User>> => {
+      const [err, result] = await to(manager.findOne(User, { email }));
+      return err ? left<Error, User>(err) : right<Error, User>(result as User);
+    };
+  }
+
   return {
     create,
     update,
     remove,
     findById,
+    findByEmail,
   };
 };
