@@ -1,34 +1,38 @@
-import { Request, Response, NextFunction, Router } from 'express';
-import { left, right, fold, chain, TaskEither } from 'fp-ts/lib/TaskEither';
+import {
+  Request, Response, NextFunction, Router,
+} from 'express';
+import {
+  left, right, fold, chain, TaskEither,
+} from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import Joi from 'typesafe-joi';
 import makeUserService from '~/application/service/user.service';
-import { UserRepository } from '~/domain/repository/user.repository';
 
-function signinCallbackValidate<T>(obj: T): TaskEither<Error, { code: string; }> {
+function signinCallbackValidate<T>(obj: T): TaskEither<Error, { code: string }> {
   const schema = Joi.object({
     code: Joi.string().required(),
   });
 
-  type SchemaType = { code: string; };
+  type SchemaType = { code: string };
   const result = schema.validate(obj);
 
   return result.error ? left<Error, SchemaType>(result.error) : right<Error, SchemaType>(result.value as SchemaType);
 }
 
-export default function makeUserController(userRepository: UserRepository) {
+//eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export default function makeUserController() {
   const router = Router();
-  const userService = makeUserService(userRepository);
+  const userService = makeUserService();
 
-  async function googleSignin(req: any, res: Response, next: NextFunction) {
+  async function googleSignin(_req: Request, res: Response, next: NextFunction): Promise<void> {
     fold<Error, string, void>(
       (error) => of(next(error)),
       (url) => of(res.redirect(url)),
     )(userService.signin())();
   }
 
-  async function googleSigninCallback(req: Request, res: Response, next: NextFunction) {
+  async function googleSigninCallback(req: Request, res: Response, next: NextFunction): Promise<void> {
     pipe(
       signinCallbackValidate({ code: req.query.code }),
       chain((dto) => (userService.signinCallback(dto))),

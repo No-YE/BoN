@@ -1,7 +1,7 @@
 import { UserRole } from './user-role.type';
 
 export type UserSession = {
-  id: string | number;
+  id: number;
   email: string;
   role: UserRole;
 };

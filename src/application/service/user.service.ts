@@ -11,7 +11,7 @@ import {
 } from '../dto/user.dto';
 import User from '~/domain/aggregate/user';
 import { GoogleEnv, getGoogleEnv } from '~/constant/env';
-import { UserSession } from '~/type';
+import { UserSession, UserRole } from '~/type';
 
 type Tokens = { id_token: string };
 
@@ -71,7 +71,7 @@ export default function makeUserService() {
     return map(generateAuthUrl)(getGoogleEnv());
   }
 
-  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, Partial<UserSession>> {
+  function signinCallback(dto: SigninCallbackDto): TaskEither<Error, UserSession> {
     const { code } = dto;
 
     return pipe(
@@ -79,9 +79,9 @@ export default function makeUserService() {
       chain((email: string) => right<Error, string>(email)),
       chain(repository.findByEmail),
       chain((user: User) => right({
-        id: user.id,
-        email: user.email,
-        role: user.role,
+        id: user.id as number,
+        email: user.email as string,
+        role: user.role as UserRole,
       })),
     );
   }
