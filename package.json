@@ -7,7 +7,12 @@
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "watch": "tsc -w --skipLibCheck",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint src/**/*.ts"
+    "lint": "./node_modules/.bin/eslint src/**/*.ts",
+    "typeorm": "ts-node ./node_modules/.bin/typeorm --config src/config/ormconfig.ts",
+    "typeorm:create": "npm run typeorm migration:create -c default -- -n bon",
+    "typeorm:run": "npm run typeorm migration:run -c default",
+    "typeorm:generate": "npm run typeorm migration:generate -c default -- -n bon",
+    "typeorm:revert": "npm run typeorm migration:revert -c default"
   },
   "repository": {
     "type": "git",

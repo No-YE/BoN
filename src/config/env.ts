@@ -2,6 +2,7 @@ import 'dotenv/config';
 import {
   TaskEither, left, right, ap,
 } from 'fp-ts/lib/TaskEither';
+import * as Either from 'fp-ts/lib/Either';
 
 export type GoogleEnv = {
   clientId: string;
@@ -10,9 +11,10 @@ export type GoogleEnv = {
 };
 
 export type MysqlEnv = {
+  nodeEnv: string;
   database: string;
   host: string;
-  user: string;
+  username: string;
   port: number;
   password: string;
 };
@@ -22,10 +24,15 @@ function getEnv(key: string): TaskEither<Error, string> {
   return env === undefined ? left(new Error()) : right(env);
 }
 
-function getEnvAsNumber(key: string): TaskEither<Error, number> {
+function getEnvEither(key: string): Either.Either<Error, string> {
+  const env = process.env[key];
+  return env === undefined ? Either.left(new Error()) : Either.right(env);
+}
+
+function getEnvAsNumberEither(key: string): Either.Either<Error, number> {
   const env = process.env[key];
   const value = Number(env);
-  return Number.isNaN(value) ? left(new Error()) : right(value);
+  return Number.isNaN(value) ? Either.left(new Error()) : Either.right(value);
 }
 
 const combineGoogleEnv = (clientId: string) => (clientSecret: string) => (redirectUri: string): GoogleEnv => ({
@@ -34,12 +41,15 @@ const combineGoogleEnv = (clientId: string) => (clientSecret: string) => (redire
   redirectUri,
 });
 
-const combineMysqlEnv = (database: string) => (host: string) => (user: string) => (port: number) => (
+const combineMysqlEnv = (nodeEnv: string) => (database: string) => (host: string) => (username: string) => (
+  port: number,
+) => (
   password: string,
 ): MysqlEnv => ({
+  nodeEnv,
   database,
   host,
-  user,
+  username,
   port,
   password,
 });
@@ -54,13 +64,15 @@ export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
   );
 }
 
-export function getMysqlEnv(): TaskEither<Error, MysqlEnv> {
-  return ap(getEnv('MYSQL_PASSWORD'))(
-    ap(getEnvAsNumber('MYSQL_PORT'))(
-      ap(getEnv('MYSQL_USER'))(
-        ap(getEnv('MYSQL_HOST'))(
-          ap(getEnv('MYSQL_DATABASE'))(
-            right(combineMysqlEnv),
+export function getMysqlEnv(): Either.Either<Error, MysqlEnv> {
+  return Either.ap(getEnvEither('MYSQL_PASSWORD'))(
+    Either.ap(getEnvAsNumberEither('MYSQL_PORT'))(
+      Either.ap(getEnvEither('MYSQL_USERNAME'))(
+        Either.ap(getEnvEither('MYSQL_HOST'))(
+          Either.ap(getEnvEither('MYSQL_DATABASE'))(
+            Either.ap(getEnvEither('NODE_ENV'))(
+              Either.right(combineMysqlEnv),
+            ),
           ),
         ),
       ),
