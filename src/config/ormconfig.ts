@@ -1,6 +1,7 @@
-import { ConnectionOptions } from 'typeorm';
-import { map } from 'fp-ts/lib/Either';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { ConnectionOptions, createConnection } from 'typeorm';
+import to from 'await-to-js';
+import { map, TaskEither } from 'fp-ts/lib/TaskEither';
+import { Either, left, right } from 'fp-ts/lib/Either';
 import { getMysqlEnv, MysqlEnv } from './env';
 
 function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
@@ -70,6 +71,15 @@ function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
     };
 }
 
+const ormconfig = map(makeOrmConfig)(getMysqlEnv());
+
+function connect(connectionOptions: ConnectionOptions): TaskEither<Error, null> {
+  return async (): Promise<Either<Error, null>> => {
+    const [err] = await to(createConnection(connectionOptions));
+    return err ? left<Error, null>(err) : right<Error, null>(null);
+  };
+}
+
 module.exports = makeOrmConfig({
   database: process.env.MYSQL_DATABASE!,
   host: process.env.MYSQL_HOST!,
@@ -79,7 +89,10 @@ module.exports = makeOrmConfig({
   username: process.env.MYSQL_USERNAME!,
 });
 
-export default pipe(
-  getMysqlEnv(),
-  map(makeOrmConfig),
-);
+module.exports.ormconfig = ormconfig;
+module.exports.connect = connect;
+
+export {
+  ormconfig,
+  connect,
+};

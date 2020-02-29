@@ -1,25 +1,32 @@
 import express, {
-  Request, Response, NextFunction,
+  Request, Response, NextFunction, Express,
 } from 'express';
 import next from 'next';
 import path from 'path';
-import router from './presenter/rest';
+import to from 'await-to-js';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
+import { Either, left, right } from 'fp-ts/lib/Either';
+import makeRouter from './presenter/rest';
 
-const dev = process.env.NODE_ENV !== 'production';
-const dir = path.resolve(__dirname, './webview');
+export default (): TaskEither<Error, Express> => async (): Promise<Either<Error, Express>> => {
+  const dev = process.env.NODE_ENV !== 'production';
+  const dir = path.resolve(__dirname, './webview');
 
-async function createApp(): Promise<void> {
   const app = express();
   const nextApp = next({ dev, dir });
 
-  await nextApp.prepare();
+  const [nextErr] = await to(nextApp.prepare());
+
+  if (nextErr) {
+    return left<Error, Express>(nextErr);
+  }
 
   const handle = nextApp.getRequestHandler();
 
   app
     .use(express.json())
-    .use('/api', router)
     .use(express.urlencoded({ extended: true }))
+    .use('/api', makeRouter())
     .all('*', (req: Request, res: Response) => handle(req, res))
     .use((err: Error, req: Request, res: Response, nextF: NextFunction): void => {
       console.log(err);
@@ -27,9 +34,5 @@ async function createApp(): Promise<void> {
       nextF();
     });
 
-  app.listen(4000, () => {
-    console.log('server start');
-  });
-}
-
-createApp();
+  return right<Error, Express>(app);
+};
