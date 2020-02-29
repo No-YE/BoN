@@ -4,7 +4,7 @@ import {
 import { fold, chain } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { getPostsValidate } from '../validator/post.validator';
+import { getPostsValidate, createPostValidate } from '../validator/post.validator';
 import makePostService from '~/application/service/post.service';
 
 export default function makeUserController(): Router {
@@ -27,5 +27,24 @@ export default function makeUserController(): Router {
     )();
   }
 
-  return router.get('/', getPosts);
+  function createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      createPostValidate({
+        title: req.body.title,
+        content: req.body.content,
+        categoryNames: req.body.categoryNames,
+        userId: req.session!.user!.id,
+      }),
+      chain((dto) => postService.createPost(dto)),
+      fold(
+        (error) => of(next(error)),
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (_) => of(res.status(201).end()),
+      ),
+    )();
+  }
+
+  return router
+    .get('/', getPosts)
+    .post('/', createPost);
 }

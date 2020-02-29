@@ -6,8 +6,7 @@ type GetPostsSchema = {
   limit: number;
 };
 
-//eslint-disable-next-line import/prefer-default-export
-export function getPostsValidate<T>(obj: T): TaskEither<Error, GetPostsSchema> {
+export function getPostsValidate(obj: GetPostsSchema): TaskEither<Error, GetPostsSchema> {
   const schema = Joi.object({
     take: Joi.number().integer().min(0).default(0),
     limit: Joi.number().integer().min(0).max(100)
@@ -15,7 +14,26 @@ export function getPostsValidate<T>(obj: T): TaskEither<Error, GetPostsSchema> {
   });
 
   const result = schema.validate(obj);
-  console.log(result);
 
   return result.error ? left(result.error) : right(result.value as GetPostsSchema);
+}
+
+type CreatePostSchema = {
+  title: string;
+  content: string;
+  categoryNames: Array<string>;
+  userId: number;
+};
+
+export function createPostValidate(obj: CreatePostSchema): TaskEither<Error, CreatePostSchema> {
+  const schema = Joi.object({
+    title: Joi.string().min(1).max(255).required(),
+    content: Joi.string().min(1).required(),
+    categoryNames: Joi.array().items(Joi.string()),
+    userId: Joi.number(),
+  });
+
+  const result = schema.validate(obj);
+
+  return result.error ? left(result.error) : right(result.value as CreatePostSchema);
 }

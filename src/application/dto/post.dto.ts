@@ -2,7 +2,7 @@ export type CraetePostDto = {
   title: string;
   content: string;
   userId: number;
-  categoryNames: Array<{ name: string }>;
+  categoryNames: Array<string>;
 };
 
 export type UpdatePostDto = {
