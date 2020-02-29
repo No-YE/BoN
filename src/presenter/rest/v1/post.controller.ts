@@ -4,7 +4,7 @@ import {
 import { fold, chain } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { getPostsValidate, createPostValidate } from '../validator/post.validator';
+import * as validator from '../validator/post.validator';
 import makePostService from '~/application/service/post.service';
 
 export default function makeUserController(): Router {
@@ -13,11 +13,11 @@ export default function makeUserController(): Router {
 
   function getPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
-      getPostsValidate({
+      validator.getPostsValidate({
         take: req.body.offset,
         limit: req.body.limit,
       }),
-      chain((dto) => postService.findNewPosts(dto)),
+      chain(postService.findNewPosts),
       fold(
         (error) => of(next(error)),
         (posts) => of(
@@ -29,13 +29,13 @@ export default function makeUserController(): Router {
 
   function createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
-      createPostValidate({
+      validator.createPostValidate({
         title: req.body.title,
         content: req.body.content,
         categoryNames: req.body.categoryNames,
         userId: req.session!.user!.id,
       }),
-      chain((dto) => postService.createPost(dto)),
+      chain(postService.createPost),
       fold(
         (error) => of(next(error)),
         //eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -44,7 +44,26 @@ export default function makeUserController(): Router {
     )();
   }
 
+  function updatePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      validator.updatePostValidate({
+        id: req.params.id,
+        title: req.body.title,
+        content: req.body.content,
+        categoryNames: req.body.categoryNames,
+        userId: req.session!.user!.id,
+      }),
+      chain(postService.updatePost),
+      fold(
+        (error) => of(next(error)),
+        //eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (_) => of(res.status(204).end()),
+      ),
+    )();
+  }
+
   return router
     .get('/', getPosts)
-    .post('/', createPost);
+    .post('/', createPost)
+    .put('/:id', updatePost);
 }
