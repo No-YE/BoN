@@ -43,7 +43,6 @@ type UpdatePostSchema = {
   title: string;
   content: string;
   categoryNames: Array<string>;
-  userId: number;
 };
 
 export function updatePostValidate<T>(obj: T): TaskEither<Error, UpdatePostSchema> {
@@ -52,7 +51,6 @@ export function updatePostValidate<T>(obj: T): TaskEither<Error, UpdatePostSchem
     title: Joi.string().min(1).max(255).required(),
     content: Joi.string().min(1).required(),
     categoryNames: Joi.array().items(Joi.string()),
-    userId: Joi.number().integer().min(0),
   });
 
   const result = schema.validate(obj);

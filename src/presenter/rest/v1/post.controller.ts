@@ -51,7 +51,6 @@ export default function makeUserController(): Router {
         title: req.body.title,
         content: req.body.content,
         categoryNames: req.body.categoryNames,
-        userId: req.session!.user!.id,
       }),
       chain(postService.updatePost),
       fold(
