@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
+//eslint-disable-next-line import/named
 import { StoreProvider, createStore, Store } from '../store';
 import 'react-markdown-editor-lite/lib/index.css';
 import '../styles/global.css';
@@ -18,7 +19,7 @@ export default class extends React.Component {
     const appProps = await App.getInitialProps(appContext);
 
     if (typeof window === 'undefined') {
-      await store.nextInit();
+      await store.nextInit(appContext.ctx.req.session.user);
     }
 
     return {

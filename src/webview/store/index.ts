@@ -5,8 +5,10 @@ import { useContext, createContext } from 'react';
 import CategoryStore from './category';
 import FeedStore from './feed';
 import TagStore from './tag';
+import UserStore from './user';
 import { getPosts } from '../lib/api/post';
 import { Feed } from '../type';
+import { UserSession } from '~/type';
 
 const isServer = typeof window === 'undefined';
 useStaticRendering(isServer);
@@ -16,6 +18,7 @@ const RootStore = types
     category: types.maybe(CategoryStore),
     feed: types.maybe(FeedStore),
     tag: types.maybe(TagStore),
+    user: types.maybe(UserStore),
   })
   .actions((self) => ({
     setCategory(): void {
@@ -38,9 +41,15 @@ const RootStore = types
         items: [],
       });
     },
-    async nextInit(): Promise<void> {
+    setUser(user?: UserSession): void {
+      if (user) {
+        self.user = UserStore.create(user);
+      }
+    },
+    async nextInit(user: UserSession): Promise<void> {
       this.setCategory();
       this.setTag();
+      this.setUser(user);
 
       const posts = await getPosts({ offset: 0, limit: 10 });
       this.setFeeds(posts.data[0].map((post: {
