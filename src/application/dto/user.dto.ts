@@ -1,11 +1,5 @@
 import { UserRole } from '~/type';
 
-export type CreateUserDto = {
-  name: string;
-  email: string;
-  role: UserRole;
-};
-
 export type UpdateUserRoleDto = {
   id: number;
   role: UserRole;

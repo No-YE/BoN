@@ -35,7 +35,7 @@ export default function makeUserController() {
   async function googleSigninCallback(req: Request, res: Response, next: NextFunction): Promise<void> {
     pipe(
       signinCallbackValidate({ code: req.query.code }),
-      chain((dto) => (userService.signinCallback(dto))),
+      chain(userService.signinCallback),
       fold(
         (error) => of(next(error)),
         (user) => {

@@ -4,6 +4,7 @@ import { left, right, Either } from 'fp-ts/lib/Either';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import User from '../aggregate/user';
 import { UserRole } from '~/type';
+import { Social } from '~/type/social.type';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default () => {
@@ -13,7 +14,7 @@ export default () => {
     user: {
       name: string;
       email: string;
-      socialId: string;
+      social: 'google';
       role: UserRole;
     },
     transactionManager?: EntityManager,
@@ -61,10 +62,29 @@ export default () => {
     };
   }
 
-  function findByEmail(email: string): TaskEither<Error, User> {
+  function findOrCreateByEmail(
+    user: {
+      email: string;
+      name: string;
+      social: Social;
+    },
+  ): TaskEither<Error, User> {
     return async (): Promise<Either<Error, User>> => {
-      const [err, result] = await to(manager.findOne(User, { email }));
-      return err ? left<Error, User>(err) : right<Error, User>(result as User);
+      const [findErr, findResult] = await to(manager.findOne(User, { email: user.email }));
+
+      if (findErr) {
+        return left<Error, User>(findErr);
+      }
+
+      if (findResult) {
+        return right<Error, User>(findResult as User);
+      }
+
+      const [createErr, createResult] = await to(manager.save(User.of(user)));
+
+      return createErr
+        ? left<Error, User>(createErr)
+        : (!createResult ? left<Error, User>(new Error()) : right<Error, User>(createResult));
     };
   }
 
@@ -73,6 +93,6 @@ export default () => {
     update,
     remove,
     findById,
-    findByEmail,
+    findOrCreateByEmail,
   };
 };

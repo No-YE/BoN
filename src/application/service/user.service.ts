@@ -7,13 +7,18 @@ import * as Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makeUserRepository from '~/domain/repository/user.repository';
 import {
-  CreateUserDto, UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
+  UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
 } from '../dto/user.dto';
 import User from '~/domain/aggregate/user';
 import { GoogleEnv, getGoogleEnv } from '~/config/env';
 import { UserSession, UserRole } from '~/type';
+import { Social } from '~/type/social.type';
 
 type Tokens = { id_token: string };
+type DecodedToken = {
+  email: string;
+  name: string;
+};
 
 function generateAuthUrl(envs: GoogleEnv): string {
   const { clientId, clientSecret, redirectUri } = envs;
@@ -25,7 +30,7 @@ function generateAuthUrl(envs: GoogleEnv): string {
   });
 }
 
-function getEmailFromCode(code: string): TaskEither<Error, string> {
+function getUserInfoFromGoogleCode(code: string): TaskEither<Error, DecodedToken & { social: Social }> {
   function getTokenFromGoogle(envs: GoogleEnv): TaskEither<Error, Tokens> {
     return async (): Promise<Either.Either<Error, Tokens>> => {
       const { clientId, clientSecret, redirectUri } = envs;
@@ -39,25 +44,23 @@ function getEmailFromCode(code: string): TaskEither<Error, string> {
     return tokens.id_token ? right(tokens.id_token) : left(new Error());
   }
 
-  function getEmailFromIdToken(idToken: string): TaskEither<Error, string> {
-    const decodedIdToken = decode(idToken) as { emails: string };
-    return decodedIdToken.emails ? left(new Error()) : right(decodedIdToken.emails);
+  function getUserInfoFromIdToken(idToken: string): TaskEither<Error, DecodedToken & { social: Social }> {
+    const decodedIdToken = decode(idToken) as DecodedToken;
+    return decodedIdToken.email && decodedIdToken.name
+      ? right({ ...decodedIdToken, social: 'google' })
+      : left(new Error());
   }
 
   return pipe(
     chain(getTokenFromGoogle)(getGoogleEnv()),
     chain(getIdTokenFromCredential),
-    chain(getEmailFromIdToken),
+    chain(getUserInfoFromIdToken),
   );
 }
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeUserService() {
   const repository = makeUserRepository();
-
-  function createUser(dto: CreateUserDto): TaskEither<Error, null> {
-    return repository.create({ ...dto, socialId: '' });
-  }
 
   function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, null> {
     return repository.update({ ...dto });
@@ -75,9 +78,8 @@ export default function makeUserService() {
     const { code } = dto;
 
     return pipe(
-      getEmailFromCode(code),
-      chain((email: string) => right<Error, string>(email)),
-      chain(repository.findByEmail),
+      getUserInfoFromGoogleCode(code),
+      chain(repository.findOrCreateByEmail),
       chain((user: User) => right({
         id: user.id as number,
         email: user.email as string,
@@ -87,7 +89,6 @@ export default function makeUserService() {
   }
 
   return {
-    createUser,
     updateUserRole,
     deleteUser,
     signin,

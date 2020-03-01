@@ -3,8 +3,10 @@ import {
   Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Index,
 } from 'typeorm';
 import { UserRole } from '~/type';
+import { Social } from '~/type/social.type';
 
 @Entity()
+@Index(['email', 'social'], { unique: true })
 export default class User {
   static of(user: Partial<User>): User {
     return new this(user);
@@ -20,8 +22,12 @@ export default class User {
   @Column()
   email?: string;
 
-  @Column()
-  socialId?: string;
+  @Column({
+    type: 'enum',
+    enum: ['google'],
+    default: 'google',
+  })
+  social?: Social;
 
   @Column({
     type: 'enum',

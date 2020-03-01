@@ -1,6 +1,7 @@
 import express, {
   Request, Response, NextFunction, Express,
 } from 'express';
+import expressSession from 'express-session';
 import next from 'next';
 import path from 'path';
 import to from 'await-to-js';
@@ -26,6 +27,11 @@ export default (): TaskEither<Error, Express> => async (): Promise<Either<Error,
   app
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
+    .use(expressSession({
+      secret: process.env.SESSION_SECRET ?? 'a',
+      saveUninitialized: true,
+      resave: false,
+    }))
     .use('/api', makeRouter())
     .all('*', (req: Request, res: Response) => handle(req, res))
     .use((err: Error, req: Request, res: Response, nextF: NextFunction): void => {
