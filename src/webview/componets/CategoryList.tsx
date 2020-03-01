@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -6,6 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import CreateIcon from '@material-ui/icons/Create';
 import { observer } from 'mobx-react-lite';
 import DrawerItem from './CategoryItem';
 import { useStore } from '../store';
@@ -68,6 +70,11 @@ const CategoryList: React.FC<Props> = observer<Props>(({
       {anchor === 'left'
         ? (
           <div className={classes.drawerLeftHeader}>
+            {store.user
+              ? (
+                <Link href="/write-post"><CreateIcon /></Link>
+              )
+              : null}
             <IconButton onClick={closeOnClick}>
               <ChevronLeftIcon />
             </IconButton>
@@ -78,6 +85,11 @@ const CategoryList: React.FC<Props> = observer<Props>(({
             <IconButton onClick={closeOnClick}>
               <ChevronRightIcon />
             </IconButton>
+            {store.user
+              ? (
+                <Link href="/write-post"><CreateIcon /></Link>
+              )
+              : null}
           </div>
         )}
       <Divider />
