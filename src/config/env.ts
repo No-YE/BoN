@@ -2,6 +2,7 @@ import 'dotenv/config';
 import {
   TaskEither, left, right, ap,
 } from 'fp-ts/lib/TaskEither';
+import { pipe } from 'fp-ts/lib/pipeable';
 
 export type GoogleEnv = {
   clientId: string;
@@ -49,27 +50,22 @@ const combineMysqlEnv = (nodeEnv: string) => (database: string) => (host: string
 });
 
 export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
-  return ap(getEnv('GOOGLE_REDIRECT_URI'))(
-    ap(getEnv('GOOGLE_CLIENT_SECRET'))(
-      ap(getEnv('GOOGLE_CLIENT_ID'))(
-        right(combineGoogleEnv),
-      ),
-    ),
+  return pipe(
+    right(combineGoogleEnv),
+    ap(getEnv('GOOGLE_CLIENT_ID')),
+    ap(getEnv('GOOGLE_CLIENT_SECRET')),
+    ap(getEnv('GOOGLE_REDIRECT_URI')),
   );
 }
 
 export function getMysqlEnv(): TaskEither<Error, MysqlEnv> {
-  return ap(getEnv('MYSQL_PASSWORD'))(
-    ap(getEnvAsNumber('MYSQL_PORT'))(
-      ap(getEnv('MYSQL_USERNAME'))(
-        ap(getEnv('MYSQL_HOST'))(
-          ap(getEnv('MYSQL_DATABASE'))(
-            ap(getEnv('NODE_ENV'))(
-              right(combineMysqlEnv),
-            ),
-          ),
-        ),
-      ),
-    ),
+  return pipe(
+    right(combineMysqlEnv),
+    ap(getEnv('NODE_ENV')),
+    ap(getEnv('MYSQL_DATABASE')),
+    ap(getEnv('MYSQL_HOST')),
+    ap(getEnv('MYSQL_USERNAME')),
+    ap(getEnvAsNumber('MYSQL_PORT')),
+    ap(getEnv('MYSQL_PASSWORD')),
   );
 }
