@@ -5,15 +5,15 @@ export default types
     items: types.array(types.string),
   })
   .actions((self) => ({
-    add(tag: string) {
+    add(tag: string): void {
       if (!self.items.includes(tag)) {
         self.items.push(tag);
       }
     },
-    removeLast() {
+    removeLast(): void {
       self.items.pop();
     },
-    removeOne(tag: string) {
+    removeOne(tag: string): void {
       self.items.splice(self.items.indexOf(tag), 1);
-    }
+    },
   }));

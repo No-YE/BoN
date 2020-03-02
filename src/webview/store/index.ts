@@ -6,6 +6,7 @@ import CategoryStore from './category';
 import FeedStore from './feed';
 import TagStore from './tag';
 import UserStore from './user';
+import PostStore from './post';
 import { getPosts } from '../lib/api/post';
 import { Feed } from '../type';
 import { UserSession } from '~/type';
@@ -17,6 +18,7 @@ const RootStore = types
   .model({
     category: types.maybe(CategoryStore),
     feed: types.maybe(FeedStore),
+    post: types.maybe(PostStore),
     tag: types.maybe(TagStore),
     user: types.maybe(UserStore),
   })
@@ -46,13 +48,20 @@ const RootStore = types
         self.user = UserStore.create(user);
       }
     },
+    setPost(): void {
+      self.post = PostStore.create({
+        title: '',
+        content: '',
+      });
+    },
     async nextInit(user: UserSession): Promise<void> {
       this.setCategory();
       this.setTag();
       this.setUser(user);
+      this.setPost();
 
-      const posts = await getPosts({ offset: 0, limit: 10 });
-      this.setFeeds(posts.data[0].map((post: {
+      const feeds = await getPosts({ offset: 0, limit: 10 });
+      this.setFeeds(feeds.data[0].map((post: {
         id: number;
         title: string;
         content: string;
