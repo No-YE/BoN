@@ -2,6 +2,7 @@
 import { useStaticRendering } from 'mobx-react-lite';
 import { types, Instance } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
+import removeMd from 'remove-markdown';
 import CategoryStore from './category';
 import FeedStore from './feed';
 import UserStore from './user';
@@ -61,7 +62,7 @@ const RootStore = types
       }): Feed => ({
         id: post.id,
         title: post.title,
-        summary: post.content.substring(0, 200),
+        summary: removeMd(post.content.substring(0, 200)),
         createdAt: new Date(post.createdAt),
       })));
     },
