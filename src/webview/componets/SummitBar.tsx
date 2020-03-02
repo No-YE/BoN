@@ -1,12 +1,13 @@
 import React from 'react';
-import Router from 'next/router';
 import {
   withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
+import Router from 'next/router';
 import CustomButton from './Button';
 import { useStore } from '../store';
 import { createPost } from '../lib/api/post';
+import goToIndex from '../lib/go-to-index';
 
 const styles = createStyles({
   root: {
@@ -40,7 +41,7 @@ const SubmitBar: React.FC<Props> = observer<Props>(({
       alert(`error: ${status}`);
     }
 
-    Router.push('/');
+    goToIndex(store, Router);
   };
 
   const sendOnClick = (): void => {

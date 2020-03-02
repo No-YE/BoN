@@ -62,7 +62,7 @@ const RootStore = types
       }): Feed => ({
         id: post.id,
         title: post.title,
-        summary: removeMd(post.content.substring(0, 200)),
+        summary: removeMd(post.content.substring(0, 300)),
         createdAt: new Date(post.createdAt),
       })));
     },
