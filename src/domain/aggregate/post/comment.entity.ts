@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToOne, JoinColumn,
+  Column, PrimaryGeneratedColumn, Entity, ManyToOne, JoinColumn, UpdateDateColumn, CreateDateColumn,
 } from 'typeorm';
 import Post from '.';
 
@@ -26,23 +26,11 @@ export default class Comment {
   @Column()
   userId?: number;
 
-  @Column()
+  @CreateDateColumn()
   createdAt?: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt?: Date;
-
-  @BeforeInsert()
-  updateDateCreation(): void {
-    const currentDate = new Date();
-    this.createdAt = currentDate;
-    this.updatedAt = currentDate;
-  }
-
-  @BeforeUpdate()
-  updateDateUpdate(): void {
-    this.updatedAt = new Date();
-  }
 
   constructor(comment: Partial<Comment>) {
     Object.assign(this, comment);

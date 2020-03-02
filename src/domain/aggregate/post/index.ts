@@ -1,7 +1,7 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, BeforeUpdate, BeforeInsert, PrimaryGeneratedColumn,
-  Column, ManyToMany, JoinTable, OneToMany, JoinColumn, Index,
+  Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, JoinColumn, Index, CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import Category from './category.entity';
 import Comment from './comment.entity';
@@ -19,7 +19,7 @@ export default class Post implements Partial<Post> {
   @Column()
   title?: string;
 
-  @Column()
+  @Column({ length: 20000 })
   content?: string;
 
   @Column()
@@ -36,23 +36,11 @@ export default class Post implements Partial<Post> {
   @Column({ default: true, nullable: true })
   isActive?: boolean;
 
-  @Column({ nullable: true })
+  @CreateDateColumn({ nullable: true })
   createdAt?: Date;
 
-  @Column({ nullable: true })
+  @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;
-
-  @BeforeInsert()
-  updateDateCreation(): void {
-    const currentDate = new Date();
-    this.createdAt = currentDate;
-    this.updatedAt = currentDate;
-  }
-
-  @BeforeUpdate()
-  updateDateUpdate(): void {
-    this.updatedAt = new Date();
-  }
 
   constructor(post: Partial<Post>) {
     Object.assign(this, post);

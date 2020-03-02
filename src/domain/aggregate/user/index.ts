@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate, Index,
+  Entity, PrimaryGeneratedColumn, Column, Index, UpdateDateColumn, CreateDateColumn,
 } from 'typeorm';
 import { UserRole } from '~/type';
 import { Social } from '~/type/social.type';
@@ -39,23 +39,11 @@ export default class User {
   @Column({ default: true, nullable: true })
   isActive?: boolean;
 
-  @Column({ nullable: true })
+  @CreateDateColumn({ nullable: true })
   createdAt?: Date;
 
-  @Column({ nullable: true })
+  @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;
-
-  @BeforeInsert()
-  updateDateCreation(): void {
-    const currentDate = new Date();
-    this.createdAt = currentDate;
-    this.updatedAt = currentDate;
-  }
-
-  @BeforeUpdate()
-  updateDateUpdate(): void {
-    this.updatedAt = new Date();
-  }
 
   constructor(user: Partial<User>) {
     Object.assign(this, user);

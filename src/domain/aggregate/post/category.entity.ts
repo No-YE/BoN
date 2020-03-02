@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Column, PrimaryGeneratedColumn, Entity, BeforeInsert, BeforeUpdate, ManyToMany, JoinTable,
+  Column, PrimaryGeneratedColumn, Entity, ManyToMany, JoinTable, UpdateDateColumn, CreateDateColumn,
 } from 'typeorm';
 import Post from '.';
 
@@ -23,23 +23,11 @@ export default class Category {
   @JoinTable()
   posts?: Array<Post>;
 
-  @Column({ nullable: true })
+  @CreateDateColumn({ nullable: true })
   createdAt?: Date;
 
-  @Column({ nullable: true })
+  @UpdateDateColumn({ nullable: true })
   updatedAt?: Date;
-
-  @BeforeInsert()
-  updateDateCreation(): void {
-    const currentDate = new Date();
-    this.createdAt = currentDate;
-    this.updatedAt = currentDate;
-  }
-
-  @BeforeUpdate()
-  updateDateUpdate(): void {
-    this.updatedAt = new Date();
-  }
 
   constructor(category: Partial<Category>) {
     Object.assign(this, category);

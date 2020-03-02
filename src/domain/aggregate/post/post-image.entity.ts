@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeUpdate, BeforeInsert,
+  Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 import Post from '.';
 
@@ -19,23 +19,11 @@ export default class PostImage {
   @ManyToOne((_) => Post)
   post?: Post;
 
-  @Column()
+  @CreateDateColumn()
   createdAt?: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt?: Date;
-
-  @BeforeInsert()
-  updateDateCreation(): void {
-    const currentDate = new Date();
-    this.createdAt = currentDate;
-    this.updatedAt = currentDate;
-  }
-
-  @BeforeUpdate()
-  updateDateUpdate(): void {
-    this.updatedAt = new Date();
-  }
 
   constructor(postImage: Partial<PostImage>) {
     Object.assign(this, postImage);
