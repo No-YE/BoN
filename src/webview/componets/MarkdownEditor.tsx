@@ -40,7 +40,7 @@ const MarkdownEditor: React.FC<Props> = ({
       <TagInput placeholder="카테고리" />
       <MdEditor
         renderHTML={(text): string => mdParser.render(text)}
-        onChange={(content): void => post.changeContent(content.text)}
+        onChange={(content): void => post.setContent(content.text)}
         onImageUpload={onImageUpload}
         style={{ width: '100%', height: '100%' }}
       />

@@ -30,24 +30,24 @@ const TagInput: React.FC<Props> = observer<Props>(({
   const store = useStore();
   const [categoryInput, setCategoryInput] = React.useState<string>('');
 
-  if (!store.tag) {
+  if (!store.post) {
     return null;
   }
 
-  const { tag } = store;
+  const { post } = store;
 
   const chipOnClick = (tagName: string): void => {
-    tag.removeOne(tagName);
+    post.removeOneTag(tagName);
   };
 
   const inputOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Backspace' && categoryInput === '') {
-      tag.removeLast();
+      post.removeLastTag();
       return;
     }
 
     if (e.key === 'Enter' && categoryInput.trim() !== '') {
-      tag.add(categoryInput.trim());
+      post.addTag(categoryInput.trim());
       setCategoryInput('');
     }
   };
@@ -58,7 +58,7 @@ const TagInput: React.FC<Props> = observer<Props>(({
 
   return (
     <Box display="flex" className={classes.root} flexDirection="row" alignItems="center">
-      {tag.items.map((item) => (
+      {post.tags.map((item) => (
         <Chip
           className={classes.chip}
           key={item}

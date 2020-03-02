@@ -33,7 +33,7 @@ const TitleInput: React.FC<Props> = ({
       <InputBase
         className={classes.input}
         placeholder={placeholder}
-        onChange={(e): void => post.changeTitle(e.target.value)}
+        onChange={(e): void => post.setTitle(e.target.value)}
       />
     </Box>
   );
