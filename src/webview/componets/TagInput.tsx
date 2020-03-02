@@ -21,7 +21,7 @@ const styles = createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   placeholder?: string;
-};
+}
 
 const TagInput: React.FC<Props> = observer<Props>(({
   classes,
@@ -36,23 +36,23 @@ const TagInput: React.FC<Props> = observer<Props>(({
 
   const { tag } = store;
 
-  const chipOnClick = (tagName: string) => {
+  const chipOnClick = (tagName: string): void => {
     tag.removeOne(tagName);
-  }
+  };
 
-  const inputOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const inputOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Backspace' && categoryInput === '') {
       tag.removeLast();
       return;
     }
 
     if (e.key === 'Enter' && categoryInput.trim() !== '') {
-      tag.add(categoryInput.trim())
+      tag.add(categoryInput.trim());
       setCategoryInput('');
     }
-  }
+  };
 
-  const inputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputOnChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setCategoryInput(e.target.value);
   };
 
@@ -66,7 +66,7 @@ const TagInput: React.FC<Props> = observer<Props>(({
           size="small"
           clickable
           color="primary"
-          onClick={() => chipOnClick(item)}
+          onClick={(): void => chipOnClick(item)}
         />
       ))}
       <InputBase

@@ -1,14 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
+import { Box } from '@material-ui/core';
 import SubmitBar from '../componets/SummitBar';
 import MarkdownEditor from '../componets/MarkdownEditor';
-import { Box } from '@material-ui/core';
-import LineInput from '../componets/LineInput';
 
 const styles = createStyles({
   root: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     height: '100%',
   },
 });
