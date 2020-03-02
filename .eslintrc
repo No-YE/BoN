@@ -37,6 +37,7 @@
       "max-classes-per-file": ["error", 2],
       "import/no-cycle": 0,
       "no-nested-ternary": 0,
+      "no-alert": 0,
       "@typescript-eslint/no-non-null-assertion": 0
     }
 }
