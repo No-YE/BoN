@@ -38,6 +38,7 @@
       "import/no-cycle": 0,
       "no-nested-ternary": 0,
       "no-alert": 0,
+      "import/no-unresolved": 0,
       "@typescript-eslint/no-non-null-assertion": 0
     }
 }

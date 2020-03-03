@@ -1,11 +1,13 @@
 import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
+import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
+import { UpdateResult } from 'typeorm';
 import { decode } from 'jsonwebtoken';
 import {
-  TaskEither, left, right, chain, map, fromEither,
+  TaskEither, left, right, chain, map, fromEither, tryCatch, fromOption,
 } from 'fp-ts/lib/TaskEither';
-import * as Either from 'fp-ts/lib/Either';
+import { fromNullable } from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { UpdateResult } from 'typeorm';
 import makeUserRepository from '~/domain/repository/user.repository';
 import {
   UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
@@ -14,6 +16,7 @@ import User from '~/domain/aggregate/user';
 import { GoogleEnv, getGoogleEnv } from '~/config/env';
 import { UserSession, UserRole } from '~/type';
 import { Social } from '~/type/social.type';
+import Error from '~/lib/Error';
 
 type Tokens = { id_token: string };
 type DecodedToken = {
@@ -32,17 +35,23 @@ function generateAuthUrl(envs: GoogleEnv): string {
 }
 
 function getUserInfoFromGoogleCode(code: string): TaskEither<Error, DecodedToken & { social: Social }> {
-  function getTokenFromGoogle(envs: GoogleEnv): TaskEither<Error, Tokens> {
-    return async (): Promise<Either.Either<Error, Tokens>> => {
-      const { clientId, clientSecret, redirectUri } = envs;
-      const client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
-      const res = await client.getToken(code);
-      return Either.right(res.tokens as Tokens);
-    };
+  function getGoogleClient(envs: GoogleEnv): OAuth2Client {
+    const { clientId, clientSecret, redirectUri } = envs;
+    return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
   }
 
-  function getIdTokenFromCredential(tokens: Tokens): TaskEither<Error, string> {
-    return tokens.id_token ? right(tokens.id_token) : left(new Error());
+  function getTokenResponse(client: OAuth2Client): TaskEither<Error, GetTokenResponse> {
+    return tryCatch(
+      () => client.getToken(code),
+      Error.of,
+    );
+  }
+
+  function getIdTokenFromRes(res: GetTokenResponse): TaskEither<Error, string> {
+    return pipe(
+      fromNullable(res.tokens.id_token),
+      fromOption<Error>(Error.of),
+    );
   }
 
   function getUserInfoFromIdToken(idToken: string): TaskEither<Error, DecodedToken & { social: Social }> {
@@ -54,8 +63,9 @@ function getUserInfoFromGoogleCode(code: string): TaskEither<Error, DecodedToken
 
   return pipe(
     fromEither(getGoogleEnv()),
-    chain(getTokenFromGoogle),
-    chain(getIdTokenFromCredential),
+    map(getGoogleClient),
+    chain(getTokenResponse),
+    chain(getIdTokenFromRes),
     chain(getUserInfoFromIdToken),
   );
 }

@@ -58,6 +58,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "fp-ts": "^2.4.4",
+    "google-auth-library": "^5.10.1",
     "googleapis": "^47.0.0",
     "graphql-playground-middleware-express": "^1.7.12",
     "hot-shots": "^6.8.5",

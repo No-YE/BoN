@@ -1,9 +1,10 @@
-import { ConnectionOptions, createConnection } from 'typeorm';
-import to from 'await-to-js';
-import { map, TaskEither, fromEither } from 'fp-ts/lib/TaskEither';
-import { Either, left, right } from 'fp-ts/lib/Either';
+import { ConnectionOptions, createConnection, Connection } from 'typeorm';
+import {
+  map, TaskEither, fromEither, tryCatch,
+} from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { getMysqlEnv, MysqlEnv } from './env';
+import Error from '~/lib/error';
 
 function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
   const {
@@ -77,11 +78,11 @@ const ormconfig = pipe(
   map(makeOrmConfig),
 );
 
-function connect(connectionOptions: ConnectionOptions): TaskEither<Error, null> {
-  return async (): Promise<Either<Error, null>> => {
-    const [err] = await to(createConnection(connectionOptions));
-    return err ? left<Error, null>(err) : right<Error, null>(null);
-  };
+function connect(connectionOptions: ConnectionOptions): TaskEither<Error, Connection> {
+  return tryCatch<Error, Connection>(
+    () => createConnection(connectionOptions),
+    Error.of,
+  );
 }
 
 module.exports = makeOrmConfig({
