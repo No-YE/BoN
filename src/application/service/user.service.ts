@@ -1,10 +1,11 @@
 import { google } from 'googleapis';
 import { decode } from 'jsonwebtoken';
 import {
-  TaskEither, left, right, chain, map,
+  TaskEither, left, right, chain, map, fromEither,
 } from 'fp-ts/lib/TaskEither';
 import * as Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { UpdateResult } from 'typeorm';
 import makeUserRepository from '~/domain/repository/user.repository';
 import {
   UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
@@ -52,7 +53,8 @@ function getUserInfoFromGoogleCode(code: string): TaskEither<Error, DecodedToken
   }
 
   return pipe(
-    chain(getTokenFromGoogle)(getGoogleEnv()),
+    fromEither(getGoogleEnv()),
+    chain(getTokenFromGoogle),
     chain(getIdTokenFromCredential),
     chain(getUserInfoFromIdToken),
   );
@@ -62,16 +64,19 @@ function getUserInfoFromGoogleCode(code: string): TaskEither<Error, DecodedToken
 export default function makeUserService() {
   const repository = makeUserRepository();
 
-  function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, null> {
+  function updateUserRole(dto: UpdateUserRoleDto): TaskEither<Error, UpdateResult> {
     return repository.update({ ...dto });
   }
 
-  function deleteUser(dto: DeleteUserDto): TaskEither<Error, null> {
+  function deleteUser(dto: DeleteUserDto): TaskEither<Error, UpdateResult> {
     return repository.remove(dto.id);
   }
 
   function signin(): TaskEither<Error, string> {
-    return map(generateAuthUrl)(getGoogleEnv());
+    return pipe(
+      fromEither(getGoogleEnv()),
+      map(generateAuthUrl),
+    );
   }
 
   function signinCallback(dto: SigninCallbackDto): TaskEither<Error, UserSession> {

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import {
-  TaskEither, left, right, ap,
-} from 'fp-ts/lib/TaskEither';
+  Either, left, right, ap,
+} from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 
 export type GoogleEnv = {
@@ -19,12 +19,12 @@ export type MysqlEnv = {
   password: string;
 };
 
-function getEnv(key: string): TaskEither<Error, string> {
+function getEnv(key: string): Either<Error, string> {
   const env = process.env[key];
   return env === undefined ? left(new Error()) : right(env);
 }
 
-function getEnvAsNumber(key: string): TaskEither<Error, number> {
+function getEnvAsNumber(key: string): Either<Error, number> {
   const env = process.env[key];
   const value = Number(env);
   return Number.isNaN(value) ? left(new Error()) : right(value);
@@ -49,7 +49,7 @@ const combineMysqlEnv = (nodeEnv: string) => (database: string) => (host: string
   password,
 });
 
-export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
+export function getGoogleEnv(): Either<Error, GoogleEnv> {
   return pipe(
     right(combineGoogleEnv),
     ap(getEnv('GOOGLE_CLIENT_ID')),
@@ -58,7 +58,7 @@ export function getGoogleEnv(): TaskEither<Error, GoogleEnv> {
   );
 }
 
-export function getMysqlEnv(): TaskEither<Error, MysqlEnv> {
+export function getMysqlEnv(): Either<Error, MysqlEnv> {
   return pipe(
     right(combineMysqlEnv),
     ap(getEnv('NODE_ENV')),

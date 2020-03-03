@@ -1,10 +1,12 @@
-import { getManager, EntityManager } from 'typeorm';
-import to from 'await-to-js';
-import { left, right, Either } from 'fp-ts/lib/Either';
-import { TaskEither } from 'fp-ts/lib/TaskEither';
+import { getManager, EntityManager, UpdateResult } from 'typeorm';
+import { pipe } from 'fp-ts/lib/pipeable';
+import {
+  TaskEither, tryCatch, map, chain, right,
+} from 'fp-ts/lib/TaskEither';
+import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
 import User from '../aggregate/user';
-import { UserRole } from '~/type';
-import { Social } from '~/type/social.type';
+import { UserRole, Social } from '~/type';
+import Error from '~/lib/error';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default () => {
@@ -14,18 +16,17 @@ export default () => {
     user: {
       name: string;
       email: string;
-      social: 'google';
-      role: UserRole;
+      social: Social;
+      role?: UserRole;
     },
     transactionManager?: EntityManager,
-  ): TaskEither<Error, null> {
-    return async (): Promise<Either<Error, null>> => {
-      const usingManager = transactionManager ?? manager;
-      const newUser = User.of(user);
+  ): TaskEither<Error, User> {
+    const usingManager = transactionManager ?? manager;
 
-      const [err] = await to(usingManager.save(newUser));
-      return err ? left<Error, null>(err) : right<Error, null>(null);
-    };
+    return tryCatch(
+      () => usingManager.save(User.of(user)),
+      Error.of,
+    );
   }
 
   function update(
@@ -34,32 +35,39 @@ export default () => {
       role: UserRole;
     },
     transactionManager?: EntityManager,
-  ): TaskEither<Error, null> {
-    return async (): Promise<Either<Error, null>> => {
-      const usingManager = transactionManager ?? manager;
+  ): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
 
-      const [err] = await to(usingManager.update(User, user.id, user));
-      return err ? left<Error, null>(err) : right<Error, null>(null);
-    };
+    return tryCatch(
+      () => usingManager.update(User, user.id, user),
+      Error.of,
+    );
   }
 
   function remove(
     id: number,
     transactionManager?: EntityManager,
-  ): TaskEither<Error, null> {
-    return async (): Promise<Either<Error, null>> => {
-      const usingManager = transactionManager ?? manager;
+  ): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
 
-      const [err] = await to(usingManager.delete(User, id));
-      return err ? left<Error, null>(err) : right<Error, null>(null);
-    };
+    return tryCatch(
+      () => usingManager.update(User, id, { isActive: false }),
+      Error.of,
+    );
   }
 
-  function findById(id: number): TaskEither<Error, User> {
-    return async (): Promise<Either<Error, User>> => {
-      const [err, result] = await to(manager.findOne(User, id));
-      return err ? left<Error, User>(err) : right<Error, User>(result as User);
-    };
+  function findById(id: number): TaskEither<Error, User | undefined> {
+    return tryCatch(
+      () => manager.findOne(User, id),
+      Error.of,
+    );
+  }
+
+  function findByEmail(email: string): TaskEither<Error, User | undefined> {
+    return tryCatch(
+      () => manager.findOne(User, { email }),
+      Error.of,
+    );
   }
 
   function findOrCreateByEmail(
@@ -67,29 +75,20 @@ export default () => {
       email: string;
       name: string;
       social: Social;
+      role?: UserRole;
     },
   ): TaskEither<Error, User> {
-    return async (): Promise<Either<Error, User>> => {
-      const [findErr, findResult] = await to(manager.findOne(User, { email: user.email }));
-
-      if (findErr) {
-        return left<Error, User>(findErr);
-      }
-
-      if (findResult) {
-        return right<Error, User>(findResult as User);
-      }
-
-      const [createErr, createResult] = await to(manager.save(User.of(user)));
-
-      return createErr
-        ? left<Error, User>(createErr)
-        : (!createResult ? left<Error, User>(new Error()) : right<Error, User>(createResult));
-    };
+    return pipe(
+      findByEmail(user.email),
+      map(fromNullable),
+      chain(optionFold(
+        () => create(user),
+        (u) => right(u),
+      )),
+    );
   }
 
   return {
-    create,
     update,
     remove,
     findById,

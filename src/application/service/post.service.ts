@@ -1,23 +1,28 @@
-import { TaskEither, chain } from 'fp-ts/lib/TaskEither';
+import { UpdateResult } from 'typeorm';
+import {
+  TaskEither, chain, map, fromOption,
+} from 'fp-ts/lib/TaskEither';
+import { fromNullable, Option } from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makePostRepository from '~/domain/repository/post.repository';
 import Post from '~/domain/aggregate/post';
 import {
   CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto,
 } from '../dto/post.dto';
+import Error from '~/lib/error';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makePostService() {
   const repository = makePostRepository();
 
-  function createPost(dto: CraetePostDto): TaskEither<Error, null> {
+  function createPost(dto: CraetePostDto): TaskEither<Error, Post> {
     const {
       categoryNames, content, title, userId,
     } = dto;
 
     return pipe(
       categoryNames.map((name) => ({ name })),
-      repository.findOrCreateCategoriesByName,
+      repository.findOrCreateCategories,
       chain((categories) => repository.create({
         title,
         content,
@@ -27,14 +32,14 @@ export default function makePostService() {
     );
   }
 
-  function updatePost(dto: UpdatePostDto): TaskEither<Error, null> {
+  function updatePost(dto: UpdatePostDto): TaskEither<Error, UpdateResult> {
     const {
       categoryNames, content, id, title,
     } = dto;
 
     return pipe(
       categoryNames.map((name) => ({ name })),
-      repository.findOrCreateCategoriesByName,
+      repository.findOrCreateCategories,
       chain((categories) => repository.update({
         categories,
         content,
@@ -44,7 +49,7 @@ export default function makePostService() {
     );
   }
 
-  function deletePost(dto: DeletePostDto): TaskEither<Error, null> {
+  function deletePost(dto: DeletePostDto): TaskEither<Error, UpdateResult> {
     return repository.remove(dto.id);
   }
 
@@ -58,7 +63,11 @@ export default function makePostService() {
   }
 
   function findPost(dto: FindPostDto): TaskEither<Error, Post> {
-    return repository.findById(dto.id);
+    return pipe(
+      repository.findById(dto.id),
+      map(fromNullable),
+      chain<Error, Option<Post>, Post>(fromOption(Error.of)),
+    );
   }
 
   return {

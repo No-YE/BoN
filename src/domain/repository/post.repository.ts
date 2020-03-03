@@ -1,8 +1,14 @@
-import { getManager, EntityManager, Like } from 'typeorm';
-import to from 'await-to-js';
-import { left, right, Either } from 'fp-ts/lib/Either';
-import { TaskEither } from 'fp-ts/lib/TaskEither';
+import {
+  getManager, EntityManager, Like, UpdateResult,
+} from 'typeorm';
+import {
+  TaskEither, tryCatch, map, chain, right, taskEither,
+} from 'fp-ts/lib/TaskEither';
+import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
+import { array } from 'fp-ts/lib/Array';
+import { pipe } from 'fp-ts/lib/pipeable';
 import Post, { Category } from '../aggregate/post';
+import Error from '~/lib/error';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default () => {
@@ -16,14 +22,13 @@ export default () => {
       categories: Array<Category>;
     },
     transactionManager?: EntityManager,
-  ): TaskEither<Error, null> {
-    return async (): Promise<Either<Error, null>> => {
-      const usingManager = transactionManager ?? manager;
-      const newPost = Post.of(post);
+  ): TaskEither<Error, Post> {
+    const usingManager = transactionManager ?? manager;
 
-      const [err] = await to(usingManager.save(newPost));
-      return err ? left<Error, null>(err) : right<Error, null>(null);
-    };
+    return tryCatch(
+      () => usingManager.save(Post.of(post)),
+      Error.of,
+    );
   }
 
   function update(
@@ -34,37 +39,35 @@ export default () => {
       categories: Array<Category>;
     },
     transactionManager?: EntityManager,
-  ): TaskEither<Error, null> {
-    return async (): Promise<Either<Error, null>> => {
-      const usingManager = transactionManager ?? manager;
+  ): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
 
-      const [err] = await to(usingManager.update(Post, post.id, post));
-      return err ? left<Error, null>(err) : right<Error, null>(null);
-    };
+    return tryCatch(
+      () => usingManager.update(Post, post.id, post),
+      Error.of,
+    );
   }
 
-  function remove(id: number, transactionManager?: EntityManager): TaskEither<Error, null> {
-    return async (): Promise<Either<Error, null>> => {
-      const usingManager = transactionManager ?? manager;
+  function remove(id: number, transactionManager?: EntityManager): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
 
-      const [err] = await to(usingManager.update(Post, id, { isActive: false }));
-      return err ? left<Error, null>(err) : right<Error, null>(null);
-    };
+    return tryCatch(
+      () => usingManager.update(Post, id, { isActive: false }),
+      Error.of,
+    );
   }
 
   function findRecent(options: {
     take: number;
     limit: number;
   }): TaskEither<Error, [Array<Post>, number]> {
-    return async (): Promise<Either<Error, [Array<Post>, number]>> => {
-      const [err, result] = await to<[Array<Post>, number]>(manager.findAndCount(Post, {
+    return tryCatch(
+      () => manager.findAndCount(Post, {
         ...options,
         order: { createdAt: 'DESC' },
-      }));
-      return err
-        ? left<Error, [Array<Post>, number]>(err)
-        : right<Error, [Array<Post>, number]>(result as [Array<Post>, number]);
-    };
+      }),
+      Error.of,
+    );
   }
 
   function findByQuery(
@@ -74,57 +77,59 @@ export default () => {
     },
     query: string,
   ): TaskEither<Error, [Array<Post>, number]> {
-    return async (): Promise<Either<Error, [Array<Post>, number]>> => {
-      const [err, result] = await to<[Array<Post>, number]>(manager.findAndCount(Post, {
+    return tryCatch(
+      () => manager.findAndCount(Post, {
         ...options,
         where: [
           { title: Like(`%${query}%`) },
         ],
-      }));
-      return err
-        ? left<Error, [Array<Post>, number]>(err)
-        : right<Error, [Array<Post>, number]>(result as [Array<Post>, number]);
-    };
+      }),
+      Error.of,
+    );
   }
 
-  function findById(id: number): TaskEither<Error, Post> {
-    return async (): Promise<Either<Error, Post>> => {
-      const [err, result] = await to<Post | undefined>(manager.findOne(Post, id));
-      return err
-        ? left<Error, Post>(err)
-        : (!result ? left<Error, Post>(new Error()) : right<Error, Post>(result));
-    };
+  function findById(id: number): TaskEither<Error, Post | undefined> {
+    return tryCatch(
+      () => manager.findOne(Post, id),
+      Error.of,
+    );
   }
 
-  function findOrCreateCategoriesByName(categories: Array<{ name: string }>): TaskEither<Error, Array<Category>> {
-    async function findOrCreateCategory(name: string): Promise<Category> {
-      const [findErr, findResult] = await to<Category | undefined>(manager.findOne(Category, { name }));
+  function createCategory(
+    category: { name: string },
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, Category> {
+    const usingManager = transactionManager ?? manager;
 
-      if (findErr) {
-        throw findErr;
-      }
+    return tryCatch(
+      () => usingManager.save(category),
+      Error.of,
+    );
+  }
 
-      if (findResult) {
-        return findResult;
-      }
+  function findCategoryByName(name: string): TaskEither<Error, Post | undefined> {
+    return tryCatch(
+      () => manager.findOne(Category, { name }),
+      Error.of,
+    );
+  }
 
-      const [createErr, createResult] = await to<Category>(manager.save(Category.of({ name })));
+  function findOrCreateCategory(category: { name: string }): TaskEither<Error, Category> {
+    return pipe(
+      findCategoryByName(category.name),
+      map(fromNullable),
+      chain(optionFold(
+        () => createCategory(category),
+        (p) => right(p),
+      )),
+    );
+  }
 
-      if (createErr) {
-        throw createErr;
-      }
-
-      return createResult as Category;
-    }
-
-    return async (): Promise<Either<Error, Array<Category>>> => {
-      const [err, result] = await to<Array<Category>>(
-        Promise.all(categories.map((category) => findOrCreateCategory(category.name))),
-      );
-      return err
-        ? left<Error, Array<Category>>(err)
-        : (!result ? left<Error, Array<Category>>(new Error()) : right<Error, Array<Category>>(result));
-    };
+  function findOrCreateCategories(categories: Array<{ name: string }>): TaskEither<Error, Array<Category>> {
+    return pipe(
+      categories.map(findOrCreateCategory),
+      array.sequence(taskEither),
+    );
   }
 
   return {
@@ -134,6 +139,6 @@ export default () => {
     findRecent,
     findByQuery,
     findById,
-    findOrCreateCategoriesByName,
+    findOrCreateCategories,
   };
 };
