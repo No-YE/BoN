@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import Image from 'material-ui-image';
 import { Category } from '../type/Category';
+import dateFormat from '../lib/date-format';
 
 const styles = createStyles({
   root: {
@@ -74,7 +75,7 @@ const FeedItem: React.FC<Props> = ({
         : null}
     </Box>
     <Box display="flex" flexDirection="row">
-      <Typography className={classes.metadata}>{String(createdAt)}</Typography>
+      <Typography className={classes.metadata}>{dateFormat(createdAt)}</Typography>
     </Box>
   </Box>
 );
