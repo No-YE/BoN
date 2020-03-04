@@ -102,7 +102,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save(category),
+      () => usingManager.save(Category.of(category)),
       Error.of,
     );
   }
