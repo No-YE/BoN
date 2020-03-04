@@ -1,6 +1,7 @@
 import {
   Request, Response, NextFunction, Router,
 } from 'express';
+import asyncHandler from 'express-async-handler';
 import {
   left, right, fold, chain, TaskEither,
 } from 'fp-ts/lib/TaskEither';
@@ -46,6 +47,6 @@ export default function makeUserController() {
     )();
   }
 
-  return router.get('/google', googleSignin)
-    .get('/google/callback', googleSigninCallback);
+  return router.get('/google', asyncHandler(googleSignin))
+    .get('/google/callback', asyncHandler(googleSigninCallback));
 }

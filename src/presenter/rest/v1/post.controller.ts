@@ -1,6 +1,7 @@
 import {
   Request, Response, NextFunction, Router,
 } from 'express';
+import asyncHandler from 'express-async-handler';
 import { fold, chain } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
@@ -62,7 +63,7 @@ export default function makeUserController(): Router {
   }
 
   return router
-    .get('/', getPosts)
-    .post('/', createPost)
-    .put('/:id', updatePost);
+    .get('/', asyncHandler(getPosts))
+    .post('/', asyncHandler(createPost))
+    .put('/:id', asyncHandler(updatePost));
 }
