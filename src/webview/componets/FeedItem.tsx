@@ -8,10 +8,11 @@ import dateFormat from '../lib/date-format';
 
 const styles = createStyles({
   root: {
-    marginBottom: 40,
+    marginBottom: 20,
+    marginTop: 20,
   },
   content: {
-    color: 'rgba(0, 0, 0, 0.8)',
+    color: 'rgba(0, 0, 0, 0.6)',
     fontSize: 14,
     minHeight: 60,
     maxHeight: 80,

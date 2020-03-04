@@ -13,7 +13,8 @@ const styles = createStyles({
     height: 40,
   },
   shortRoot: {
-    width: 240,
+    width: '50%',
+    maxWidth: 240,
   },
   longRoot: {
   },
