@@ -7,7 +7,7 @@ import CategoryStore from './category';
 import FeedStore from './feed';
 import UserStore from './user';
 import PostStore from './post';
-import { getPosts } from '../lib/api/post';
+import { getPosts, getAllCategories } from '../lib/api/post';
 import { Feed, Category } from '../type';
 import { UserSession } from '~/type';
 
@@ -22,13 +22,10 @@ const RootStore = types
     user: types.maybe(UserStore),
   })
   .actions((self) => ({
-    setCategory(): void {
+    setCategory(categories: Array<Category>): void {
       self.category = CategoryStore.create({
         isOpen: false,
-        items: [
-          { id: 1, name: 'typescript' },
-          { id: 2, name: 'architecture' },
-        ],
+        items: categories,
       });
     },
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,12 +46,13 @@ const RootStore = types
       });
     },
     async nextInit(user: UserSession): Promise<void> {
-      this.setCategory();
       this.setUser(user);
       this.setPost();
 
+      const categories = await getAllCategories();
+      this.setCategory(categories.data[0]);
+
       const feeds = await getPosts({ offset: 0, limit: 10 });
-      console.log(feeds.data[0]);
       this.setFeeds(feeds.data[0].map((post: {
         id: number;
         title: string;
