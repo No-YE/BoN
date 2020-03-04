@@ -40,7 +40,7 @@ interface Props extends WithStyles<typeof styles> {
   summary: string;
   createdAt: Date;
   mainImageUri?: string;
-  categories?: Array<Category>;
+  categories: Array<Category>;
 }
 
 const FeedItem: React.FC<Props> = ({
@@ -50,7 +50,7 @@ const FeedItem: React.FC<Props> = ({
   summary,
   mainImageUri,
   createdAt,
-  categories = [],
+  categories,
 }) => (
   <Box key={id} display="flex" flexDirection="column" className={classes.root}>
     <Box display="flex" flexDirection="row">

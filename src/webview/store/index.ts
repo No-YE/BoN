@@ -8,7 +8,7 @@ import FeedStore from './feed';
 import UserStore from './user';
 import PostStore from './post';
 import { getPosts } from '../lib/api/post';
-import { Feed } from '../type';
+import { Feed, Category } from '../type';
 import { UserSession } from '~/type';
 
 const isServer = typeof window === 'undefined';
@@ -54,16 +54,19 @@ const RootStore = types
       this.setPost();
 
       const feeds = await getPosts({ offset: 0, limit: 10 });
+      console.log(feeds.data[0]);
       this.setFeeds(feeds.data[0].map((post: {
         id: number;
         title: string;
         content: string;
         createdAt: string;
+        categories: Array<Category>;
       }): Feed => ({
         id: post.id,
         title: post.title,
         summary: removeMd(post.content.substring(0, 300)),
         createdAt: new Date(post.createdAt),
+        categories: post.categories,
       })));
     },
   }));

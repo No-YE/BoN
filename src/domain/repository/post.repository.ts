@@ -64,6 +64,7 @@ export default () => {
     return tryCatch(
       () => manager.findAndCount(Post, {
         ...options,
+        relations: ['categories'],
         order: { createdAt: 'DESC' },
       }),
       Error.of,

@@ -2,7 +2,7 @@ import { SingletonRouter } from 'next/router';
 import removeMd from 'remove-markdown';
 import { StoreInstance } from '../store';
 import { getPosts } from './api/post';
-import { Feed } from '../type';
+import { Feed, Category } from '../type';
 
 export default async (store: StoreInstance, Router: SingletonRouter): Promise<void> => {
   const feeds = await getPosts({ offset: 0, limit: 20 });
@@ -12,11 +12,13 @@ export default async (store: StoreInstance, Router: SingletonRouter): Promise<vo
     title: string;
     content: string;
     createdAt: string;
+    categories: Array<Category>;
   }): Feed => ({
     id: feed.id,
     title: feed.title,
     summary: removeMd(feed.content.substring(0, 300)),
     createdAt: new Date(feed.createdAt),
+    categories: feed.categories,
   })));
 
   store.category?.changeOpen(false);
