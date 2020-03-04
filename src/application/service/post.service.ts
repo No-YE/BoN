@@ -5,7 +5,7 @@ import {
 import { fromNullable, Option } from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makePostRepository from '~/domain/repository/post.repository';
-import Post from '~/domain/aggregate/post';
+import Post, { Category } from '~/domain/aggregate/post';
 import {
   CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto,
 } from '../dto/post.dto';
@@ -70,6 +70,10 @@ export default function makePostService() {
     );
   }
 
+  function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {
+    return repository.findAllCategories();
+  }
+
   return {
     createPost,
     updatePost,
@@ -77,5 +81,6 @@ export default function makePostService() {
     searchPosts,
     findNewPosts,
     findPost,
+    findAllCategories,
   };
 }

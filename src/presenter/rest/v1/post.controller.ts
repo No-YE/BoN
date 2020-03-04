@@ -62,8 +62,19 @@ export default function makeUserController(): Router {
     )();
   }
 
+  function getAllCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      postService.findAllCategories(),
+      fold(
+        (error) => of(next(error)),
+        (categories) => of(res.status(200).json(categories).end()),
+      ),
+    )();
+  }
+
   return router
     .get('/', asyncHandler(getPosts))
     .post('/', asyncHandler(createPost))
-    .put('/:id', asyncHandler(updatePost));
+    .put('/:id', asyncHandler(updatePost))
+    .get('/category', asyncHandler(getAllCategories));
 }

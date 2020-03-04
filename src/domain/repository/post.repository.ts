@@ -108,6 +108,13 @@ export default () => {
     );
   }
 
+  function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {
+    return tryCatch(
+      () => manager.findAndCount(Category),
+      Error.of,
+    );
+  }
+
   function findCategoryByName(name: string): TaskEither<Error, Post | undefined> {
     return tryCatch(
       () => manager.findOne(Category, { name }),
@@ -140,6 +147,7 @@ export default () => {
     findRecent,
     findByQuery,
     findById,
+    findAllCategories,
     findOrCreateCategories,
   };
 };
