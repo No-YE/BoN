@@ -1,11 +1,12 @@
 import { SingletonRouter } from 'next/router';
 import removeMd from 'remove-markdown';
 import { StoreInstance } from '../store';
-import { getPosts } from './api/post';
+import { getPosts, getAllCategories } from './api/post';
 import { Feed, Category } from '../type';
 
 export default async (store: StoreInstance, Router: SingletonRouter): Promise<void> => {
   const feeds = await getPosts({ offset: 0, limit: 20 });
+  const categories = await getAllCategories();
 
   store.setFeeds(feeds.data[0].map((feed: {
     id: number;
@@ -21,7 +22,7 @@ export default async (store: StoreInstance, Router: SingletonRouter): Promise<vo
     categories: feed.categories,
   })));
 
-  store.category?.changeOpen(false);
+  store.setCategory(categories.data[0]);
 
   Router.push('/');
 };
