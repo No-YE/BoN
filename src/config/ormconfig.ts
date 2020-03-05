@@ -19,7 +19,7 @@ function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
       username,
       password,
       database,
-      synchronize: true,
+      synchronize: false,
       logging: false,
       dropSchema: false,
       entities: [

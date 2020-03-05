@@ -1,6 +1,6 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Column, PrimaryGeneratedColumn, Entity, UpdateDateColumn, CreateDateColumn, OneToMany,
+  Column, PrimaryGeneratedColumn, Entity, UpdateDateColumn, CreateDateColumn, ManyToMany, JoinTable,
 } from 'typeorm';
 import Post from '.';
 import PostToCategory from './post-to-category.entity';
@@ -12,7 +12,7 @@ export default class Category {
   }
 
   @PrimaryGeneratedColumn()
-  id?: string | number;
+  id?: number;
 
   @Column()
   name?: string;
@@ -20,8 +20,13 @@ export default class Category {
   @Column({ default: true, nullable: true })
   isActive?: boolean;
 
-  @OneToMany((_) => PostToCategory, (postToCategory) => postToCategory.category)
-  postToCategories?: Array<PostToCategory>;
+  @ManyToMany((_) => Post)
+  @JoinTable({
+    name: 'post_to_category',
+    joinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'postId', referencedColumnName: 'id' },
+  })
+  post?: Array<Post>;
 
   @CreateDateColumn({ nullable: true })
   createdAt?: Date;

@@ -1,5 +1,5 @@
 export default class extends Error {
-  static of(message?: string | unknown): Error {
-    return new Error(message as string | undefined);
+  static of(error?: Error | unknown): Error {
+    return error as Error;
   }
 }

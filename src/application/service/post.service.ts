@@ -27,8 +27,7 @@ export default function makePostService() {
         title,
         content,
         userId,
-        categories,
-      })),
+      }, categories)),
     );
   }
 

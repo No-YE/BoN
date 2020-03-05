@@ -1,7 +1,5 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
-import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne,
-} from 'typeorm';
+import { Entity, ManyToOne, JoinColumn } from 'typeorm';
 import Post from '.';
 import Category from './category.entity';
 
@@ -11,20 +9,13 @@ export default class PostToCategory {
     return new this(postToCategory);
   }
 
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @ManyToOne((_) => Post, { primary: true })
+  @JoinColumn()
+  post?: Post;
 
-  @Column()
-  postId!: number;
-
-  @Column()
-  categoryId!: number;
-
-  @ManyToOne((_) => Post, (post) => post.postToCategories)
-  post!: Post;
-
-  @ManyToOne((_) => Category, (category) => category.postToCategories)
-  category!: Category;
+  @ManyToOne((_) => Category, { primary: true })
+  @JoinColumn()
+  category?: Category;
 
   constructor(postToCategory: Partial<PostToCategory>) {
     Object.assign(this, postToCategory);

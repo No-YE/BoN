@@ -1,6 +1,7 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, Index, CreateDateColumn, UpdateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, Index, CreateDateColumn, UpdateDateColumn, ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import Category from './category.entity';
 import Comment from './comment.entity';
@@ -13,7 +14,7 @@ export default class Post implements Partial<Post> {
   }
 
   @PrimaryGeneratedColumn()
-  id?: string | number;
+  id?: number;
 
   @Index({ fulltext: true })
   @Column()
@@ -25,8 +26,13 @@ export default class Post implements Partial<Post> {
   @Column()
   userId?: number;
 
-  @OneToMany((_) => PostToCategory, (postToCategory) => postToCategory.category)
-  postToCategories?: Array<PostToCategory>;
+  @ManyToMany((_) => Category)
+  @JoinTable({
+    name: 'post_to_category',
+    joinColumn: { name: 'postId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+  })
+  categories?: Array<Category>;
 
   @OneToMany((_) => Comment, (comment) => comment.post)
   @JoinColumn()

@@ -7,27 +7,58 @@ import {
 import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
 import { array } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
-import Post, { Category } from '../aggregate/post';
+import Post, { Category, PostToCategory } from '../aggregate/post';
 import Error from '~/lib/error';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default () => {
   const manager = getManager();
 
+  function createPostToCategory(
+    post: Post,
+    category: Category,
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, PostToCategory> {
+    const usingManager = transactionManager ?? manager;
+
+    return tryCatch(
+      () => usingManager.save(PostToCategory.of({ post, category })),
+      Error.of,
+    );
+  }
+
+  function createPostToCategories(
+    post: Post,
+    categories: Array<Category>,
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, [Post, Array<PostToCategory>]> {
+    const usingManager = transactionManager ?? manager;
+
+    return pipe(
+      categories.map((category) => createPostToCategory(post, category, usingManager)),
+      array.sequence(taskEither),
+      map((postToCategories) => [post, postToCategories]),
+    );
+  }
+
   function create(
     post: {
       title: string;
       content: string;
       userId: number;
-      categories: Array<Category>;
     },
+    categories: Array<Category>,
     transactionManager?: EntityManager,
   ): TaskEither<Error, Post> {
     const usingManager = transactionManager ?? manager;
 
-    return tryCatch(
-      () => usingManager.save(Post.of(post)),
-      Error.of,
+    return pipe(
+      tryCatch(
+        () => usingManager.save(Post.of(post)),
+        Error.of,
+      ),
+      chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
+      map((postToCategories) => postToCategories[0]),
     );
   }
 
@@ -64,7 +95,12 @@ export default () => {
     return tryCatch(
       () => manager.findAndCount(Post, {
         ...options,
-        relations: ['categories'],
+        join: {
+          alias: 'post',
+          leftJoinAndSelect: {
+            postToCategories: 'post.categories',
+          },
+        },
         order: { createdAt: 'DESC' },
       }),
       Error.of,
