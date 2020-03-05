@@ -1,10 +1,10 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinColumn, Index, CreateDateColumn, UpdateDateColumn,
-  JoinTable,
+  Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, Index, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 import Category from './category.entity';
 import Comment from './comment.entity';
+import PostToCategory from './post-to-category.entity';
 
 @Entity()
 export default class Post implements Partial<Post> {
@@ -25,9 +25,8 @@ export default class Post implements Partial<Post> {
   @Column()
   userId?: number;
 
-  @ManyToMany((_) => Category)
-  @JoinTable()
-  categories?: Array<Category>;
+  @OneToMany((_) => PostToCategory, (postToCategory) => postToCategory.category)
+  postToCategories?: Array<PostToCategory>;
 
   @OneToMany((_) => Comment, (comment) => comment.post)
   @JoinColumn()
@@ -50,4 +49,5 @@ export default class Post implements Partial<Post> {
 export {
   Category,
   Comment,
+  PostToCategory,
 };
