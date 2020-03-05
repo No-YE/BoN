@@ -12,9 +12,9 @@ export default function makeUserController(): Router {
   const router = Router();
   const postService = makePostService();
 
-  function getPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+  function getRecentPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
-      validator.getPostsValidate({
+      validator.getRecentPostsValidate({
         take: req.body.offset,
         limit: req.body.limit,
       }),
@@ -24,6 +24,21 @@ export default function makeUserController(): Router {
         (posts) => of(
           res.status(200).json(posts).end(),
         ),
+      ),
+    )();
+  }
+
+  function getPostsByCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      validator.GetPostsByCategoryValidate({
+        take: req.body.offset,
+        limit: req.body.limit,
+        categoryId: req.params.categoryId,
+      }),
+      chain(postService.findByCategory),
+      fold(
+        (error) => of(next(error)),
+        (posts) => of(res.status(200).json(posts).end()),
       ),
     )();
   }
@@ -73,8 +88,9 @@ export default function makeUserController(): Router {
   }
 
   return router
-    .get('/', asyncHandler(getPosts))
+    .get('/', asyncHandler(getRecentPosts))
     .post('/', asyncHandler(createPost))
     .put('/:id', asyncHandler(updatePost))
-    .get('/category', asyncHandler(getAllCategories));
+    .get('/category', asyncHandler(getAllCategories))
+    .get('/category/:categoryId', asyncHandler(getPostsByCategory));
 }

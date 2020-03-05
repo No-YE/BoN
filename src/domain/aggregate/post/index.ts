@@ -1,7 +1,7 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, JoinColumn, Index, CreateDateColumn,
-  UpdateDateColumn,
+  Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinColumn, Index, CreateDateColumn, UpdateDateColumn,
+  JoinTable,
 } from 'typeorm';
 import Category from './category.entity';
 import Comment from './comment.entity';

@@ -1,12 +1,12 @@
 import { TaskEither, left, right } from 'fp-ts/lib/TaskEither';
 import Joi from 'typesafe-joi';
 
-type GetPostsSchema = {
+type GetRecentPostsSchema = {
   take: number;
   limit: number;
 };
 
-export function getPostsValidate<T>(obj: T): TaskEither<Error, GetPostsSchema> {
+export function getRecentPostsValidate<T>(obj: T): TaskEither<Error, GetRecentPostsSchema> {
   const schema = Joi.object({
     take: Joi.number().integer().min(0).default(0),
     limit: Joi.number().integer().min(0).max(100)
@@ -15,7 +15,26 @@ export function getPostsValidate<T>(obj: T): TaskEither<Error, GetPostsSchema> {
 
   const result = schema.validate(obj);
 
-  return result.error ? left(result.error) : right(result.value as GetPostsSchema);
+  return result.error ? left(result.error) : right(result.value as GetRecentPostsSchema);
+}
+
+type GetPostsByCategorySchema = {
+  take: number;
+  limit: number;
+  categoryId: number;
+};
+
+export function GetPostsByCategoryValidate<T>(obj: T): TaskEither<Error, GetPostsByCategorySchema> {
+  const schema = Joi.object({
+    take: Joi.number().integer().min(0).default(0),
+    limit: Joi.number().integer().min(0).max(100)
+      .default(20),
+    categoryId: Joi.number().integer().min(0).required(),
+  });
+
+  const result = schema.validate(obj);
+
+  return result.error ? left(result.error) : right(result.value as GetPostsByCategorySchema);
 }
 
 type CreatePostSchema = {

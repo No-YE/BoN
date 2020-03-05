@@ -27,10 +27,10 @@ export type FindNewPostsDto = {
   limit: number;
 };
 
-export type FindPostsByCategory = {
+export type FindByCategory = {
   take: number;
   limit: number;
-  categoryId: string | number;
+  categoryId: number;
 };
 
 export type FindPostDto = {

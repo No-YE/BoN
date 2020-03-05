@@ -4,7 +4,7 @@ import {
 } from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { getMysqlEnv, MysqlEnv } from './env';
-import Error from '~/lib/error';
+import Error from '../lib/error';
 
 function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
   const {

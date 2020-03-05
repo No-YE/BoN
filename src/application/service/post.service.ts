@@ -7,7 +7,7 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import makePostRepository from '~/domain/repository/post.repository';
 import Post, { Category } from '~/domain/aggregate/post';
 import {
-  CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto,
+  CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto, FindByCategory,
 } from '../dto/post.dto';
 import Error from '~/lib/error';
 
@@ -70,6 +70,11 @@ export default function makePostService() {
     );
   }
 
+  function findByCategory(dto: FindByCategory): TaskEither<Error, [Array<Post>, number]> {
+    const { take, limit, categoryId } = dto;
+    return repository.findByCategory({ take, limit }, categoryId);
+  }
+
   function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {
     return repository.findAllCategories();
   }
@@ -81,6 +86,7 @@ export default function makePostService() {
     searchPosts,
     findNewPosts,
     findPost,
+    findByCategory,
     findAllCategories,
   };
 }

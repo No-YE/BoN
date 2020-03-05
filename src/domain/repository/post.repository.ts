@@ -96,6 +96,25 @@ export default () => {
     );
   }
 
+  function findByCategory(
+    options: {
+      take: number;
+      limit: number;
+    },
+    categoryId: number,
+  ): TaskEither<Error, [Array<Post>, number]> {
+    return tryCatch(
+      () => manager.findAndCount(Post, {
+        ...options,
+        relations: ['categories'],
+        where: [
+          { categories: categoryId },
+        ],
+      }),
+      Error.of,
+    );
+  }
+
   function createCategory(
     category: { name: string },
     transactionManager?: EntityManager,
@@ -147,6 +166,7 @@ export default () => {
     findRecent,
     findByQuery,
     findById,
+    findByCategory,
     findAllCategories,
     findOrCreateCategories,
   };

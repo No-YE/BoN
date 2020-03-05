@@ -20,7 +20,6 @@ export default class Category {
   isActive?: boolean;
 
   @ManyToMany((_) => Post)
-  @JoinTable()
   posts?: Array<Post>;
 
   @CreateDateColumn({ nullable: true })
