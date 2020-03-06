@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Box, Divider } from '@material-ui/core';
 import { useStore } from '../store';
 import FeedItem from './FeedItem';
+import { Feed } from '../type';
 
 const styles = createStyles({
   root: {
@@ -15,10 +16,13 @@ const styles = createStyles({
   },
 });
 
-type Props = WithStyles<typeof styles>;
+interface Props extends WithStyles<typeof styles> {
+  feedProps?: { items: Array<Feed> };
+}
 
 const FeedList: React.FC<Props> = observer<Props>(({
   classes,
+  feedProps,
 }) => {
   const store = useStore();
 
@@ -27,10 +31,11 @@ const FeedList: React.FC<Props> = observer<Props>(({
   }
 
   const { feed } = store;
+  const feeds = feedProps as { items: Array<Feed> } || feed;
 
   return (
     <Box className={classes.root} display="flex" flexDirection="column">
-      {feed.items.map((item) => (
+      {feeds.items.map((item) => (
         <>
           <FeedItem
             key={item.id}

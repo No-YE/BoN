@@ -12,6 +12,16 @@ export const getPosts = (payload: GetPostsPayload): Promise<AxiosResponse> => {
   return axios.get(`/post?${query}`);
 };
 
+type GetPostsByCategoryPayload = {
+  offset?: number;
+  limit?: number;
+};
+
+export const getPostByCategory = (payload: GetPostsByCategoryPayload, categoryId: number): Promise<AxiosResponse> => {
+  const query = queryString.stringify(payload);
+  return axios.get(`/post/category/${categoryId}?${query}`);
+};
+
 type CreatePostPayload = {
   title: string;
   content: string;

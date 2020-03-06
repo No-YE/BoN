@@ -140,13 +140,12 @@ export default () => {
     categoryId: number,
   ): TaskEither<Error, [Array<Post>, number]> {
     return tryCatch(
-      () => manager.findAndCount(Post, {
-        ...options,
-        relations: ['categories'],
-        where: [
-          { categories: categoryId },
-        ],
-      }),
+      () => manager
+        .createQueryBuilder(Post, 'post')
+        .offset(options.take)
+        .limit(options.limit)
+        .innerJoinAndSelect('post.categories', 'category', 'category.id = :categoryId', { categoryId })
+        .getManyAndCount(),
       Error.of,
     );
   }

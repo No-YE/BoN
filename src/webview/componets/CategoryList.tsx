@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Router from 'next/router';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -11,6 +12,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import { observer } from 'mobx-react-lite';
 import DrawerItem from './CategoryItem';
 import { useStore } from '../store';
+import goToIndex from '../lib/go-to-index';
 
 const drawWidth = 250;
 
@@ -57,6 +59,10 @@ const CategoryList: React.FC<Props> = observer<Props>(({
     category.changeOpen(false);
   };
 
+  const categoryOnClick = (id: number | string) => (): void => {
+    goToIndex(store, Router, `/category/${id}`);
+  };
+
   return (
     <Drawer
       className={classes.root}
@@ -98,6 +104,7 @@ const CategoryList: React.FC<Props> = observer<Props>(({
           <DrawerItem
             category={draw}
             key={draw.id}
+            onClick={categoryOnClick(draw.id)}
           />
         ))}
       </List>

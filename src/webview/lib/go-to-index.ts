@@ -4,7 +4,7 @@ import { StoreInstance } from '../store';
 import { getPosts, getAllCategories } from './api/post';
 import { Feed, Category } from '../type';
 
-export default async (store: StoreInstance, Router: SingletonRouter): Promise<void> => {
+export default async (store: StoreInstance, Router: SingletonRouter, path?: string): Promise<void> => {
   const feeds = await getPosts({ offset: 0, limit: 20 });
   const categories = await getAllCategories();
 
@@ -24,5 +24,5 @@ export default async (store: StoreInstance, Router: SingletonRouter): Promise<vo
 
   store.setCategory(categories.data[0]);
 
-  Router.push('/');
+  Router.push(path ?? '/');
 };

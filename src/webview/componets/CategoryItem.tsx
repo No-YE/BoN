@@ -5,13 +5,15 @@ import { Category } from '../type/Category';
 
 interface Props {
   category: Category;
+  onClick: () => void;
 }
 
 const DrawerItem: React.FC<Props> = ({
   category,
+  onClick,
 }) => (
   <ListItem button>
-    <ListItemText primary={category.name} />
+    <ListItemText primary={category.name} onClick={onClick} />
   </ListItem>
 );
 
