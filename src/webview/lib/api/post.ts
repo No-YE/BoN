@@ -30,4 +30,4 @@ type CreatePostPayload = {
 
 export const createPost = (payload: CreatePostPayload): Promise<AxiosResponse> => axios.post('/post', payload);
 
-export const getAllCategories = (): Promise<AxiosResponse> => axios.get('/post/category');
+export const getAllCategories = (): Promise<AxiosResponse> => axios.get('/category');

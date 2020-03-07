@@ -8,7 +8,7 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import * as validator from '../validator/post.validator';
 import makePostService from '~/application/service/post.service';
 
-export default function makeUserController(): Router {
+export default function makePostController(): Router {
   const router = Router();
   const postService = makePostService();
 
@@ -77,20 +77,9 @@ export default function makeUserController(): Router {
     )();
   }
 
-  function getAllCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
-    return pipe(
-      postService.findAllCategories(),
-      fold(
-        (error) => of(next(error)),
-        (categories) => of(res.status(200).json(categories).end()),
-      ),
-    )();
-  }
-
   return router
     .get('/', asyncHandler(getRecentPosts))
     .post('/', asyncHandler(createPost))
     .put('/:id', asyncHandler(updatePost))
-    .get('/category', asyncHandler(getAllCategories))
     .get('/category/:categoryId', asyncHandler(getPostsByCategory));
 }
