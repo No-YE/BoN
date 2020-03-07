@@ -76,7 +76,7 @@ const FeedItem: React.FC<Props> = ({
         : null}
     </Box>
     <Box display="flex" flexDirection="row">
-      <Typography className={classes.metadata}>{dateFormat(createdAt)}</Typography>
+      <Typography className={classes.metadata}>{dateFormat(new Date(createdAt))}</Typography>
     </Box>
   </Box>
 );

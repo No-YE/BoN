@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { useRouter } from 'next/router';
+import removeMd from 'remove-markdown';
 import CategoryList from '../../componets/CategoryList';
 import Header from '../../componets/Header';
 import { useStore } from '../../store';
@@ -38,6 +39,9 @@ const PageCategory: React.FC<Props> = observer(({
 
   const getPost = async (): Promise<void> => {
     const res = await getPostByCategory({ offset: 0, limit: 10 }, Number(categoryId));
+    res.data[0].forEach((data: { content: string }, i: number) => {
+      res.data[0][i].summary = removeMd(data.content.substring(0, 300));
+    });
     setFeed(res.data[0]);
   };
 
