@@ -8,7 +8,7 @@ import Comment from './comment.entity';
 import PostToCategory from './post-to-category.entity';
 
 @Entity()
-export default class Post implements Partial<Post> {
+export default class Post {
   static of(post: Partial<Post>): Post {
     return new this(post);
   }
@@ -22,6 +22,12 @@ export default class Post implements Partial<Post> {
 
   @Column({ length: 20000 })
   content?: string;
+
+  @Column({ nullable: true })
+  thumbnail?: string;
+
+  @Column({ default: 0 })
+  views?: number;
 
   @Column()
   userId?: number;

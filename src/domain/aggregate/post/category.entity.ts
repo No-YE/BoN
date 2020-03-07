@@ -1,9 +1,8 @@
 /*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
-  Column, PrimaryGeneratedColumn, Entity, UpdateDateColumn, CreateDateColumn, ManyToMany, JoinTable,
+  Column, PrimaryGeneratedColumn, Entity, UpdateDateColumn, CreateDateColumn, ManyToMany, JoinTable, Index,
 } from 'typeorm';
 import Post from '.';
-import PostToCategory from './post-to-category.entity';
 
 @Entity()
 export default class Category {
@@ -14,6 +13,7 @@ export default class Category {
   @PrimaryGeneratedColumn()
   id?: number;
 
+  @Index({ unique: true })
   @Column()
   name?: string;
 
