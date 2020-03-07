@@ -151,7 +151,16 @@ export default () => {
         .createQueryBuilder(Post, 'post')
         .offset(options.take)
         .limit(options.limit)
-        .innerJoinAndSelect('post.categories', 'category', 'category.id = :categoryId', { categoryId })
+        .orderBy('post.createdAt', 'DESC')
+        .innerJoinAndSelect('post.categories', 'category')
+        .where((qb) => {
+          const subQuery = qb.subQuery()
+            .select('postToCategory.postId', 'postId')
+            .from(PostToCategory, 'postToCategory')
+            .where('postToCategory.categoryId = :categoryId', { categoryId })
+            .getQuery();
+          return `post.id IN ${subQuery}`;
+        })
         .getManyAndCount(),
       Error.of,
     );
