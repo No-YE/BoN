@@ -14,6 +14,27 @@ import Error from '~/lib/error';
 export default () => {
   const manager = getManager();
 
+  function create(
+    post: {
+      title: string;
+      content: string;
+      userId: number;
+    },
+    categories: Array<Category>,
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, Post> {
+    const usingManager = transactionManager ?? manager;
+
+    return pipe(
+      tryCatch(
+        () => usingManager.save(Post.of(post)),
+        Error.of,
+      ),
+      chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
+      map((postToCategories) => postToCategories[0]),
+    );
+  }
+
   function createPostToCategory(
     post: Post,
     category: Category,
@@ -41,49 +62,14 @@ export default () => {
     );
   }
 
-  function create(
-    post: {
-      title: string;
-      content: string;
-      userId: number;
-    },
-    categories: Array<Category>,
+  function createCategory(
+    category: { name: string },
     transactionManager?: EntityManager,
-  ): TaskEither<Error, Post> {
-    const usingManager = transactionManager ?? manager;
-
-    return pipe(
-      tryCatch(
-        () => usingManager.save(Post.of(post)),
-        Error.of,
-      ),
-      chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
-      map((postToCategories) => postToCategories[0]),
-    );
-  }
-
-  function update(
-    post: {
-      id: number;
-      title: string;
-      content: string;
-      categories: Array<Category>;
-    },
-    transactionManager?: EntityManager,
-  ): TaskEither<Error, UpdateResult> {
+  ): TaskEither<Error, Category> {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.update(Post, post.id, post),
-      Error.of,
-    );
-  }
-
-  function remove(id: number, transactionManager?: EntityManager): TaskEither<Error, UpdateResult> {
-    const usingManager = transactionManager ?? manager;
-
-    return tryCatch(
-      () => usingManager.update(Post, id, { isActive: false }),
+      () => usingManager.save(Category.of(category)),
       Error.of,
     );
   }
@@ -166,18 +152,6 @@ export default () => {
     );
   }
 
-  function createCategory(
-    category: { name: string },
-    transactionManager?: EntityManager,
-  ): TaskEither<Error, Category> {
-    const usingManager = transactionManager ?? manager;
-
-    return tryCatch(
-      () => usingManager.save(Category.of(category)),
-      Error.of,
-    );
-  }
-
   function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {
     return tryCatch(
       () => manager.findAndCount(Category),
@@ -207,6 +181,32 @@ export default () => {
     return pipe(
       categories.map(findOrCreateCategory),
       array.sequence(taskEither),
+    );
+  }
+
+  function update(
+    post: {
+      id: number;
+      title: string;
+      content: string;
+      categories: Array<Category>;
+    },
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
+
+    return tryCatch(
+      () => usingManager.update(Post, post.id, post),
+      Error.of,
+    );
+  }
+
+  function remove(id: number, transactionManager?: EntityManager): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
+
+    return tryCatch(
+      () => usingManager.update(Post, id, { isActive: false }),
+      Error.of,
     );
   }
 

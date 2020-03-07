@@ -29,33 +29,6 @@ export default () => {
     );
   }
 
-  function update(
-    user: {
-      id: number;
-      role: UserRole;
-    },
-    transactionManager?: EntityManager,
-  ): TaskEither<Error, UpdateResult> {
-    const usingManager = transactionManager ?? manager;
-
-    return tryCatch(
-      () => usingManager.update(User, user.id, user),
-      Error.of,
-    );
-  }
-
-  function remove(
-    id: number,
-    transactionManager?: EntityManager,
-  ): TaskEither<Error, UpdateResult> {
-    const usingManager = transactionManager ?? manager;
-
-    return tryCatch(
-      () => usingManager.update(User, id, { isActive: false }),
-      Error.of,
-    );
-  }
-
   function findById(id: number): TaskEither<Error, User | undefined> {
     return tryCatch(
       () => manager.findOne(User, id),
@@ -85,6 +58,33 @@ export default () => {
         () => create(user),
         (u) => right(u),
       )),
+    );
+  }
+
+  function update(
+    user: {
+      id: number;
+      role: UserRole;
+    },
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
+
+    return tryCatch(
+      () => usingManager.update(User, user.id, user),
+      Error.of,
+    );
+  }
+
+  function remove(
+    id: number,
+    transactionManager?: EntityManager,
+  ): TaskEither<Error, UpdateResult> {
+    const usingManager = transactionManager ?? manager;
+
+    return tryCatch(
+      () => usingManager.update(User, id, { isActive: false }),
+      Error.of,
     );
   }
 
