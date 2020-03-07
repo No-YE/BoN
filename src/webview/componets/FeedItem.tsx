@@ -3,8 +3,10 @@ import {
   Typography, withStyles, WithStyles, createStyles, Box, Chip,
 } from '@material-ui/core';
 import Image from 'material-ui-image';
+import Router from 'next/router';
 import { Category } from '../type/Category';
 import dateFormat from '../lib/date-format';
+import { useStore } from '../store';
 
 const styles = createStyles({
   root: {
@@ -52,33 +54,43 @@ const FeedItem: React.FC<Props> = ({
   mainImageUri,
   createdAt,
   categories,
-}) => (
-  <Box key={id} display="flex" flexDirection="column" className={classes.root}>
-    <Box display="flex" flexDirection="row">
-      <Box display="flex" flexDirection="column">
-        <Typography variant="h6">{title}</Typography>
-        <Typography className={classes.content}>{summary}</Typography>
-        <Box>
-          {categories.map((category) => (
-            <Chip
-              className={classes.chip}
-              key={category.id}
-              label={category.name}
-              size="small"
-              clickable
-              color="primary"
-            />
-          ))}
+}) => {
+  const store = useStore();
+
+  const chipOnClick = (categoryId: string | number) => (): void => {
+    store.category?.changeOpen(false);
+    Router.push(`/category/${categoryId}`);
+  };
+
+  return (
+    <Box key={id} display="flex" flexDirection="column" className={classes.root}>
+      <Box display="flex" flexDirection="row">
+        <Box display="flex" flexDirection="column">
+          <Typography variant="h6">{title}</Typography>
+          <Typography className={classes.content}>{summary}</Typography>
+          <Box>
+            {categories.map((category) => (
+              <Chip
+                className={classes.chip}
+                key={category.id}
+                label={category.name}
+                size="small"
+                clickable
+                color="primary"
+                onClick={chipOnClick(category.id)}
+              />
+            ))}
+          </Box>
         </Box>
+        {mainImageUri
+          ? <Box className={classes.image}><Image src={mainImageUri} aspectRatio={4 / 3} /></Box>
+          : null}
       </Box>
-      {mainImageUri
-        ? <Box className={classes.image}><Image src={mainImageUri} aspectRatio={4 / 3} /></Box>
-        : null}
+      <Box display="flex" flexDirection="row">
+        <Typography className={classes.metadata}>{dateFormat(new Date(createdAt))}</Typography>
+      </Box>
     </Box>
-    <Box display="flex" flexDirection="row">
-      <Typography className={classes.metadata}>{dateFormat(new Date(createdAt))}</Typography>
-    </Box>
-  </Box>
-);
+  );
+};
 
 export default withStyles(styles)(FeedItem);

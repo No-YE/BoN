@@ -12,7 +12,6 @@ import CreateIcon from '@material-ui/icons/Create';
 import { observer } from 'mobx-react-lite';
 import DrawerItem from './CategoryItem';
 import { useStore } from '../store';
-import goToIndex from '../lib/go-to-index';
 
 const drawWidth = 250;
 
@@ -60,7 +59,8 @@ const CategoryList: React.FC<Props> = observer<Props>(({
   };
 
   const categoryOnClick = (id: number | string) => (): void => {
-    goToIndex(store, Router, `/category/${id}`);
+    category.changeOpen(false);
+    Router.push(`/category/${id}`);
   };
 
   return (
