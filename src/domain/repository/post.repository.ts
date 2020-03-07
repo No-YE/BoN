@@ -117,6 +117,13 @@ export default () => {
     return tryCatch(
       () => manager.findAndCount(Post, {
         ...options,
+        join: {
+          alias: 'post',
+          leftJoinAndSelect: {
+            postToCategories: 'post.categories',
+          },
+        },
+        order: { createdAt: 'DESC' },
         where: [
           { title: Like(`%${query}%`) },
         ],

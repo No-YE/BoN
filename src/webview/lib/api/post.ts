@@ -22,6 +22,17 @@ export const getPostByCategory = (payload: GetPostsByCategoryPayload, categoryId
   return axios.get(`/post/category/${categoryId}?${query}`);
 };
 
+type SearchPostsPayload = {
+  offset?: number;
+  limit?: number;
+  q: string;
+};
+
+export const searchPosts = (payload: SearchPostsPayload): Promise<AxiosResponse> => {
+  const query = queryString.stringify(payload);
+  return axios.get(`/post/search?${query}`);
+};
+
 type CreatePostPayload = {
   title: string;
   content: string;

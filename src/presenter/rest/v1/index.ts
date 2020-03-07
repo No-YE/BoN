@@ -9,5 +9,5 @@ export default function makeV1Controller(): Router {
   return router
     .use('/user', makeUserController())
     .use('/post', makePostController())
-    .use('category', makeCategoryController());
+    .use('/category', makeCategoryController());
 }
