@@ -43,6 +43,21 @@ export default function makePostController(): Router {
     )();
   }
 
+  function searchPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      validator.SearchPostsValidate({
+        take: req.query.offset,
+        limit: req.query.limit,
+        query: req.query.q,
+      }),
+      chain(postService.searchPosts),
+      fold(
+        (error) => of(next(error)),
+        (posts) => of(res.status(200).json(posts).end()),
+      ),
+    )();
+  }
+
   function createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.createPostValidate({
@@ -81,5 +96,6 @@ export default function makePostController(): Router {
     .get('/', asyncHandler(getRecentPosts))
     .post('/', asyncHandler(createPost))
     .put('/:id', asyncHandler(updatePost))
+    .get('/search', asyncHandler(searchPosts))
     .get('/category/:categoryId', asyncHandler(getPostsByCategory));
 }

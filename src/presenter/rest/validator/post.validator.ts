@@ -37,6 +37,25 @@ export function GetPostsByCategoryValidate<T>(obj: T): TaskEither<Error, GetPost
   return result.error ? left(result.error) : right(result.value as GetPostsByCategorySchema);
 }
 
+type SearchPostsSchema = {
+  take: number;
+  limit: number;
+  query: string;
+};
+
+export function SearchPostsValidate<T>(obj: T): TaskEither<Error, SearchPostsSchema> {
+  const schema = Joi.object({
+    take: Joi.number().integer().min(0).default(0),
+    limit: Joi.number().integer().min(0).max(100)
+      .default(20),
+    query: Joi.string().min(1).max(30).required(),
+  });
+
+  const result = schema.validate(obj);
+
+  return result.error ? left(result.error) : right(result.value as SearchPostsSchema);
+}
+
 type CreatePostSchema = {
   title: string;
   content: string;
