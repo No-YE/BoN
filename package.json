@@ -19,6 +19,7 @@
     "url": "git+https://github.com/No-YE/BoN.git"
   },
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "@types/axios": "^0.14.0",
     "@types/bluebird": "^3.5.29",
     "@types/dotenv": "^8.2.0",
@@ -52,6 +53,7 @@
     "@material-ui/icons": "^4.9.1",
     "@types/jsonwebtoken": "^8.3.7",
     "await-to-js": "^2.1.1",
+    "aws-sdk": "^2.635.0",
     "axios": "^0.19.2",
     "clsx": "^1.1.0",
     "dotenv": "^8.2.0",
