@@ -9,21 +9,30 @@ import { ImageKind } from '~/type';
 export default function makeImageService() {
   const repository = makeImageRepository();
   const s3 = new AWS.S3({ signatureVersion: 'v4', region: 'ap-northeast-2' });
+  const s3Url = 'https://blog-of-noye.s3.ap-northeast-2.amazonaws.com';
 
-  function generateUri(kind: ImageKind, userId: number, filename: string): string {
-    return `image/${kind}/${userId}/${new Date()}-${filename}`;
+  function generatePath(kind: ImageKind, userId: number, filename: string): string {
+    return `image/${kind}/${userId}/${Date.now()}-${filename}`;
   }
 
-  function createPresignedUrl(dto: CreatePresignedUrlDto): TaskEither<Error, string> {
+  function createPresignedUrl(dto: CreatePresignedUrlDto): TaskEither<Error, {
+    uploadUri: string;
+    realUri: string;
+  }> {
     const { kind, filename, userId } = dto;
+    const path = generatePath(kind, userId, filename);
+    const realUri = `${s3Url}/${path}`;
 
     return pipe(
-      generateUri(kind, userId, filename),
-      (uri) => repository.create({ kind: 'post', uri }),
-      map((image) => s3.getSignedUrl('putObject', {
-        Bucket: 'blog-of-noye',
-        Key: image.uri,
-        Expires: 3 * 60,
+      repository.create({ kind: 'post', uri: realUri }),
+      //eslint-disable-next-line @typescript-eslint/no-unused-vars
+      map((_) => ({
+        uploadUri: s3.getSignedUrl('putObject', {
+          Bucket: 'blog-of-noye',
+          Key: path,
+          Expires: 3 * 60,
+        }),
+        realUri,
       })),
     );
   }

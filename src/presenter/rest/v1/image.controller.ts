@@ -22,7 +22,7 @@ export default function makeImageController(): Router {
       chain(imageService.createPresignedUrl),
       fold(
         (error) => of(next(error)),
-        (uri) => of(res.status(200).json({ uri }).end()),
+        (info) => of(res.status(200).json(info).end()),
       ),
     )();
   }

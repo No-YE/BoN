@@ -14,7 +14,7 @@ export function createImageValidate(
 ): TaskEither<Error, CreateImageSchema> {
   const schema = Joi.object({
     userId: Joi.number().integer().min(0).required(),
-    filename: Joi.string().min(1).max(255).required(),
+    filename: Joi.string().replace(/\s+/g, '-').min(1).max(255),
     kind: Joi.valid('post').required(),
   });
 
