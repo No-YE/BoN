@@ -22,6 +22,7 @@ function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
       synchronize: false,
       logging: false,
       dropSchema: false,
+      timezone: 'Z',
       entities: [
         'dist/domain/aggregate/**/*.js',
       ],
@@ -57,6 +58,7 @@ function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
       logging: false,
       migrationsRun: false,
       dropSchema: false,
+      timezone: 'Z',
       entities: [
         'dist/data/entity/*.js',
       ],
