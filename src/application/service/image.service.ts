@@ -8,10 +8,10 @@ import { ImageKind } from '~/type';
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeImageService() {
   const repository = makeImageRepository();
-  const s3 = new AWS.S3({ signatureVersion: 'v4' });
+  const s3 = new AWS.S3({ signatureVersion: 'v4', region: 'ap-northeast-2' });
 
   function generateUri(kind: ImageKind, userId: number, filename: string): string {
-    return `/image/${kind}/${userId}/${new Date()}-${filename}`;
+    return `image/${kind}/${userId}/${new Date()}-${filename}`;
   }
 
   function createPresignedUrl(dto: CreatePresignedUrlDto): TaskEither<Error, string> {
@@ -23,6 +23,7 @@ export default function makeImageService() {
       map((image) => s3.getSignedUrl('putObject', {
         Bucket: 'blog-of-noye',
         Key: image.uri,
+        Expires: 3 * 60,
       })),
     );
   }
