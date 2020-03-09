@@ -16,7 +16,7 @@ const styles = createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
-  onImageUpload?: (file: File) => Promise<void>;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), { ssr: false });
