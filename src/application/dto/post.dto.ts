@@ -2,6 +2,7 @@ export type CraetePostDto = {
   title: string;
   content: string;
   userId: number;
+  thumbnail?: string;
   categoryNames: Array<string>;
 };
 

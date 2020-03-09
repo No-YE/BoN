@@ -60,6 +60,7 @@ type CreatePostSchema = {
   title: string;
   content: string;
   categoryNames: Array<string>;
+  thumbnail?: string;
   userId: number;
 };
 
@@ -68,6 +69,7 @@ export function createPostValidate<T>(obj: T): TaskEither<Error, CreatePostSchem
     title: Joi.string().min(1).max(255).required(),
     content: Joi.string().min(1).required(),
     categoryNames: Joi.array().items(Joi.string()),
+    thumbnail: Joi.string().uri(),
     userId: Joi.number(),
   });
 

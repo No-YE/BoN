@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import Router from 'next/router';
+import getImage from 'get-md-image';
 import CustomButton from './Button';
 import { useStore } from '../store';
 import { createPost } from '../lib/api/post';
@@ -34,8 +35,12 @@ const SubmitBar: React.FC<Props> = observer<Props>(({
 
   const { post } = store;
 
-  const send = async (title: string, content: string, categoryNames: Array<string>): Promise<void> => {
-    const { status } = await createPost({ title, content, categoryNames });
+  const send = async (
+    title: string, content: string, categoryNames: Array<string>, thumbnail?: string,
+  ): Promise<void> => {
+    const { status } = await createPost({
+      title, content, categoryNames, thumbnail,
+    });
 
     if (status !== 201) {
       alert(`error: ${status}`);
@@ -46,7 +51,10 @@ const SubmitBar: React.FC<Props> = observer<Props>(({
 
   const sendOnClick = (): void => {
     const { title, content, tags } = post;
-    send(title, content, tags);
+
+    const image = getImage(content);
+
+    send(title, content, tags, image?.src);
   };
 
   return (

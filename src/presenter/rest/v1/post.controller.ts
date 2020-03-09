@@ -64,6 +64,7 @@ export default function makePostController(): Router {
         title: req.body.title,
         content: req.body.content,
         categoryNames: req.body.categoryNames,
+        thumbnail: req.body.thumbnail,
         userId: req.session!.user!.id,
       }),
       chain(postService.createPost),

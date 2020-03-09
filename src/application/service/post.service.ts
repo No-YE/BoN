@@ -17,7 +17,7 @@ export default function makePostService() {
 
   function createPost(dto: CraetePostDto): TaskEither<Error, Post> {
     const {
-      categoryNames, content, title, userId,
+      categoryNames, content, title, userId, thumbnail,
     } = dto;
 
     return pipe(
@@ -27,6 +27,7 @@ export default function makePostService() {
         title,
         content,
         userId,
+        thumbnail,
       }, categories)),
     );
   }

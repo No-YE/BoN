@@ -12,6 +12,10 @@
     "allowJs": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "typeRoots": [
+      "./src/type",
+      "./node_modules/@types"
+    ],
     "paths": {
       "~/*": ["./*"],
       "@lib/*": [

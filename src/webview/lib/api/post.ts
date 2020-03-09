@@ -36,6 +36,7 @@ export const searchPosts = (payload: SearchPostsPayload): Promise<AxiosResponse>
 type CreatePostPayload = {
   title: string;
   content: string;
+  thumbnail?: string;
   categoryNames: Array<string>;
 };
 
