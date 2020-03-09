@@ -81,13 +81,16 @@ export default () => {
     return tryCatch(
       () => manager.findAndCount(Post, {
         ...options,
+        order: { createdAt: 'DESC' },
         join: {
           alias: 'post',
           leftJoinAndSelect: {
             postToCategories: 'post.categories',
           },
         },
-        order: { createdAt: 'DESC' },
+        where: [
+          { isActive: true },
+        ],
       }),
       Error.of,
     );
@@ -103,15 +106,16 @@ export default () => {
     return tryCatch(
       () => manager.findAndCount(Post, {
         ...options,
+        order: { createdAt: 'DESC' },
         join: {
           alias: 'post',
           leftJoinAndSelect: {
             postToCategories: 'post.categories',
           },
         },
-        order: { createdAt: 'DESC' },
         where: [
           { title: Like(`%${query}%`) },
+          { isActive: true },
         ],
       }),
       Error.of,
@@ -120,7 +124,11 @@ export default () => {
 
   function findById(id: number): TaskEither<Error, Post | undefined> {
     return tryCatch(
-      () => manager.findOne(Post, id),
+      () => manager.findOne(Post, id, {
+        where: [
+          { isActive: true },
+        ],
+      }),
       Error.of,
     );
   }
@@ -139,7 +147,8 @@ export default () => {
         .limit(options.limit)
         .orderBy('post.createdAt', 'DESC')
         .innerJoinAndSelect('post.categories', 'category')
-        .where((qb) => {
+        .where('post.isActive = true')
+        .andWhere((qb) => {
           const subQuery = qb.subQuery()
             .select('postToCategory.postId', 'postId')
             .from(PostToCategory, 'postToCategory')
@@ -154,14 +163,22 @@ export default () => {
 
   function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {
     return tryCatch(
-      () => manager.findAndCount(Category),
+      () => manager.findAndCount(Category, {
+        where: [
+          { isActive: true },
+        ],
+      }),
       Error.of,
     );
   }
 
   function findCategoryByName(name: string): TaskEither<Error, Post | undefined> {
     return tryCatch(
-      () => manager.findOne(Category, { name }),
+      () => manager.findOne(Category, { name }, {
+        where: [
+          { isActive: true },
+        ],
+      }),
       Error.of,
     );
   }

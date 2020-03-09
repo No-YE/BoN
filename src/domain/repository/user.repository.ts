@@ -31,14 +31,22 @@ export default () => {
 
   function findById(id: number): TaskEither<Error, User | undefined> {
     return tryCatch(
-      () => manager.findOne(User, id),
+      () => manager.findOne(User, id, {
+        where: [
+          { isActive: true },
+        ],
+      }),
       Error.of,
     );
   }
 
   function findByEmail(email: string): TaskEither<Error, User | undefined> {
     return tryCatch(
-      () => manager.findOne(User, { email }),
+      () => manager.findOne(User, { email }, {
+        where: [
+          { isActive: true },
+        ],
+      }),
       Error.of,
     );
   }
