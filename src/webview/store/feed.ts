@@ -12,7 +12,7 @@ const feed = types
     title: types.string,
     summary: types.string,
     createdAt: types.Date,
-    mainImageUri: types.maybe(types.string),
+    thumbnail: types.maybeNull(types.string),
     categories: types.array(category),
   });
 

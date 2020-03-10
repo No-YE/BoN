@@ -2,27 +2,37 @@ import React from 'react';
 import {
   Typography, withStyles, WithStyles, createStyles, Box, Chip,
 } from '@material-ui/core';
-import Image from 'material-ui-image';
 import Router from 'next/router';
+import dynamic from 'next/dynamic';
 import { Category } from '../type/Category';
 import dateFormat from '../lib/date-format';
 import { useStore } from '../store';
 
 const styles = createStyles({
   root: {
+    width: '100%',
     marginBottom: 20,
     marginTop: 20,
+    paddingRight: 10,
+    paddingLeft: 10,
   },
   content: {
     color: 'rgba(0, 0, 0, 0.6)',
     fontSize: 14,
-    minHeight: 60,
+    minHeight: 70,
     maxHeight: 80,
-    overflowY: 'hidden',
+    maxWidth: 500,
+    wordWrap: 'break-word',
+    wordBreak: 'break-all',
     marginBottom: 10,
+    lineHeight: 1.6,
+    overflowY: 'hidden',
+    '-webkit-line-clamp': 3,
+    '-webkit-box-orient': 'vertical',
+    display: '-webkit-box',
   },
   image: {
-    width: '30%',
+    width: '25%',
     minWidth: 100,
     marginLeft: 10,
   },
@@ -42,7 +52,7 @@ interface Props extends WithStyles<typeof styles> {
   title: string;
   summary: string;
   createdAt: Date;
-  mainImageUri?: string;
+  thumbnail?: string;
   categories: Array<Category>;
 }
 
@@ -51,7 +61,7 @@ const FeedItem: React.FC<Props> = ({
   id,
   title,
   summary,
-  mainImageUri,
+  thumbnail,
   createdAt,
   categories,
 }) => {
@@ -62,12 +72,14 @@ const FeedItem: React.FC<Props> = ({
     Router.push(`/category/${categoryId}`);
   };
 
+  const Image = dynamic(() => import('material-ui-image'), { ssr: false });
+
   return (
     <Box key={id} display="flex" flexDirection="column" className={classes.root}>
-      <Box display="flex" flexDirection="row">
+      <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box display="flex" flexDirection="column">
-          <Typography variant="h6">{title}</Typography>
-          <Typography className={classes.content}>{summary}</Typography>
+          <Typography variant="h5">{title}</Typography>
+          <p className={classes.content}>{summary}</p>
           <Box>
             {categories.map((category) => (
               <Chip
@@ -81,13 +93,11 @@ const FeedItem: React.FC<Props> = ({
               />
             ))}
           </Box>
+          <Typography className={classes.metadata}>{dateFormat(new Date(createdAt))}</Typography>
         </Box>
-        {mainImageUri
-          ? <Box className={classes.image}><Image src={mainImageUri} aspectRatio={4 / 3} /></Box>
+        {thumbnail
+          ? <Box className={classes.image}><Image src={thumbnail} aspectRatio={4 / 3} /></Box>
           : null}
-      </Box>
-      <Box display="flex" flexDirection="row">
-        <Typography className={classes.metadata}>{dateFormat(new Date(createdAt))}</Typography>
       </Box>
     </Box>
   );

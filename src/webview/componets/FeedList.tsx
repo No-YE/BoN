@@ -42,7 +42,7 @@ const FeedList: React.FC<Props> = observer<Props>(({
             id={item.id}
             summary={item.summary}
             title={item.title}
-            mainImageUri={item.mainImageUri}
+            thumbnail={item.thumbnail}
             createdAt={item.createdAt}
             categories={item.categories}
           />

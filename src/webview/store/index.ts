@@ -57,12 +57,14 @@ const RootStore = types
         id: number;
         title: string;
         content: string;
+        thumbnail?: string;
         createdAt: string;
         categories: Array<Category>;
       }): Feed => ({
         id: post.id,
         title: post.title,
         summary: removeMd(post.content.substring(0, 300)),
+        thumbnail: post.thumbnail,
         createdAt: new Date(post.createdAt),
         categories: post.categories,
       })));
