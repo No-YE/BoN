@@ -33,6 +33,8 @@ export const searchPosts = (payload: SearchPostsPayload): Promise<AxiosResponse>
   return axios.get(`/post/search?${query}`);
 };
 
+export const getPostById = (id: number): Promise<AxiosResponse> => axios.get(`/post/${id}`);
+
 type CreatePostPayload = {
   title: string;
   content: string;
