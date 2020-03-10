@@ -56,6 +56,20 @@ export function SearchPostsValidate<T>(obj: T): TaskEither<Error, SearchPostsSch
   return result.error ? left(result.error) : right(result.value as SearchPostsSchema);
 }
 
+type GetPostByIdSchema = {
+  id: number;
+};
+
+export function getPostByIdValidate<T>(obj: T): TaskEither<Error, GetPostByIdSchema> {
+  const schema = Joi.object({
+    id: Joi.number().integer().min(0).required(),
+  });
+
+  const result = schema.validate(obj);
+
+  return result.error ? left(result.error) : right(result.value as GetPostByIdSchema);
+}
+
 type CreatePostSchema = {
   title: string;
   content: string;

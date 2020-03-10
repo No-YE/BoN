@@ -58,6 +58,17 @@ export default function makePostController(): Router {
     )();
   }
 
+  function getPostById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      validator.getPostByIdValidate({ id: req.params.id }),
+      chain(postService.findPost),
+      fold(
+        (error) => of(next(error)),
+        (post) => of(res.status(200).json(post).end()),
+      ),
+    )();
+  }
+
   function createPost(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.createPostValidate({
@@ -95,6 +106,7 @@ export default function makePostController(): Router {
 
   return router
     .get('/', asyncHandler(getRecentPosts))
+    .get('/:id', asyncHandler(getPostById))
     .post('/', asyncHandler(createPost))
     .put('/:id', asyncHandler(updatePost))
     .get('/search', asyncHandler(searchPosts))
