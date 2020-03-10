@@ -31,6 +31,9 @@ const styles = createStyles({
     '-webkit-box-orient': 'vertical',
     display: '-webkit-box',
   },
+  pointer: {
+    cursor: 'pointer',
+  },
   image: {
     width: '25%',
     minWidth: 100,
@@ -72,14 +75,21 @@ const FeedItem: React.FC<Props> = ({
     Router.push(`/category/${categoryId}`);
   };
 
+  const goToPost = (): void => {
+    store.category?.changeOpen(false);
+    Router.push(`/post/${id}`);
+  };
+
   const Image = dynamic(() => import('material-ui-image'), { ssr: false });
 
   return (
     <Box key={id} display="flex" flexDirection="column" className={classes.root}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box display="flex" flexDirection="column">
-          <Typography variant="h5">{title}</Typography>
-          <p className={classes.content}>{summary}</p>
+          <Box onClick={goToPost} className={classes.pointer}>
+            <Typography variant="h5">{title}</Typography>
+            <p className={classes.content}>{summary}</p>
+          </Box>
           <Box>
             {categories.map((category) => (
               <Chip
