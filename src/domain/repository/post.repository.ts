@@ -126,6 +126,7 @@ export default () => {
   function findById(id: number): TaskEither<Error, Post | undefined> {
     return tryCatch(
       () => manager.findOne(Post, id, {
+        relations: ['categories'],
         where: [
           { isActive: true },
         ],

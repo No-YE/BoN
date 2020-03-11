@@ -20,6 +20,8 @@ const styles = createStyles({
   },
   content: {
     fontSize: 19,
+    color: 'rgba(0, 0, 0, 0.8)',
+    fontWeight: 100,
   },
 });
 
