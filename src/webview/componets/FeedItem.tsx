@@ -19,6 +19,8 @@ const styles = createStyles({
   },
   title: {
     fontSize: '3vh',
+    marginBottom: 5,
+    fontWeight: 500,
   },
   content: {
     color: 'rgba(0, 0, 0, 0.6)',

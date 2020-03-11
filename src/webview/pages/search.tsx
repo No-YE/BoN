@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
-import { Box } from '@material-ui/core';
+import { Box, CircularProgress } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import removeMd from 'remove-markdown';
 import CategoryList from '../componets/CategoryList';
@@ -24,6 +24,7 @@ const PageSearch: React.FC<Props> = observer(({
   classes,
 }) => {
   const [feed, setFeed] = useState<Array<Feed>>([]);
+  const [isLoading, setLoading] = useState(true);
   const router = useRouter();
   const store = useStore();
   const q = router.query.q as string;
@@ -43,6 +44,7 @@ const PageSearch: React.FC<Props> = observer(({
       res.data[0][i].summary = removeMd(data.content.substring(0, 300));
     });
     setFeed(res.data[0]);
+    setLoading(false);
   };
 
   useEffect((): void => {
@@ -53,7 +55,9 @@ const PageSearch: React.FC<Props> = observer(({
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
-      <FeedList feedProps={{ items: feed }} />
+      {!isLoading
+        ? <FeedList feedProps={{ items: feed }} />
+        : <CircularProgress className="progress-bar" />}
     </Box>
   );
 });

@@ -22,7 +22,15 @@ img {
   display: block;
 }
 
+a {
+  color: #556cd6;
+}
+
 #__next {
   width: 100%;
   height: 100%;
+}
+
+.progress-bar {
+  margin: 100px;
 }

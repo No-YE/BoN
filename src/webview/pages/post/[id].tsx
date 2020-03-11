@@ -59,7 +59,7 @@ const PageIndex: React.FC<Props> = observer(({
             <MarkdownViewer content={post.content} />
           </>
         )
-        : <CircularProgress />}
+        : <CircularProgress className="progress-bar" />}
     </Box>
   );
 });
