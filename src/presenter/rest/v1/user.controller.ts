@@ -2,24 +2,11 @@ import {
   Request, Response, NextFunction, Router,
 } from 'express';
 import asyncHandler from 'express-async-handler';
-import {
-  left, right, fold, chain, TaskEither,
-} from 'fp-ts/lib/TaskEither';
+import { fold, chain } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
-import Joi from 'typesafe-joi';
 import makeUserService from '~/application/service/user.service';
-
-function signinCallbackValidate<T>(obj: T): TaskEither<Error, { code: string }> {
-  const schema = Joi.object({
-    code: Joi.string().required(),
-  });
-
-  type SchemaType = { code: string };
-  const result = schema.validate(obj);
-
-  return result.error ? left<Error, SchemaType>(result.error) : right<Error, SchemaType>(result.value as SchemaType);
-}
+import * as validator from '../validator/user.validator';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeUserController() {
@@ -35,7 +22,7 @@ export default function makeUserController() {
 
   async function googleSigninCallback(req: Request, res: Response, next: NextFunction): Promise<void> {
     pipe(
-      signinCallbackValidate({ code: req.query.code }),
+      validator.signinCallbackValidate({ code: req.query.code }),
       chain(userService.signinCallback),
       fold(
         (error) => of(next(error)),

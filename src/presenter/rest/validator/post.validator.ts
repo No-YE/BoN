@@ -6,7 +6,9 @@ type GetRecentPostsSchema = {
   limit: number;
 };
 
-export function getRecentPostsValidate<T>(obj: T): TaskEither<Error, GetRecentPostsSchema> {
+export function getRecentPostsValidate(
+  obj: { [key in keyof GetRecentPostsSchema]: unknown },
+): TaskEither<Error, GetRecentPostsSchema> {
   const schema = Joi.object({
     take: Joi.number().integer().min(0).default(0),
     limit: Joi.number().integer().min(0).max(100)
@@ -24,7 +26,9 @@ type GetPostsByCategorySchema = {
   categoryId: number;
 };
 
-export function GetPostsByCategoryValidate<T>(obj: T): TaskEither<Error, GetPostsByCategorySchema> {
+export function GetPostsByCategoryValidate(
+  obj: { [key in keyof GetPostsByCategorySchema]: unknown },
+): TaskEither<Error, GetPostsByCategorySchema> {
   const schema = Joi.object({
     take: Joi.number().integer().min(0).default(0),
     limit: Joi.number().integer().min(0).max(100)
@@ -43,7 +47,9 @@ type SearchPostsSchema = {
   query: string;
 };
 
-export function SearchPostsValidate<T>(obj: T): TaskEither<Error, SearchPostsSchema> {
+export function SearchPostsValidate(
+  obj: { [key in keyof SearchPostsSchema]: unknown },
+): TaskEither<Error, SearchPostsSchema> {
   const schema = Joi.object({
     take: Joi.number().integer().min(0).default(0),
     limit: Joi.number().integer().min(0).max(100)
@@ -60,7 +66,9 @@ type GetPostByIdSchema = {
   id: number;
 };
 
-export function getPostByIdValidate<T>(obj: T): TaskEither<Error, GetPostByIdSchema> {
+export function getPostByIdValidate(
+  obj: { [key in keyof GetPostByIdSchema]: unknown },
+): TaskEither<Error, GetPostByIdSchema> {
   const schema = Joi.object({
     id: Joi.number().integer().min(0).required(),
   });
@@ -78,7 +86,9 @@ type CreatePostSchema = {
   userId: number;
 };
 
-export function createPostValidate<T>(obj: T): TaskEither<Error, CreatePostSchema> {
+export function createPostValidate(
+  obj: { [key in keyof CreatePostSchema]: unknown },
+): TaskEither<Error, CreatePostSchema> {
   const schema = Joi.object({
     title: Joi.string().min(1).max(255).required(),
     content: Joi.string().min(1).required(),
@@ -99,7 +109,9 @@ type UpdatePostSchema = {
   categoryNames: Array<string>;
 };
 
-export function updatePostValidate<T>(obj: T): TaskEither<Error, UpdatePostSchema> {
+export function updatePostValidate(
+  obj: { [key in keyof UpdatePostSchema]: unknown },
+): TaskEither<Error, UpdatePostSchema> {
   const schema = Joi.object({
     id: Joi.number().integer().min(0),
     title: Joi.string().min(1).max(255).required(),
