@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Typography, withStyles, WithStyles, createStyles, Box, Chip,
+  Typography, withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
 import Router from 'next/router';
 import dynamic from 'next/dynamic';
 import { Category } from '../type/Category';
 import dateFormat from '../lib/date-format';
 import { useStore } from '../store';
+import CategoryTag from './CategoryTag';
 
 const styles = createStyles({
   root: {
@@ -16,12 +17,14 @@ const styles = createStyles({
     paddingRight: 10,
     paddingLeft: 10,
   },
+  title: {
+    fontSize: '3vh',
+  },
   content: {
     color: 'rgba(0, 0, 0, 0.6)',
-    fontSize: 14,
+    fontSize: '1.9vh',
     minHeight: 70,
     maxHeight: 80,
-    maxWidth: 500,
     wordWrap: 'break-word',
     wordBreak: 'break-all',
     marginBottom: 10,
@@ -35,18 +38,12 @@ const styles = createStyles({
     cursor: 'pointer',
   },
   image: {
-    width: '25%',
-    minWidth: 100,
+    minWidth: 'min(30%, 23vh)',
     marginLeft: 10,
   },
   metadata: {
     color: 'rgba(0, 0, 0, 0.6)',
-    fontSize: 14,
-  },
-  chip: {
-    padding: 5,
-    marginRight: 10,
-    marginBottom: 10,
+    fontSize: '1.8vh',
   },
 });
 
@@ -70,11 +67,6 @@ const FeedItem: React.FC<Props> = ({
 }) => {
   const store = useStore();
 
-  const chipOnClick = (categoryId: string | number) => (): void => {
-    store.category?.changeOpen(false);
-    Router.push(`/category/${categoryId}`);
-  };
-
   const goToPost = (): void => {
     store.category?.changeOpen(false);
     Router.push(`/post/${id}`);
@@ -84,25 +76,11 @@ const FeedItem: React.FC<Props> = ({
 
   return (
     <Box key={id} display="flex" flexDirection="column" className={classes.root}>
+      <Typography variant="h5" className={`${classes.pointer} ${classes.title}`} onClick={goToPost}>{title}</Typography>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box display="flex" flexDirection="column">
-          <Box onClick={goToPost} className={classes.pointer}>
-            <Typography variant="h5">{title}</Typography>
-            <p className={classes.content}>{summary}</p>
-          </Box>
-          <Box>
-            {categories.map((category) => (
-              <Chip
-                className={classes.chip}
-                key={category.id}
-                label={category.name}
-                size="small"
-                clickable
-                color="primary"
-                onClick={chipOnClick(category.id)}
-              />
-            ))}
-          </Box>
+          <Typography className={`${classes.content} ${classes.pointer}`} onClick={goToPost}>{summary}</Typography>
+          <CategoryTag categories={categories} />
           <Typography className={classes.metadata}>{dateFormat(new Date(createdAt))}</Typography>
         </Box>
         {thumbnail
