@@ -54,7 +54,6 @@ PageSearch.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
   const feeds = await searchPosts({ offset: 0, limit: 10, q: ctx.query.q as string });
   const categories = await getAllCategories();
 
-  console.log(feeds.data);
   return {
     feeds: feeds.data[0],
     categories: categories.data[0],

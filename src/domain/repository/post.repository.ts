@@ -115,8 +115,10 @@ export default () => {
           },
         },
         where: [
-          { title: Like(`%${query}%`) },
-          { isActive: true },
+          {
+            title: Like(`%${query}%`),
+            isActive: true,
+          },
         ],
       }),
       Error.of,
