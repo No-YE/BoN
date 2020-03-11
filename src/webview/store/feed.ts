@@ -8,7 +8,7 @@ const category = types
 
 const feed = types
   .model({
-    id: types.union(types.number, types.string),
+    id: types.number,
     title: types.string,
     summary: types.string,
     createdAt: types.Date,

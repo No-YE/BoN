@@ -1,29 +1,40 @@
 import React from 'react';
+import { NextPage } from 'next';
 import { observer } from 'mobx-react-lite';
-import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import Copy from '../componets/CategoryList';
 import Header from '../componets/Header';
 import { useStore } from '../store';
 import FeedList from '../componets/FeedList';
+import { getAllCategories, getPosts } from '../lib/api/post';
+import { Feed, Category } from '../type';
 
-const styles = createStyles({
+const useStyles = makeStyles({
   root: {
     width: '100%',
     alignItems: 'center',
   },
 });
 
-type Props = WithStyles<typeof styles>;
+interface Props {
+  feeds: Array<Feed>;
+  categories: Array<Category>;
+}
 
-const PageIndex: React.FC<Props> = observer(({
-  classes,
+const PageIndex: NextPage<Props> = observer(({
+  feeds,
+  categories,
 }) => {
+  const classes = useStyles();
   const store = useStore();
+  store.setFeeds(feeds);
+  store.setCategory(categories);
 
   if (!store.category) {
     return null;
   }
+
   const { category } = store;
 
   const menuOnClick = (): void => {
@@ -39,4 +50,14 @@ const PageIndex: React.FC<Props> = observer(({
   );
 });
 
-export default withStyles(styles)(PageIndex);
+PageIndex.getInitialProps = async (): Promise<Props> => {
+  const feeds = await getPosts({ offset: 0, limit: 20 });
+  const categories = await getAllCategories();
+
+  return {
+    feeds: feeds.data[0],
+    categories: categories.data[0],
+  };
+};
+
+export default PageIndex;

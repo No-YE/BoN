@@ -19,10 +19,6 @@ export default class extends React.Component {
     appContext.ctx.store = store;
     const appProps = await App.getInitialProps(appContext);
 
-    if (typeof window === 'undefined') {
-      await store.nextInit(appContext.ctx.req.session.user);
-    }
-
     return {
       ...appProps,
       initialState: store,

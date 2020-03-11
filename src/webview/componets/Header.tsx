@@ -1,11 +1,14 @@
+/*eslint-disable jsx-a11y/no-noninteractive-element-interactions*/
+/*eslint-disable jsx-a11y/click-events-have-key-events*/
 import React from 'react';
+import Router from 'next/router';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, IconButton, Typography, Box,
+  AppBar, Toolbar, IconButton, Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import LineInput from './LineInput';
-
+import logo from '../static/logo.png';
 
 const styles = createStyles({
   root: {
@@ -19,9 +22,14 @@ const styles = createStyles({
   title: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    width: '15%',
+    width: '50%',
+  },
+  logo: {
+    width: 150,
+    marginLeft: '3%',
+    cursor: 'pointer',
   },
 });
 
@@ -34,22 +42,26 @@ const Header: React.FC<Props> = ({
   classes,
   menuOnClick = (): void => {},
   position = 'static',
-}) => (
-  <Box width="100%">
-    <AppBar position={position} color="inherit">
-      <Toolbar variant="regular" className={classes.root}>
-        <div className={classes.title}>
-          <IconButton onClick={menuOnClick}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6">
-            Bon
-          </Typography>
-        </div>
-        <LineInput placeholder="Search" />
-      </Toolbar>
-    </AppBar>
-  </Box>
-);
+}) => {
+  const logoOnClick = (): void => {
+    Router.push('/');
+  };
+
+  return (
+    <Box width="100%">
+      <AppBar position={position} color="inherit">
+        <Toolbar variant="regular" className={classes.root}>
+          <div className={classes.title}>
+            <IconButton onClick={menuOnClick}>
+              <MenuIcon />
+            </IconButton>
+            <img alt="" src={logo} className={classes.logo} onClick={logoOnClick} />
+          </div>
+          <LineInput placeholder="Search" />
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
+};
 
 export default withStyles(styles)(Header);

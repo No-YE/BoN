@@ -48,7 +48,7 @@ const MarkdownViewer: React.FC<Props> = ({
   });
 
   return (
-    <Box className={classes.root} display="flex" flexDirection="column">
+    <Box className={`${classes.root} post`} display="flex" flexDirection="column">
       <Typography className={classes.content}>{reactHtmlParser(md.render(content))}</Typography>
     </Box>
   );

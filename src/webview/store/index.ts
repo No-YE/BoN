@@ -1,3 +1,4 @@
+/*eslint-disable @typescript-eslint/no-explicit-any*/
 /*eslint-disable no-param-reassign*/
 import { useStaticRendering } from 'mobx-react-lite';
 import { types, Instance } from 'mobx-state-tree';
@@ -7,7 +8,6 @@ import CategoryStore from './category';
 import FeedStore from './feed';
 import UserStore from './user';
 import PostStore from './post';
-import { getPosts, getAllCategories } from '../lib/api/post';
 import { Feed, Category } from '../type';
 import { UserSession } from '~/type';
 
@@ -28,32 +28,9 @@ const RootStore = types
         items: categories,
       });
     },
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setFeeds(feeds: any): void {
-      self.feed = FeedStore.create({
-        items: feeds,
-      });
-    },
-    setUser(user?: UserSession): void {
-      if (user) {
-        self.user = UserStore.create(user);
-      }
-    },
-    setPost(): void {
-      self.post = PostStore.create({
-        title: '',
-        content: '',
-      });
-    },
-    async nextInit(user: UserSession): Promise<void> {
-      this.setUser(user);
-      this.setPost();
 
-      const categories = await getAllCategories();
-      this.setCategory(categories.data[0]);
-
-      const feeds = await getPosts({ offset: 0, limit: 10 });
-      this.setFeeds(feeds.data[0].map((post: {
+    setFeeds(feeds: Array<any>): void {
+      const items: Array<any> = feeds.map((post: {
         id: number;
         title: string;
         content: string;
@@ -67,7 +44,22 @@ const RootStore = types
         thumbnail: post.thumbnail,
         createdAt: new Date(post.createdAt),
         categories: post.categories,
-      })));
+      }));
+
+      self.feed = FeedStore.create({
+        items,
+      });
+    },
+    setUser(user?: UserSession): void {
+      if (user) {
+        self.user = UserStore.create(user);
+      }
+    },
+    setPost(): void {
+      self.post = PostStore.create({
+        title: '',
+        content: '',
+      });
     },
   }));
 

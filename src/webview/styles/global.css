@@ -14,7 +14,7 @@ pre {
   font-size: 17px;
 }
 
-img {
+.post img {
   max-height: 500px;
   max-width: 100%;
   margin-left: auto;

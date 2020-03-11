@@ -1,65 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
-import { Box, CircularProgress } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import removeMd from 'remove-markdown';
+import { makeStyles } from '@material-ui/core/styles';
+import { Box } from '@material-ui/core';
+import { NextPage, NextPageContext } from 'next';
 import CategoryList from '../componets/CategoryList';
 import Header from '../componets/Header';
 import { useStore } from '../store';
 import FeedList from '../componets/FeedList';
-import { Feed } from '../type';
-import { searchPosts } from '../lib/api/post';
+import { Feed, Category } from '../type';
+import { searchPosts, getAllCategories } from '../lib/api/post';
 
-const styles = createStyles({
+const useStyles = makeStyles({
   root: {
     width: '100%',
     alignItems: 'center',
   },
 });
 
-type Props = WithStyles<typeof styles>;
+interface Props {
+  feeds: Array<Feed>;
+  categories: Array<Category>;
+}
 
-const PageSearch: React.FC<Props> = observer(({
-  classes,
+const PageSearch: NextPage<Props> = observer(({
+  categories,
+  feeds,
 }) => {
-  const [feed, setFeed] = useState<Array<Feed>>([]);
-  const [isLoading, setLoading] = useState(true);
-  const router = useRouter();
+  const classes = useStyles();
   const store = useStore();
-  const q = router.query.q as string;
+  store.setFeeds(feeds);
+  store.setCategory(categories);
 
   if (!store.category) {
     return null;
   }
+
   const { category } = store;
 
   const menuOnClick = (): void => {
     category.changeOpen(true);
   };
 
-  const getPost = async (): Promise<void> => {
-    const res = await searchPosts({ offset: 0, limit: 10, q });
-    res.data[0].forEach((data: { content: string }, i: number) => {
-      res.data[0][i].summary = removeMd(data.content.substring(0, 300));
-    });
-    setFeed(res.data[0]);
-    setLoading(false);
-  };
-
-  useEffect((): void => {
-    getPost();
-  }, [router.query.q]);
-
   return (
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
-      {!isLoading
-        ? <FeedList feedProps={{ items: feed }} />
-        : <CircularProgress className="progress-bar" />}
+      <FeedList />
     </Box>
   );
 });
 
-export default withStyles(styles)(PageSearch);
+PageSearch.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
+  const feeds = await searchPosts({ offset: 0, limit: 10, q: ctx.query.q as string });
+  const categories = await getAllCategories();
+
+  console.log(feeds.data);
+  return {
+    feeds: feeds.data[0],
+    categories: categories.data[0],
+  };
+};
+
+export default PageSearch;
