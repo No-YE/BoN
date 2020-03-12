@@ -4,25 +4,31 @@ import { observer } from 'mobx-react-lite';
 import { Box, Divider } from '@material-ui/core';
 import { useStore } from '../store';
 import FeedItem from './FeedItem';
-import { Feed } from '../type';
+import PaginationBar from './Pagination';
 
 const styles = createStyles({
   root: {
     paddingLeft: 20,
     paddingRight: 20,
     marginTop: '3%',
+    marginBottom: '3%',
     width: '100%',
     maxWidth: 800,
+  },
+  pagination: {
+    marginTop: '2%',
   },
 });
 
 interface Props extends WithStyles<typeof styles> {
-  feedProps?: { items: Array<Feed> };
+  page: string;
+  count: number;
 }
 
 const FeedList: React.FC<Props> = observer<Props>(({
   classes,
-  feedProps,
+  page,
+  count,
 }) => {
   const store = useStore();
 
@@ -31,11 +37,10 @@ const FeedList: React.FC<Props> = observer<Props>(({
   }
 
   const { feed } = store;
-  const feeds = feedProps as { items: Array<Feed> } || feed;
 
   return (
     <Box className={classes.root} display="flex" flexDirection="column">
-      {feeds.items.map((item) => (
+      {feed.items.map((item) => (
         <>
           <FeedItem
             key={item.id}
@@ -49,6 +54,9 @@ const FeedList: React.FC<Props> = observer<Props>(({
           <Divider />
         </>
       ))}
+      <Box className={classes.pagination} display="flex" justifyContent="center">
+        <PaginationBar page={page} count={count} />
+      </Box>
     </Box>
   );
 });

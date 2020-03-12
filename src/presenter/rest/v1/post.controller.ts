@@ -15,8 +15,8 @@ export default function makePostController(): Router {
   function getRecentPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.getRecentPostsValidate({
-        take: req.body.offset,
-        limit: req.body.limit,
+        skip: req.query.offset,
+        take: req.query.limit,
       }),
       chain(postService.findNewPosts),
       fold(

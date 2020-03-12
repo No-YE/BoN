@@ -76,8 +76,8 @@ export default () => {
   }
 
   function findRecent(options: {
+    skip: number;
     take: number;
-    limit: number;
   }): TaskEither<Error, [Array<Post>, number]> {
     return tryCatch(
       () => manager.findAndCount(Post, {

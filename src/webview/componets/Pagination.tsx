@@ -22,16 +22,16 @@ const PaginationBar: React.FC<Props> = ({
   count,
 }) => {
   const classes = useStyles();
+  const limit = 10;
+  const pageCount = Math.ceil(count / limit);
 
-  const onChange = (): void => {
-    const limit = 10;
-    const offset = count * limit;
-    const query = queryString.stringify({ offset, limit });
-    Router.push(`/${page}?${query}`);
+  const onChange = (e: React.ChangeEvent, newPage: number): void => {
+    const query = queryString.stringify({ offset: (newPage - 1) * limit, limit });
+    Router.push(`${page}?${query}`);
   };
 
   return (
-    <Pagination count={count} color="primary" className={classes.root} onChange={onChange} />
+    <Pagination count={pageCount} color="primary" className={classes.root} onChange={onChange} />
   );
 };
 

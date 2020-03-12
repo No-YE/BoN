@@ -24,8 +24,8 @@ export type SearchPostsDto = {
 };
 
 export type FindNewPostsDto = {
+  skip: number;
   take: number;
-  limit: number;
 };
 
 export type FindByCategory = {

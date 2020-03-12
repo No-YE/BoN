@@ -54,7 +54,7 @@ interface Props extends WithStyles<typeof styles> {
   title: string;
   summary: string;
   createdAt: Date;
-  thumbnail?: string;
+  thumbnail: string | null;
   categories: Array<Category>;
 }
 

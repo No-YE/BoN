@@ -19,11 +19,13 @@ const useStyles = makeStyles({
 
 interface Props {
   categories: Array<Category>;
+  feedsCount: number;
   feeds: Array<Feed>;
 }
 
 const PageCategory: NextPage<Props> = observer(({
   categories,
+  feedsCount,
   feeds,
 }) => {
   const classes = useStyles();
@@ -44,17 +46,20 @@ const PageCategory: NextPage<Props> = observer(({
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
-      <FeedList />
+      <FeedList count={feedsCount} page="/category" />
     </Box>
   );
 });
 
 PageCategory.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
-  const feeds = await getPostByCategory({ offset: 0, limit: 10 }, Number(ctx.query.id));
+  const offset = Number(ctx.query.offset) ?? 0;
+  const limit = Number(ctx.query.limit) ?? 10;
+  const feeds = await getPostByCategory({ offset, limit }, Number(ctx.query.id));
   const categories = await getAllCategories();
 
   return {
     feeds: feeds.data[0],
+    feedsCount: feeds.data[1],
     categories: categories.data[0],
   };
 };

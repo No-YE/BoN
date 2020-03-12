@@ -2,16 +2,16 @@ import { TaskEither, left, right } from 'fp-ts/lib/TaskEither';
 import Joi from 'typesafe-joi';
 
 type GetRecentPostsSchema = {
+  skip: number;
   take: number;
-  limit: number;
 };
 
 export function getRecentPostsValidate(
   obj: { [key in keyof GetRecentPostsSchema]: unknown },
 ): TaskEither<Error, GetRecentPostsSchema> {
   const schema = Joi.object({
-    take: Joi.number().integer().min(0).default(0),
-    limit: Joi.number().integer().min(0).max(100)
+    skip: Joi.number().integer().min(0).default(0),
+    take: Joi.number().integer().min(0).max(100)
       .default(20),
   });
 
