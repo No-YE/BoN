@@ -1,3 +1,4 @@
+/*eslint-disable @typescript-eslint/no-explicit-any*/
 /*eslint-disable react/jsx-props-no-spreading*/
 import React from 'react';
 import App from 'next/app';
@@ -5,11 +6,11 @@ import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
-//eslint-disable-next-line import/named
 import { StoreProvider, createStore, Store } from '../store';
 import 'react-markdown-editor-lite/lib/index.css';
 import '../styles/global.css';
 import 'highlight.js/styles/github.css';
+import Float from '../componets/Float';
 
 export default class extends React.Component {
   static async getInitialProps(appContext: any): Promise<any> {
@@ -18,6 +19,10 @@ export default class extends React.Component {
     //eslint-disable-next-line no-param-reassign
     appContext.ctx.store = store;
     const appProps = await App.getInitialProps(appContext);
+
+    if (typeof window === 'undefined') {
+      store.setUser(appContext.ctx.req.session?.user);
+    }
 
     return {
       ...appProps,
@@ -35,7 +40,7 @@ export default class extends React.Component {
       : createStore(props.initialState);
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <NextApp
         {...this.props}
@@ -46,8 +51,10 @@ export default class extends React.Component {
 }
 
 class NextApp extends App<any> {
-  render() {
-    const { Component, pageProps } = this.props;
+  render(): JSX.Element {
+    const {
+      Component, pageProps, router, store,
+    } = this.props;
 
     return (
       <>
@@ -59,6 +66,9 @@ class NextApp extends App<any> {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...pageProps} />
+            {router.pathname !== '/write-post' && store.user
+              ? <Float />
+              : null}
           </ThemeProvider>
         </StoreProvider>
       </>
