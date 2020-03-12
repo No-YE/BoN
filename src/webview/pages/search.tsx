@@ -20,12 +20,14 @@ const useStyles = makeStyles({
 interface Props {
   feeds: Array<Feed>;
   feedsCount: number;
+  currentPage: number;
   categories: Array<Category>;
 }
 
 const PageSearch: NextPage<Props> = observer(({
   categories,
   feedsCount,
+  currentPage,
   feeds,
 }) => {
   const classes = useStyles();
@@ -47,20 +49,25 @@ const PageSearch: NextPage<Props> = observer(({
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
-      <FeedList count={feedsCount} page="/search" />
+      <FeedList count={feedsCount} page="/search" currentPage={currentPage} />
     </Box>
   );
 });
 
 PageSearch.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
-  const offset = Number(ctx.query.offset) ?? 0;
-  const limit = Number(ctx.query.limit) ?? 10;
+  const offset = Number(ctx.query.offset ?? 0);
+  const limit = Number(ctx.query.limit ?? 10);
   const feeds = await searchPosts({ offset, limit, q: ctx.query.q as string });
   const categories = await getAllCategories();
+
+  if (typeof window !== 'undefined') {
+    window.scrollTo(0, 0);
+  }
 
   return {
     feeds: feeds.data[0],
     feedsCount: feeds.data[1],
+    currentPage: Math.ceil(offset / limit) + 1,
     categories: categories.data[0],
   };
 };

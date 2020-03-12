@@ -36,7 +36,7 @@ const LineInput: React.FC<Props> = ({
 
   const onKeyPress = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter' && value.length > 0) {
-      Router.push(`/search?q=${value}`, undefined, { shallow: true });
+      Router.push(`/search?q=${value}`);
     }
   };
 

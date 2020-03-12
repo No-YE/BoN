@@ -18,8 +18,8 @@ export type DeletePostDto = {
 };
 
 export type SearchPostsDto = {
+  skip: number;
   take: number;
-  limit: number;
   query: string;
 };
 
@@ -29,8 +29,8 @@ export type FindNewPostsDto = {
 };
 
 export type FindByCategory = {
+  skip: number;
   take: number;
-  limit: number;
   categoryId: number;
 };
 

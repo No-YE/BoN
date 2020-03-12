@@ -100,7 +100,7 @@ export default () => {
   function findByQuery(
     options: {
       take: number;
-      limit: number;
+      skip: number;
     },
     query: string,
   ): TaskEither<Error, [Array<Post>, number]> {
@@ -140,15 +140,15 @@ export default () => {
   function findByCategory(
     options: {
       take: number;
-      limit: number;
+      skip: number;
     },
     categoryId: number,
   ): TaskEither<Error, [Array<Post>, number]> {
     return tryCatch(
       () => manager
         .createQueryBuilder(Post, 'post')
-        .offset(options.take)
-        .limit(options.limit)
+        .skip(options.skip)
+        .take(options.take)
         .orderBy('post.createdAt', 'DESC')
         .innerJoinAndSelect('post.categories', 'category')
         .where('post.isActive = true')

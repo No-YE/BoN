@@ -20,12 +20,14 @@ const useStyles = makeStyles({
 interface Props {
   feeds: Array<Feed>;
   feedsCount: number;
+  currentPage: number;
   categories: Array<Category>;
 }
 
 const PageIndex: NextPage<Props> = observer(({
   feeds,
   feedsCount,
+  currentPage,
   categories,
 }) => {
   const classes = useStyles();
@@ -47,14 +49,14 @@ const PageIndex: NextPage<Props> = observer(({
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
       <Header position="static" menuOnClick={menuOnClick} />
       <Copy anchor="left" />
-      <FeedList page="/" count={feedsCount} />
+      <FeedList page="/" count={feedsCount} currentPage={currentPage} />
     </Box>
   );
 });
 
 PageIndex.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
-  const offset = Number(ctx.query.offset) ?? 0;
-  const limit = Number(ctx.query.limit) ?? 10;
+  const offset = Number(ctx.query.offset ?? 0);
+  const limit = Number(ctx.query.limit ?? 10);
   const feeds = await getPosts({ offset, limit });
   const categories = await getAllCategories();
 
@@ -65,6 +67,7 @@ PageIndex.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
   return {
     feeds: feeds.data[0],
     feedsCount: feeds.data[1],
+    currentPage: Math.ceil(offset / limit) + 1,
     categories: categories.data[0],
   };
 };

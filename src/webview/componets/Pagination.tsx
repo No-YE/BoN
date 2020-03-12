@@ -15,11 +15,13 @@ const useStyles = makeStyles({
 interface Props {
   page: string;
   count: number;
+  currentPage: number;
 }
 
 const PaginationBar: React.FC<Props> = ({
   page,
   count,
+  currentPage,
 }) => {
   const classes = useStyles();
   const limit = 10;
@@ -31,7 +33,13 @@ const PaginationBar: React.FC<Props> = ({
   };
 
   return (
-    <Pagination count={pageCount} color="primary" className={classes.root} onChange={onChange} />
+    <Pagination
+      count={pageCount}
+      defaultPage={currentPage}
+      color="primary"
+      className={classes.root}
+      onChange={onChange}
+    />
   );
 };
 

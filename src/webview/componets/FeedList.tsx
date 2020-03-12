@@ -23,12 +23,14 @@ const styles = createStyles({
 interface Props extends WithStyles<typeof styles> {
   page: string;
   count: number;
+  currentPage: number;
 }
 
 const FeedList: React.FC<Props> = observer<Props>(({
   classes,
   page,
   count,
+  currentPage,
 }) => {
   const store = useStore();
 
@@ -55,7 +57,7 @@ const FeedList: React.FC<Props> = observer<Props>(({
         </>
       ))}
       <Box className={classes.pagination} display="flex" justifyContent="center">
-        <PaginationBar page={page} count={count} />
+        <PaginationBar page={page} count={count} currentPage={currentPage} />
       </Box>
     </Box>
   );

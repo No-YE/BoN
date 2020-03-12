@@ -31,8 +31,8 @@ export default function makePostController(): Router {
   function getPostsByCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.GetPostsByCategoryValidate({
-        take: req.body.offset,
-        limit: req.body.limit,
+        skip: req.query.offset,
+        take: req.query.limit,
         categoryId: req.params.categoryId,
       }),
       chain(postService.findByCategory),
@@ -46,8 +46,8 @@ export default function makePostController(): Router {
   function searchPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.SearchPostsValidate({
-        take: req.query.offset,
-        limit: req.query.limit,
+        skip: req.query.offset,
+        take: req.query.limit,
         query: req.query.q,
       }),
       chain(postService.searchPosts),
@@ -105,10 +105,10 @@ export default function makePostController(): Router {
   }
 
   return router
+    .get('/search', asyncHandler(searchPosts))
     .get('/', asyncHandler(getRecentPosts))
     .get('/:id', asyncHandler(getPostById))
     .post('/', asyncHandler(createPost))
     .put('/:id', asyncHandler(updatePost))
-    .get('/search', asyncHandler(searchPosts))
     .get('/category/:categoryId', asyncHandler(getPostsByCategory));
 }

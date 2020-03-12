@@ -21,12 +21,16 @@ interface Props {
   categories: Array<Category>;
   feedsCount: number;
   feeds: Array<Feed>;
+  currentPage: number;
+  id: string;
 }
 
 const PageCategory: NextPage<Props> = observer(({
   categories,
   feedsCount,
   feeds,
+  currentPage,
+  id,
 }) => {
   const classes = useStyles();
   const store = useStore();
@@ -46,21 +50,27 @@ const PageCategory: NextPage<Props> = observer(({
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
-      <FeedList count={feedsCount} page="/category" />
+      <FeedList count={feedsCount} page={`/category/${id}`} currentPage={currentPage} />
     </Box>
   );
 });
 
 PageCategory.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
-  const offset = Number(ctx.query.offset) ?? 0;
-  const limit = Number(ctx.query.limit) ?? 10;
+  const offset = Number(ctx.query.offset ?? 0);
+  const limit = Number(ctx.query.limit ?? 10);
   const feeds = await getPostByCategory({ offset, limit }, Number(ctx.query.id));
   const categories = await getAllCategories();
+
+  if (typeof window !== 'undefined') {
+    window.scrollTo(0, 0);
+  }
 
   return {
     feeds: feeds.data[0],
     feedsCount: feeds.data[1],
     categories: categories.data[0],
+    currentPage: Math.ceil(offset / limit) + 1,
+    id: ctx.query.id as string,
   };
 };
 

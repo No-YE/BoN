@@ -16,6 +16,6 @@ export type DeleteCommentDto = {
 };
 
 export type FindCommentsDto = {
-  offset: number;
-  limit: number;
+  skip: number;
+  take: number;
 };

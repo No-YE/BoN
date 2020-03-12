@@ -54,8 +54,8 @@ export default function makePostService() {
   }
 
   function searchPosts(dto: SearchPostsDto): TaskEither<Error, [Array<Post>, number]> {
-    const { take, limit, query } = dto;
-    return repository.findByQuery({ take, limit }, query);
+    const { take, skip, query } = dto;
+    return repository.findByQuery({ take, skip }, query);
   }
 
   function findNewPosts(dto: FindNewPostsDto): TaskEither<Error, [Array<Post>, number]> {
@@ -71,8 +71,8 @@ export default function makePostService() {
   }
 
   function findByCategory(dto: FindByCategory): TaskEither<Error, [Array<Post>, number]> {
-    const { take, limit, categoryId } = dto;
-    return repository.findByCategory({ take, limit }, categoryId);
+    const { take, skip, categoryId } = dto;
+    return repository.findByCategory({ take, skip }, categoryId);
   }
 
   function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {

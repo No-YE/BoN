@@ -22,7 +22,7 @@ export function getRecentPostsValidate(
 
 type GetPostsByCategorySchema = {
   take: number;
-  limit: number;
+  skip: number;
   categoryId: number;
 };
 
@@ -30,8 +30,8 @@ export function GetPostsByCategoryValidate(
   obj: { [key in keyof GetPostsByCategorySchema]: unknown },
 ): TaskEither<Error, GetPostsByCategorySchema> {
   const schema = Joi.object({
-    take: Joi.number().integer().min(0).default(0),
-    limit: Joi.number().integer().min(0).max(100)
+    skip: Joi.number().integer().min(0).default(0),
+    take: Joi.number().integer().min(0).max(100)
       .default(20),
     categoryId: Joi.number().integer().min(0).required(),
   });
@@ -43,7 +43,7 @@ export function GetPostsByCategoryValidate(
 
 type SearchPostsSchema = {
   take: number;
-  limit: number;
+  skip: number;
   query: string;
 };
 
@@ -51,8 +51,8 @@ export function SearchPostsValidate(
   obj: { [key in keyof SearchPostsSchema]: unknown },
 ): TaskEither<Error, SearchPostsSchema> {
   const schema = Joi.object({
-    take: Joi.number().integer().min(0).default(0),
-    limit: Joi.number().integer().min(0).max(100)
+    skip: Joi.number().integer().min(0).default(0),
+    take: Joi.number().integer().min(0).max(100)
       .default(20),
     query: Joi.string().min(1).max(30).required(),
   });
