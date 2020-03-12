@@ -1,5 +1,4 @@
 import React from 'react';
-import { observer } from 'mobx-react-lite';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { NextPage, NextPageContext } from 'next';
@@ -24,7 +23,7 @@ interface Props {
   post: any;
 }
 
-const PagePost: NextPage<Props> = observer(({
+const PagePost: NextPage<Props> = ({
   categories,
   post,
 }) => {
@@ -50,7 +49,7 @@ const PagePost: NextPage<Props> = observer(({
       <MarkdownViewer content={post.content} />
     </Box>
   );
-});
+};
 
 PagePost.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
   const categories = await getAllCategories();

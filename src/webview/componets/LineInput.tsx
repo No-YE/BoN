@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
-import { InputBase, IconButton } from '@material-ui/core';
+import { InputBase, IconButton, Box } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 
 const styles = createStyles({
@@ -45,7 +45,7 @@ const LineInput: React.FC<Props> = ({
   };
 
   return (
-    <div className={`${classes.root} ${classes.shortRoot}`}>
+    <Box className={`${classes.root} ${classes.shortRoot}`}>
       <IconButton>
         <SearchIcon />
       </IconButton>
@@ -55,7 +55,7 @@ const LineInput: React.FC<Props> = ({
         onKeyPress={onKeyPress}
         onChange={onChange}
       />
-    </div>
+    </Box>
   );
 };
 

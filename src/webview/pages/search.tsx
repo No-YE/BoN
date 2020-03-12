@@ -1,5 +1,4 @@
 import React from 'react';
-import { observer } from 'mobx-react-lite';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { NextPage, NextPageContext } from 'next';
@@ -24,7 +23,7 @@ interface Props {
   categories: Array<Category>;
 }
 
-const PageSearch: NextPage<Props> = observer(({
+const PageSearch: NextPage<Props> = ({
   categories,
   feedsCount,
   currentPage,
@@ -52,7 +51,7 @@ const PageSearch: NextPage<Props> = observer(({
       <FeedList count={feedsCount} page="/search" currentPage={currentPage} />
     </Box>
   );
-});
+};
 
 PageSearch.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
   const offset = Number(ctx.query.offset ?? 0);

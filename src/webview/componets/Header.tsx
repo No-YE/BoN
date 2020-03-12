@@ -51,12 +51,12 @@ const Header: React.FC<Props> = ({
     <Box width="100%">
       <AppBar position={position} color="inherit">
         <Toolbar variant="regular" className={classes.root}>
-          <div className={classes.title}>
+          <Box className={classes.title}>
             <IconButton onClick={menuOnClick}>
               <MenuIcon />
             </IconButton>
             <img alt="" src={logo} className={classes.logo} onClick={logoOnClick} />
-          </div>
+          </Box>
           <LineInput placeholder="Search" />
         </Toolbar>
       </AppBar>

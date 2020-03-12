@@ -27,6 +27,7 @@ const MarkdownEditor: React.FC<Props> = ({
   onImageUpload = async (): Promise<void> => {},
 }) => {
   const store = useStore();
+  store.setPost();
 
   if (!store.post) {
     return null;

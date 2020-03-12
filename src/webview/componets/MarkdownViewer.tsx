@@ -4,7 +4,7 @@ import hljs from 'highlight.js';
 import markdownIt from 'markdown-it';
 import reactHtmlParser from 'react-html-parser';
 import {
-  withStyles, WithStyles, createStyles, Box, Typography,
+  withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
 
 const styles = createStyles({
@@ -17,11 +17,9 @@ const styles = createStyles({
     wordBreak: 'break-all',
     paddingLeft: 20,
     paddingRight: 20,
-  },
-  content: {
     fontSize: 19,
-    color: 'rgba(0, 0, 0, 0.8)',
-    fontWeight: 100,
+    color: 'rgb(52, 58, 64)',
+    fontWeight: 300,
   },
 });
 
@@ -49,7 +47,7 @@ const MarkdownViewer: React.FC<Props> = ({
 
   return (
     <Box className={`${classes.root} post`} display="flex" flexDirection="column">
-      <Typography className={classes.content}>{reactHtmlParser(md.render(content))}</Typography>
+      {reactHtmlParser(md.render(content))}
     </Box>
   );
 };

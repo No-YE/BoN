@@ -1,6 +1,5 @@
 import React from 'react';
 import { NextPage, NextPageContext } from 'next';
-import { observer } from 'mobx-react-lite';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import Copy from '../componets/CategoryList';
@@ -24,7 +23,7 @@ interface Props {
   categories: Array<Category>;
 }
 
-const PageIndex: NextPage<Props> = observer(({
+const PageIndex: NextPage<Props> = ({
   feeds,
   feedsCount,
   currentPage,
@@ -52,7 +51,7 @@ const PageIndex: NextPage<Props> = observer(({
       <FeedList page="/" count={feedsCount} currentPage={currentPage} />
     </Box>
   );
-});
+};
 
 PageIndex.getInitialProps = async (ctx: NextPageContext): Promise<Props> => {
   const offset = Number(ctx.query.offset ?? 0);

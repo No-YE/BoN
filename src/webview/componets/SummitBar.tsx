@@ -8,7 +8,6 @@ import getImage from 'get-md-image';
 import CustomButton from './Button';
 import { useStore } from '../store';
 import { createPost } from '../lib/api/post';
-import goToIndex from '../lib/go-to-index';
 
 const styles = createStyles({
   root: {
@@ -46,7 +45,7 @@ const SubmitBar: React.FC<Props> = observer<Props>(({
       alert(`error: ${status}`);
     }
 
-    goToIndex(store, Router);
+    Router.push('/');
   };
 
   const sendOnClick = (): void => {

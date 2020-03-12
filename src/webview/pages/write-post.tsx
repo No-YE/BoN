@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { observer } from 'mobx-react-lite';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import SubmitBar from '../componets/SummitBar';
@@ -16,7 +15,7 @@ const styles = createStyles({
 
 type Props = WithStyles<typeof styles>;
 
-const PageWritePost: React.FC<Props> = observer(({
+const PageWritePost: React.FC<Props> = ({
   classes,
 }) => {
   const onImageUpload = async (file: File): Promise<string> => {
@@ -40,6 +39,6 @@ const PageWritePost: React.FC<Props> = observer(({
       <SubmitBar />
     </Box>
   );
-});
+};
 
 export default withStyles(styles)(PageWritePost);

@@ -10,6 +10,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CreateIcon from '@material-ui/icons/Create';
 import { observer } from 'mobx-react-lite';
+import { Box } from '@material-ui/core';
 import DrawerItem from './CategoryItem';
 import { useStore } from '../store';
 
@@ -75,7 +76,7 @@ const CategoryList: React.FC<Props> = observer<Props>(({
     >
       {anchor === 'left'
         ? (
-          <div className={classes.drawerLeftHeader}>
+          <Box className={classes.drawerLeftHeader}>
             {store.user
               ? (
                 <Link href="/write-post"><CreateIcon /></Link>
@@ -84,10 +85,10 @@ const CategoryList: React.FC<Props> = observer<Props>(({
             <IconButton onClick={closeOnClick}>
               <ChevronLeftIcon />
             </IconButton>
-          </div>
+          </Box>
         )
         : (
-          <div className={classes.drawerRightHeader}>
+          <Box className={classes.drawerRightHeader}>
             <IconButton onClick={closeOnClick}>
               <ChevronRightIcon />
             </IconButton>
@@ -96,7 +97,7 @@ const CategoryList: React.FC<Props> = observer<Props>(({
                 <Link href="/write-post"><CreateIcon /></Link>
               )
               : null}
-          </div>
+          </Box>
         )}
       <Divider />
       <List>
