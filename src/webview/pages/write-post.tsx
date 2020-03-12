@@ -1,23 +1,39 @@
 import React from 'react';
+import Router from 'next/router';
 import axios from 'axios';
-import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
+import { Request, Response } from 'express';
 import SubmitBar from '../componets/SummitBar';
 import MarkdownEditor from '../componets/MarkdownEditor';
 import { getSignedUrl } from '../lib/api/image';
+import { Store } from '../store';
 
-const styles = createStyles({
+interface CustomNextPage<P> {
+  (props: P): JSX.Element;
+  getInitialProps: (ctx: CustomNextPageProps) => Promise<P>;
+}
+
+interface CustomNextPageProps {
+  req: Request;
+  res: Response;
+  store: Store;
+}
+
+interface Props {
+  isAuthenticated: boolean;
+}
+
+const useStyles = makeStyles({
   root: {
     justifyContent: 'space-between',
     height: '100%',
   },
 });
 
-type Props = WithStyles<typeof styles>;
+const PageWritePost: CustomNextPage<Props> = () => {
+  const classes = useStyles();
 
-const PageWritePost: React.FC<Props> = ({
-  classes,
-}) => {
   const onImageUpload = async (file: File): Promise<string> => {
     const filename = file.name;
     const kind = 'post';
@@ -41,4 +57,21 @@ const PageWritePost: React.FC<Props> = ({
   );
 };
 
-export default withStyles(styles)(PageWritePost);
+PageWritePost.getInitialProps = async (ctx: CustomNextPageProps): Promise<Props> => {
+  const isServer = typeof window === 'undefined';
+
+  if (!ctx.req?.session?.user && isServer) {
+    ctx.res.writeHead(302, { Location: '/api/v1/user/google' });
+    ctx.res.end();
+    return { isAuthenticated: false };
+  }
+
+  if (!ctx.store.user && !isServer) {
+    Router.push('/api/v1/user/google');
+    return { isAuthenticated: false };
+  }
+
+  return { isAuthenticated: true };
+};
+
+export default PageWritePost;
