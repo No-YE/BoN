@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Express } from 'express';
 import { fold, chain } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';

@@ -1,3 +1,4 @@
+import './config/ts-path';
 import express, {
   Request, Response, NextFunction, Express,
 } from 'express';

@@ -60,13 +60,13 @@ function makeOrmConfig(env: MysqlEnv): ConnectionOptions {
       dropSchema: false,
       timezone: 'Z',
       entities: [
-        'dist/data/entity/*.js',
+        'dist/domain/aggregate/**/*.js',
       ],
       migrations: [
         'dist/migration/*.js',
       ],
       cli: {
-        entitiesDir: 'src/data/entity',
+        entitiesDir: 'src/domain/aggregate/**',
         migrationsDir: 'src/migration',
       },
       extra: {

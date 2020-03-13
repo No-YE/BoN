@@ -5,7 +5,7 @@ import App from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from './theme';
+import theme from '../styles/theme';
 import { StoreProvider, createStore, Store } from '../store';
 import 'react-markdown-editor-lite/lib/index.css';
 import '../styles/global.css';
@@ -67,8 +67,8 @@ class NextApp extends App<any> {
             <CssBaseline />
             <Component {...pageProps} />
             {router.pathname !== '/write-post' && store.user
-              ? <Float />
-              : null}
+        ? <Float />
+        : null}
           </ThemeProvider>
         </StoreProvider>
       </>

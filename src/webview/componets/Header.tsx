@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import LineInput from './LineInput';
-import logo from '../static/logo.png';
+import logo from '../public/static/logo.png';
 
 const styles = createStyles({
   root: {

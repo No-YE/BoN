@@ -10,6 +10,7 @@
     "strict": true,
     "sourceMap": true,
     "allowJs": true,
+    "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "typeRoots": [
@@ -18,9 +19,6 @@
     ],
     "paths": {
       "~/*": ["./*"],
-      "@lib/*": [
-        "./infrastructure/lib/*"
-      ]
     },
   },
   "exclude": [
