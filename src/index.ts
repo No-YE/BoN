@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import './config/ts-path';
 import { Express } from 'express';
 import { fold, chain } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
