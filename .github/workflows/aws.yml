@@ -49,6 +49,6 @@ jobs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: BoN
+        service: BoN-Service
         cluster: BoN
         wait-for-service-stability: true
