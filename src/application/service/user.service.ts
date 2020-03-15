@@ -16,7 +16,7 @@ import User from '~/domain/aggregate/user';
 import { GoogleEnv, getGoogleEnv } from '~/config/env';
 import { UserSession, UserRole } from '~/type';
 import { Social } from '~/type/social.type';
-import Error from '~/lib/Error';
+import Error from '~/lib/error';
 
 type Tokens = { id_token: string };
 type DecodedToken = {

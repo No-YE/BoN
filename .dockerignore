@@ -1,0 +1,11 @@
+.envrc
+.dockerignore
+.gitignore
+.git
+.eslintrc
+.eslintignore
+docker-compose.yml
+Dockerfile
+README.md
+node_modules/
+.github/
