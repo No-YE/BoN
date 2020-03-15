@@ -1,0 +1,122 @@
+{
+  "ipcMode": null,
+  "executionRoleArn": "arn:aws:iam::285218891720:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "dnsSearchDomains": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/BoN",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "entryPoint": null,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 443
+        }
+      ],
+      "command": null,
+      "linuxParameters": null,
+      "cpu": 1,
+      "environment": [
+        {
+          "name": "GOOGLE_REDIRECT_URI",
+          "value": "http://localhost:4000/api/v1/user/google/callback"
+        },
+        {
+          "name": "MYSQL_DATABASE",
+          "value": "bon"
+        },
+        {
+          "name": "MYSQL_HOST",
+          "value": "bon.ci6bk8piwpol.ap-northeast-2.rds.amazonaws.com"
+        },
+        {
+          "name": "MYSQL_PORT",
+          "value": "3306"
+        },
+        {
+          "name": "MYSQL_USERNAME",
+          "value": "bon"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        }
+      ],
+      "resourceRequirements": null,
+      "ulimits": null,
+      "dnsServers": null,
+      "mountPoints": [],
+      "workingDirectory": null,
+      "secrets": [
+        {
+          "valueFrom": "BON_AWS_ACCESS_KEY_ID",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        {
+          "valueFrom": "BON_AWS_SECRET_ACCESS_KEY",
+          "name": "AWS_SECRET_ACCESS_KEY"
+        },
+        {
+          "valueFrom": "BON_GOOGLE_CLIENT_ID",
+          "name": "GOOGLE_CLIEND_ID"
+        },
+        {
+          "valueFrom": "BON_GOOGLE_CLIENT_SECRET",
+          "name": "GOOGLE_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "BON_MYSQL_PASSWORD",
+          "name": "MYSQL_PASSWORD"
+        },
+        {
+          "valueFrom": "BON_SESSION_SECRET",
+          "name": "SESSION_SECRET"
+        }
+      ],
+      "dockerSecurityOptions": null,
+      "memory": 1024,
+      "memoryReservation": null,
+      "volumesFrom": [],
+      "stopTimeout": null,
+      "image": "285218891720.dkr.ecr.ap-northeast-2.amazonaws.com/bon",
+      "startTimeout": null,
+      "firelensConfiguration": null,
+      "dependsOn": null,
+      "disableNetworking": null,
+      "interactive": null,
+      "healthCheck": null,
+      "essential": true,
+      "links": null,
+      "hostname": null,
+      "extraHosts": null,
+      "pseudoTerminal": null,
+      "user": null,
+      "readonlyRootFilesystem": null,
+      "dockerLabels": null,
+      "systemControls": null,
+      "privileged": null,
+      "name": "BoN"
+    }
+  ],
+  "placementConstraints": [],
+  "memory": "1024",
+  "taskRoleArn": null,
+  "family": "BoN",
+  "pidMode": null,
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "networkMode": "bridge",
+  "cpu": "2048",
+  "inferenceAccelerators": null,
+  "proxyConfiguration": null,
+  "volumes": []
+}
