@@ -71,7 +71,7 @@
         },
         {
           "valueFrom": "BON_GOOGLE_CLIENT_ID",
-          "name": "GOOGLE_CLIEND_ID"
+          "name": "GOOGLE_CLIENT_ID"
         },
         {
           "valueFrom": "BON_GOOGLE_CLIENT_SECRET",
