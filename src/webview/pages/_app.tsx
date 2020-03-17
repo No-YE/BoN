@@ -66,7 +66,7 @@ class NextApp extends App<any> {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...pageProps} />
-            {router.pathname !== '/write-post' && store.user.role === 'admin'
+            {router.pathname !== '/write-post' && store.user?.role === 'admin'
               ? <Float />
               : null}
           </ThemeProvider>
