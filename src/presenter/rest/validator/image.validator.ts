@@ -1,6 +1,7 @@
 import Joi from 'typesafe-joi';
-import { left, right, TaskEither } from 'fp-ts/lib/TaskEither';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { ImageKind } from '~/type';
+import validate from './validate';
 
 type CreateImageSchema = {
   userId: number;
@@ -18,7 +19,5 @@ export function createImageValidate(
     kind: Joi.valid('post').required(),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as CreateImageSchema);
+  validate(schema, obj);
 }

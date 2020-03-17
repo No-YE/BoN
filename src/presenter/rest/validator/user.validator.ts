@@ -1,5 +1,6 @@
 import Joi from 'typesafe-joi';
-import { left, right, TaskEither } from 'fp-ts/lib/TaskEither';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
+import validate from './validate';
 
 type SigninCallbackSchema = {
   code: string;
@@ -13,7 +14,5 @@ export function signinCallbackValidate(
     code: Joi.string().required(),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as SigninCallbackSchema);
+  return validate<SigninCallbackSchema>(schema, obj);
 }

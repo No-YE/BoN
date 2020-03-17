@@ -1,5 +1,6 @@
-import { TaskEither, left, right } from 'fp-ts/lib/TaskEither';
+import { TaskEither } from 'fp-ts/lib/TaskEither';
 import Joi from 'typesafe-joi';
+import validate from './validate';
 
 type GetRecentPostsSchema = {
   skip: number;
@@ -15,9 +16,7 @@ export function getRecentPostsValidate(
       .default(20),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as GetRecentPostsSchema);
+  validate(schema, obj);
 }
 
 type GetPostsByCategorySchema = {
@@ -36,9 +35,7 @@ export function GetPostsByCategoryValidate(
     categoryId: Joi.number().integer().min(0).required(),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as GetPostsByCategorySchema);
+  validate(schema, obj);
 }
 
 type SearchPostsSchema = {
@@ -57,9 +54,7 @@ export function SearchPostsValidate(
     query: Joi.string().min(1).max(30).required(),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as SearchPostsSchema);
+  validate(schema, obj);
 }
 
 type GetPostByIdSchema = {
@@ -73,9 +68,7 @@ export function getPostByIdValidate(
     id: Joi.number().integer().min(0).required(),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as GetPostByIdSchema);
+  validate(schema, obj);
 }
 
 type CreatePostSchema = {
@@ -97,9 +90,7 @@ export function createPostValidate(
     userId: Joi.number(),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as CreatePostSchema);
+  validate(schema, obj);
 }
 
 type UpdatePostSchema = {
@@ -119,7 +110,5 @@ export function updatePostValidate(
     categoryNames: Joi.array().items(Joi.string()),
   });
 
-  const result = schema.validate(obj);
-
-  return result.error ? left(result.error) : right(result.value as UpdatePostSchema);
+  validate(schema, obj);
 }

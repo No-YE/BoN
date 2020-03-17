@@ -34,7 +34,7 @@
       "no-console": "off",
       "spaced-comment": ["error", "never", { "block": { "balanced": true } }],
       "react/prop-types": 0,
-      "max-classes-per-file": ["error", 2],
+      "max-classes-per-file": 0,
       "import/no-cycle": 0,
       "no-nested-ternary": 0,
       "no-alert": 0,

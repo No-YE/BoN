@@ -8,6 +8,12 @@ export default class StaticError extends Error {
   }
 }
 
+export class Error400 extends StaticError {
+  static of(error?: Error | string | unknown): Error400 {
+    return super.of(error) as Error400;
+  }
+}
+
 export class Error401 extends StaticError {
   static of(error?: Error | string | unknown): Error401 {
     return super.of(error) as Error401;
