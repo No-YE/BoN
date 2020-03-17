@@ -19,5 +19,5 @@ export function createImageValidate(
     kind: Joi.valid('post').required(),
   });
 
-  validate(schema, obj);
+  return validate<CreateImageSchema>(schema, obj);
 }

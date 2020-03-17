@@ -16,7 +16,7 @@ export function getRecentPostsValidate(
       .default(20),
   });
 
-  validate(schema, obj);
+  return validate<GetRecentPostsSchema>(schema, obj);
 }
 
 type GetPostsByCategorySchema = {
@@ -35,7 +35,7 @@ export function GetPostsByCategoryValidate(
     categoryId: Joi.number().integer().min(0).required(),
   });
 
-  validate(schema, obj);
+  return validate<GetPostsByCategorySchema>(schema, obj);
 }
 
 type SearchPostsSchema = {
@@ -54,7 +54,7 @@ export function SearchPostsValidate(
     query: Joi.string().min(1).max(30).required(),
   });
 
-  validate(schema, obj);
+  return validate<SearchPostsSchema>(schema, obj);
 }
 
 type GetPostByIdSchema = {
@@ -68,7 +68,7 @@ export function getPostByIdValidate(
     id: Joi.number().integer().min(0).required(),
   });
 
-  validate(schema, obj);
+  return validate<GetPostByIdSchema>(schema, obj);
 }
 
 type CreatePostSchema = {
@@ -90,7 +90,7 @@ export function createPostValidate(
     userId: Joi.number(),
   });
 
-  validate(schema, obj);
+  return validate<CreatePostSchema>(schema, obj);
 }
 
 type UpdatePostSchema = {
@@ -110,5 +110,5 @@ export function updatePostValidate(
     categoryNames: Joi.array().items(Joi.string()),
   });
 
-  validate(schema, obj);
+  return validate<UpdatePostSchema>(schema, obj);
 }
