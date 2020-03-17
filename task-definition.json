@@ -62,6 +62,10 @@
       "workingDirectory": null,
       "secrets": [
         {
+          "valueFrom": "BON_SENTRY_DSN",
+          "name": "SENTRY_DSN"
+        },
+        {
           "valueFrom": "BON_AWS_ACCESS_KEY_ID",
           "name": "AWS_ACCESS_KEY_ID"
         },

@@ -6,6 +6,7 @@
   "scripts": {
     "watch": "tsc -w --skipLibCheck",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/index.ts",
     "build": "next build ./src/webview && tsc",
     "lint": "./node_modules/.bin/eslint src/**/*.ts",
     "typeorm": "ts-node ./node_modules/.bin/typeorm --config src/config/ormconfig.ts",
@@ -53,6 +54,7 @@
     "@material-ui/core": "^4.9.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.45",
+    "@sentry/node": "^5.14.1",
     "@types/jsonwebtoken": "^8.3.7",
     "@zeit/next-css": "^1.0.1",
     "await-to-js": "^2.1.1",

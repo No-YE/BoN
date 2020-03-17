@@ -1,20 +1,23 @@
 import 'reflect-metadata';
 import './config/ts-path';
 import { Express } from 'express';
-import { fold, chain } from 'fp-ts/lib/TaskEither';
+import * as Sentry from '@sentry/node';
+import {
+  fold, chain, fromEither, map,
+} from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makeApp from './app';
-//eslint-disable-next-line import/no-named-default
 import { connect, ormconfig } from './config/ormconfig';
-
-chain(connect)(ormconfig)();
+import { getSentryDsn } from './config/env';
 
 pipe(
   ormconfig,
   chain(connect),
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  chain((_) => makeApp()),
+  chain((_) => fromEither(getSentryDsn())),
+  map((env) => Sentry.init({ dsn: env.dsn, environment: env.nodeEnv })),
+  chain(makeApp),
   fold<Error, Express, number>(
     (error) => {
       console.log(error);

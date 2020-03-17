@@ -19,6 +19,11 @@ export type MysqlEnv = {
   password: string;
 };
 
+export type SentryEnv = {
+  nodeEnv: string;
+  dsn: string;
+};
+
 function getEnv(key: string): Either<Error, string> {
   const env = process.env[key];
   return env === undefined ? left(new Error()) : right(env);
@@ -49,6 +54,8 @@ const combineMysqlEnv = (nodeEnv: string) => (database: string) => (host: string
   password,
 });
 
+const combineSentryEnv = (nodeEnv: string) => (dsn: string): SentryEnv => ({ nodeEnv, dsn });
+
 export function getGoogleEnv(): Either<Error, GoogleEnv> {
   return pipe(
     right(combineGoogleEnv),
@@ -67,5 +74,13 @@ export function getMysqlEnv(): Either<Error, MysqlEnv> {
     ap(getEnv('MYSQL_USERNAME')),
     ap(getEnvAsNumber('MYSQL_PORT')),
     ap(getEnv('MYSQL_PASSWORD')),
+  );
+}
+
+export function getSentryDsn(): Either<Error, SentryEnv> {
+  return pipe(
+    right(combineSentryEnv),
+    ap(getEnv('NODE_ENV')),
+    ap(getEnv('SENTRY_DSN')),
   );
 }
