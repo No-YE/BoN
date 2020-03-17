@@ -18,7 +18,6 @@ import { UserSession, UserRole } from '~/type';
 import { Social } from '~/type/social.type';
 import Error from '~/lib/error';
 
-type Tokens = { id_token: string };
 type DecodedToken = {
   email: string;
   name: string;

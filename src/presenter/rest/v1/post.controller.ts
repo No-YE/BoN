@@ -7,6 +7,7 @@ import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as validator from '../validator/post.validator';
 import makePostService from '~/application/service/post.service';
+import authenticate from '~/lib/middleware/authenticate.middleware';
 
 export default function makePostController(): Router {
   const router = Router();
@@ -108,7 +109,7 @@ export default function makePostController(): Router {
     .get('/search', asyncHandler(searchPosts))
     .get('/', asyncHandler(getRecentPosts))
     .get('/:id', asyncHandler(getPostById))
-    .post('/', asyncHandler(createPost))
-    .put('/:id', asyncHandler(updatePost))
+    .post('/', authenticate, asyncHandler(createPost))
+    .put('/:id', authenticate, asyncHandler(updatePost))
     .get('/category/:categoryId', asyncHandler(getPostsByCategory));
 }
