@@ -40,7 +40,7 @@
         },
         {
           "name": "MYSQL_HOST",
-          "value": "bon-db.ci6bk8piwpol.ap-northeast-2.rds.amazonaws.com"
+          "value": "13.124.193.213"
         },
         {
           "name": "MYSQL_PORT",
