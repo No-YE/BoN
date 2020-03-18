@@ -6,6 +6,7 @@ import reactHtmlParser from 'react-html-parser';
 import {
   withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
+import '../styles/markdown.css';
 
 const styles = createStyles({
   root: {
@@ -15,11 +16,13 @@ const styles = createStyles({
     '-webkit-box-orient': 'vertical',
     wordWrap: 'break-word',
     wordBreak: 'break-all',
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 25,
+    paddingRight: 25,
+    marginBottom: 20,
     fontSize: 19,
     color: 'rgb(52, 58, 64)',
-    fontWeight: 300,
+    fontWeight: 400,
+    lineHeight: 1.9,
   },
 });
 

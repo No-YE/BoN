@@ -12,8 +12,8 @@ const styles = createStyles({
     marginTop: '3%',
     width: '100%',
     maxWidth: 900,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 25,
+    paddingRight: 25,
     marginBottom: '1%',
   },
   title: {
