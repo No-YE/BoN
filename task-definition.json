@@ -27,7 +27,7 @@
       "environment": [
         {
           "name": "GOOGLE_REDIRECT_URI",
-          "value": "http://www.noye.xyz:3000/api/v1/user/google/callback"
+          "value": "http://www.noye.xyz/api/v1/user/google/callback"
         },
         {
           "name": "MYSQL_DATABASE",
