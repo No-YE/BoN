@@ -18,6 +18,7 @@ const styles = createStyles({
     wordBreak: 'break-all',
     paddingLeft: 25,
     paddingRight: 25,
+    paddingBottom: '10vh',
     marginBottom: 20,
     fontSize: 19,
     color: 'rgb(52, 58, 64)',

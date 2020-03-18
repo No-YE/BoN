@@ -11,6 +11,7 @@ import 'react-markdown-editor-lite/lib/index.css';
 import '../styles/global.css';
 import 'highlight.js/styles/github.css';
 import Float from '../componets/Float';
+import Footer from '../componets/Footer';
 
 export default class extends React.Component {
   static async getInitialProps(appContext: any): Promise<any> {
@@ -66,6 +67,7 @@ class NextApp extends App<any> {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...pageProps} />
+            <Footer />
             {router.pathname !== '/write-post' && store.user?.role === 'admin'
               ? <Float />
               : null}

@@ -22,13 +22,10 @@ pre {
   display: block;
 }
 
-a {
-  color: #556cd6;
-}
-
 #__next {
+  position: relative;
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
 }
 
 .progress-bar {

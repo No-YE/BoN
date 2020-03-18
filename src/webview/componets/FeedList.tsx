@@ -10,6 +10,7 @@ const styles = createStyles({
   root: {
     paddingLeft: 20,
     paddingRight: 20,
+    paddingBottom: '10vh',
     marginTop: '3%',
     marginBottom: '3%',
     width: '100%',
