@@ -20,7 +20,7 @@ const styles = createStyles({
     paddingRight: 25,
     paddingBottom: '10vh',
     marginBottom: 20,
-    fontSize: 19,
+    fontSize: '2.45vh',
     color: 'rgb(52, 58, 64)',
     fontWeight: 400,
     lineHeight: 1.9,

@@ -9,9 +9,13 @@ body {
 }
 
 pre {
-  padding: 20px;
-  background-color: #f6f8fa;
+  padding: 15px;
   font-size: 17px;
+}
+
+code {
+  padding: 5px;
+  background-color: #f6f8fa;
 }
 
 .post img {
