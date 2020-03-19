@@ -63,6 +63,7 @@ class NextApp extends App<any> {
           <title>BoN</title>
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          <meta name="google-site-verification" content="Ge4fzJOLWo1lt-Thagj3Ii9Pkx2dD_prg9JAEGZlgpo" />
         </Head>
         <StoreProvider value={this.props.store}>
           <ThemeProvider theme={theme}>
