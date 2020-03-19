@@ -23,7 +23,7 @@
       ],
       "command": null,
       "linuxParameters": null,
-      "cpu": 2048,
+      "cpu": 1024,
       "environment": [
         {
           "name": "GOOGLE_REDIRECT_URI",
