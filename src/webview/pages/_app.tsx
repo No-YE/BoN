@@ -60,7 +60,8 @@ class NextApp extends App<any> {
     return (
       <>
         <Head>
-          <title>My page</title>
+          <title>BoN</title>
+          <link rel="shortcut icon" href="/static/favicon.ico" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         </Head>
         <StoreProvider value={this.props.store}>
