@@ -222,6 +222,22 @@ export default () => {
     );
   }
 
+  function addViews(id: number, transactionManager?: EntityManager): TaskEither<Error, void> {
+    const usingManager = transactionManager ?? manager;
+
+    return tryCatch(
+      async () => {
+        usingManager
+          .createQueryBuilder()
+          .update(Post)
+          .set({ views: () => 'views + 1' })
+          .where('id = :id', { id })
+          .execute();
+      },
+      Error.of,
+    );
+  }
+
   function remove(id: number, transactionManager?: EntityManager): TaskEither<Error, UpdateResult> {
     const usingManager = transactionManager ?? manager;
 
@@ -234,6 +250,7 @@ export default () => {
   return {
     create,
     update,
+    addViews,
     remove,
     findRecent,
     findByQuery,

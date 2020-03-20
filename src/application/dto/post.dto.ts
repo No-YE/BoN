@@ -1,3 +1,5 @@
+import { UserRole } from '~/type';
+
 export type CraetePostDto = {
   title: string;
   content: string;
@@ -36,4 +38,5 @@ export type FindByCategory = {
 
 export type FindPostDto = {
   id: number;
+  userRole?: UserRole;
 };

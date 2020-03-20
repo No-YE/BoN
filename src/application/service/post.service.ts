@@ -1,8 +1,9 @@
 import { UpdateResult } from 'typeorm';
 import {
-  TaskEither, chain, map, fromOption,
+  TaskEither, chain, map, fromOption, right,
 } from 'fp-ts/lib/TaskEither';
 import { fromNullable, Option } from 'fp-ts/lib/Option';
+import { fold as bFold } from 'fp-ts/lib/boolean';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makePostRepository from '~/domain/repository/post.repository';
 import Post, { Category } from '~/domain/aggregate/post';
@@ -10,6 +11,8 @@ import {
   CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto, FindByCategory,
 } from '../dto/post.dto';
 import Error from '~/lib/error';
+import { UserRole } from '~/type';
+import voidValue from '~/lib/void';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makePostService() {
@@ -64,10 +67,18 @@ export default function makePostService() {
 
   function findPost(dto: FindPostDto): TaskEither<Error, Post> {
     return pipe(
-      repository.findById(dto.id),
+      addViews(dto.id, dto.userRole),
+      chain(() => repository.findById(dto.id)),
       map(fromNullable),
       chain<Error, Option<Post>, Post>(fromOption(Error.of)),
     );
+  }
+
+  function addViews(id: number, userRole?: UserRole): TaskEither<Error, void> {
+    return bFold(
+      () => repository.addViews(id),
+      () => right(voidValue),
+    )(userRole === 'admin');
   }
 
   function findByCategory(dto: FindByCategory): TaskEither<Error, [Array<Post>, number]> {

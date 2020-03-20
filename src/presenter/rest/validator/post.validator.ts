@@ -1,6 +1,7 @@
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import Joi from 'typesafe-joi';
 import validate from './validate';
+import { UserRole } from '~/type';
 
 type GetRecentPostsSchema = {
   skip: number;
@@ -59,6 +60,7 @@ export function SearchPostsValidate(
 
 type GetPostByIdSchema = {
   id: number;
+  userRole?: UserRole;
 };
 
 export function getPostByIdValidate(
@@ -66,6 +68,7 @@ export function getPostByIdValidate(
 ): TaskEither<Error, GetPostByIdSchema> {
   const schema = Joi.object({
     id: Joi.number().integer().min(0).required(),
+    userRole: Joi.valid('admin', 'operator', 'noRole').optional(),
   });
 
   return validate<GetPostByIdSchema>(schema, obj);
