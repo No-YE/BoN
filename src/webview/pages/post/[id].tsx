@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { NextPage, NextPageContext } from 'next';
+import Head from 'next/head';
 import CategoryList from '../../componets/CategoryList';
 import Header from '../../componets/Header';
 import { useStore } from '../../store';
@@ -43,6 +44,10 @@ const PagePost: NextPage<Props> = ({
 
   return (
     <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
+      <Head>
+        <title>{post.title}</title>
+        <meta name="keywords" content={post.categories.map((c: Category) => c.name).join(',')} />
+      </Head>
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
       <PostHead title={post.title} createdAt={post.createdAt} categories={post.categories} />
