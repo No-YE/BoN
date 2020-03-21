@@ -1,3 +1,4 @@
+/*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
   Request, Response, NextFunction, Router,
 } from 'express';
@@ -82,7 +83,6 @@ export default function makePostController(): Router {
       chain(postService.createPost),
       fold(
         (error) => of(next(error)),
-        //eslint-disable-next-line @typescript-eslint/no-unused-vars
         (_) => of(res.status(201).end()),
       ),
     )();
@@ -99,7 +99,17 @@ export default function makePostController(): Router {
       chain(postService.updatePost),
       fold(
         (error) => of(next(error)),
-        //eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (_) => of(res.status(204).end()),
+      ),
+    )();
+  }
+
+  function deletePost(req: Request, res: Response, next: NextFunction): Promise<void> {
+    return pipe(
+      validator.deletePostValidate({ id: req.params.id }),
+      chain(postService.deletePost),
+      fold(
+        (error) => of(next(error)),
         (_) => of(res.status(204).end()),
       ),
     )();
@@ -111,5 +121,6 @@ export default function makePostController(): Router {
     .get('/:id', asyncHandler(getPostById))
     .post('/', authenticate, asyncHandler(createPost))
     .put('/:id', authenticate, asyncHandler(updatePost))
+    .delete('/:id', authenticate, asyncHandler(deletePost))
     .get('/category/:categoryId', asyncHandler(getPostsByCategory));
 }

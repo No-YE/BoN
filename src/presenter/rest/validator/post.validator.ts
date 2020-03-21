@@ -115,3 +115,17 @@ export function updatePostValidate(
 
   return validate<UpdatePostSchema>(schema, obj);
 }
+
+type DeletePostSchema = {
+  id: number;
+};
+
+export function deletePostValidate(
+  obj: { [key in keyof DeletePostSchema]: unknown },
+): TaskEither<Error, DeletePostSchema> {
+  const schema = Joi.object({
+    id: Joi.number().min(0).required(),
+  });
+
+  return validate<DeletePostSchema>(schema, obj);
+}
