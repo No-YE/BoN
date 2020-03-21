@@ -17,7 +17,7 @@ const styles = createStyles({
     marginBottom: '1%',
   },
   title: {
-    fontSize: '6vh',
+    fontSize: '5vh',
     color: 'rgba(0, 0, 0, 0.8)',
     fontWeight: 'bold',
     marginBottom: '3%',

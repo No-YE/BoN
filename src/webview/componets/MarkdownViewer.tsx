@@ -14,13 +14,13 @@ const styles = createStyles({
     maxWidth: 900,
     '-webkit-line-clamp': 3,
     '-webkit-box-orient': 'vertical',
-    wordWrap: 'break-word',
-    wordBreak: 'break-all',
+    wordWrap: 'normal',
+    wordBreak: 'normal',
     paddingLeft: 25,
     paddingRight: 25,
     paddingBottom: '10vh',
     marginBottom: 20,
-    fontSize: '2.45vh',
+    fontSize: '2.3vh',
     color: 'rgb(52, 58, 64)',
     fontWeight: 400,
     lineHeight: 1.9,
@@ -47,6 +47,9 @@ const MarkdownViewer: React.FC<Props> = ({
 
       return '';
     },
+    breaks: true,
+    linkify: true,
+    typographer: false,
   });
 
   return (

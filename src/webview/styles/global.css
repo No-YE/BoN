@@ -8,16 +8,6 @@ body {
   height: 100%;
 }
 
-pre {
-  padding: 15px;
-  font-size: 17px;
-}
-
-code {
-  padding: 5px;
-  background-color: #f6f8fa;
-}
-
 .post img {
   max-height: 500px;
   max-width: 100%;
