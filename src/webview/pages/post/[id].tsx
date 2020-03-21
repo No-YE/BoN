@@ -50,7 +50,7 @@ const PagePost: NextPage<Props> = ({
       </Head>
       <Header position="static" menuOnClick={menuOnClick} />
       <CategoryList anchor="left" />
-      <PostHead title={post.title} createdAt={post.createdAt} categories={post.categories} />
+      <PostHead title={post.title} createdAt={post.createdAt} categories={post.categories} id={post.id} />
       <MarkdownViewer content={post.content} />
     </Box>
   );

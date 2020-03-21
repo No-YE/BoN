@@ -44,4 +44,6 @@ type CreatePostPayload = {
 
 export const createPost = (payload: CreatePostPayload): Promise<AxiosResponse> => axios.post('/post', payload);
 
+export const deletePost = (id: number): Promise<AxiosResponse> => axios.delete(`/post/${id}`);
+
 export const getAllCategories = (): Promise<AxiosResponse> => axios.get('/category');
