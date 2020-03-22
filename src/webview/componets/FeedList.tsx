@@ -44,7 +44,7 @@ const FeedList: React.FC<Props> = observer<Props>(({
   return (
     <Box className={classes.root} display="flex" flexDirection="column">
       {feed.items.map((item) => (
-        <>
+        <Box key={item.id}>
           <FeedItem
             key={item.id}
             id={item.id}
@@ -55,7 +55,7 @@ const FeedList: React.FC<Props> = observer<Props>(({
             categories={item.categories}
           />
           <Divider />
-        </>
+        </Box>
       ))}
       <Box className={classes.pagination} display="flex" justifyContent="center">
         <PaginationBar page={page} count={count} currentPage={currentPage} />
