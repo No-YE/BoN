@@ -210,15 +210,19 @@ export default () => {
       id: number;
       title: string;
       content: string;
-      categories: Array<Category>;
     },
+    categories: Array<Category>,
     transactionManager?: EntityManager,
-  ): TaskEither<Error, UpdateResult> {
+  ): TaskEither<Error, Post> {
     const usingManager = transactionManager ?? manager;
 
-    return tryCatch(
-      () => usingManager.update(Post, post.id, post),
-      Error.of,
+    return pipe(
+      tryCatch(
+        () => usingManager.save(Post.of(post)),
+        Error.of,
+      ),
+      chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
+      map((postToCategories) => postToCategories[0]),
     );
   }
 

@@ -30,7 +30,6 @@ const styles = createStyles({
   },
   menu: {
     marginRight: 10,
-    color: 'blue',
     cursor: 'pointer',
   },
 });
@@ -57,7 +56,7 @@ const PostHead: React.FC<Props> = ({
   };
 
   const editOnClick = (): void => {
-
+    Router.push(`/write-post?id=${id}`);
   };
 
   const deleteOnClick = (): void => {

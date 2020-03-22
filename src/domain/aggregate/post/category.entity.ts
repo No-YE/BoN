@@ -20,7 +20,7 @@ export default class Category {
   @Column({ default: true, nullable: true })
   isActive?: boolean;
 
-  @ManyToMany((_) => Post)
+  @ManyToMany((_) => Post, (post) => post.categories)
   @JoinTable({
     name: 'post_to_category',
     joinColumn: { name: 'categoryId', referencedColumnName: 'id' },

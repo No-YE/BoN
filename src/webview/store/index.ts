@@ -55,10 +55,11 @@ const RootStore = types
         self.user = UserStore.create(user);
       }
     },
-    setPost(): void {
+    setPost(title = '', content = '', tags: Array<string> = []): void {
       self.post = PostStore.create({
-        title: '',
-        content: '',
+        title,
+        content,
+        tags,
       });
     },
   }));

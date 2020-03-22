@@ -7,7 +7,7 @@ import Router from 'next/router';
 import getImage from 'get-md-image';
 import CustomButton from './Button';
 import { useStore } from '../store';
-import { createPost } from '../lib/api/post';
+import { createPost, putPost } from '../lib/api/post';
 
 const styles = createStyles({
   root: {
@@ -21,10 +21,13 @@ const styles = createStyles({
   },
 });
 
-type Props = WithStyles<typeof styles>;
+interface Props extends WithStyles<typeof styles> {
+  id?: number;
+}
 
 const SubmitBar: React.FC<Props> = observer<Props>(({
   classes,
+  id,
 }) => {
   const store = useStore();
 
@@ -48,12 +51,28 @@ const SubmitBar: React.FC<Props> = observer<Props>(({
     Router.push('/');
   };
 
+  const update = async (
+    title: string, content: string, categoryNames: Array<string>, postId: number, thumbnail?: string,
+  ): Promise<void> => {
+    const { status } = await putPost({
+      title, content, categoryNames, thumbnail,
+    }, postId);
+
+    if (status !== 201) {
+      alert(`error: ${status}`);
+      return;
+    }
+
+    Router.push('/');
+  };
+
   const sendOnClick = (): void => {
     const { title, content, tags } = post;
 
     const image = getImage(content);
 
-    send(title, content, tags, image?.src);
+    //eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    id ? update(title, content, tags, id, image?.src) : send(title, content, tags, image?.src);
   };
 
   return (

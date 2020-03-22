@@ -99,7 +99,7 @@ export default function makePostController(): Router {
       chain(postService.updatePost),
       fold(
         (error) => of(next(error)),
-        (_) => of(res.status(204).end()),
+        (_) => of(res.status(201).end()),
       ),
     )();
   }

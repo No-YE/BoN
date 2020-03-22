@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +7,8 @@ import { Request, Response } from 'express';
 import SubmitBar from '../componets/SummitBar';
 import MarkdownEditor from '../componets/MarkdownEditor';
 import { getSignedUrl } from '../lib/api/image';
-import { Store } from '../store';
+import { Store, useStore } from '../store';
+import { getPostById } from '../lib/api/post';
 
 interface CustomNextPage<P> {
   (props: P): JSX.Element;
@@ -18,10 +19,13 @@ interface CustomNextPageProps {
   req: Request;
   res: Response;
   store: Store;
+  query: {
+    [key: string]: string;
+  };
 }
 
 interface Props {
-  isAuthenticated: boolean;
+  id?: number;
 }
 
 const useStyles = makeStyles({
@@ -31,8 +35,14 @@ const useStyles = makeStyles({
   },
 });
 
-const PageWritePost: CustomNextPage<Props> = () => {
+const PageWritePost: CustomNextPage<Props> = ({
+  id,
+}) => {
   const classes = useStyles();
+  const store = useStore();
+
+  store.setPost();
+
 
   const onImageUpload = async (file: File): Promise<string> => {
     const filename = file.name;
@@ -45,14 +55,23 @@ const PageWritePost: CustomNextPage<Props> = () => {
       },
     });
 
-    //eslint-disable-next-line max-len
     return res.data.realUri;
   };
+
+  useEffect(() => {
+    //eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    id && (async (): Promise<void> => {
+      const res = await getPostById(id);
+      const { title, content, categories } = res.data;
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      store.setPost(title, content, categories.map((category: any) => category.name));
+    })();
+  }, []);
 
   return (
     <Box display="flex" className={classes.root} flexDirection="column" justifyContent="space-between">
       <MarkdownEditor onImageUpload={onImageUpload} />
-      <SubmitBar />
+      <SubmitBar id={id} />
     </Box>
   );
 };
@@ -63,15 +82,15 @@ PageWritePost.getInitialProps = async (ctx: CustomNextPageProps): Promise<Props>
   if (!ctx.req?.session?.user && isServer) {
     ctx.res.writeHead(302, { Location: '/api/v1/user/google' });
     ctx.res.end();
-    return { isAuthenticated: false };
+    return { id: undefined };
   }
 
   if (!ctx.store.user && !isServer) {
     Router.push('/api/v1/user/google');
-    return { isAuthenticated: false };
+    return { id: undefined };
   }
 
-  return { isAuthenticated: true };
+  return { id: ctx.query.id ? Number(ctx.query.id) : undefined };
 };
 
 export default PageWritePost;

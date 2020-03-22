@@ -12,6 +12,7 @@ export default (err: Error, req: Request, res: Response, next: NextFunction): vo
       break;
     default:
       Sentry.captureException(err);
+      console.log(err);
       res.status(500).end();
   }
 

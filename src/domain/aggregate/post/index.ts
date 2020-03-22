@@ -32,7 +32,7 @@ export default class Post {
   @Column()
   userId?: number;
 
-  @ManyToMany((_) => Category)
+  @ManyToMany((_) => Category, (category) => category.post)
   @JoinTable({
     name: 'post_to_category',
     joinColumn: { name: 'postId', referencedColumnName: 'id' },

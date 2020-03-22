@@ -4,6 +4,7 @@ import MarkdownIt from 'markdown-it';
 import {
   withStyles, WithStyles, createStyles, Box,
 } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 import TitleInput from './TitleInput';
 import TagInput from './TagInput';
 import { useStore } from '../store';
@@ -18,17 +19,17 @@ const styles = createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   onImageUpload?: (file: File) => Promise<string>;
+  id?: number;
 }
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), { ssr: false });
 const mdParser = new MarkdownIt();
 
-const MarkdownEditor: React.FC<Props> = ({
+const MarkdownEditor: React.FC<Props> = observer<Props>(({
   classes,
   onImageUpload = async (): Promise<void> => {},
 }) => {
   const store = useStore();
-  store.setPost();
 
   if (!store.post) {
     return null;
@@ -41,6 +42,7 @@ const MarkdownEditor: React.FC<Props> = ({
       <TitleInput placeholder="제목" />
       <TagInput placeholder="카테고리" />
       <MdEditor
+        value={post.content}
         renderHTML={(text): string => mdParser.render(text)}
         onChange={(content): void => post.setContent(content.text)}
         onImageUpload={onImageUpload}
@@ -48,6 +50,6 @@ const MarkdownEditor: React.FC<Props> = ({
       />
     </Box>
   );
-};
+});
 
 export default withStyles(styles)(MarkdownEditor);

@@ -35,7 +35,7 @@ export default function makePostService() {
     );
   }
 
-  function updatePost(dto: UpdatePostDto): TaskEither<Error, UpdateResult> {
+  function updatePost(dto: UpdatePostDto): TaskEither<Error, Post> {
     const {
       categoryNames, content, id, title,
     } = dto;
@@ -44,11 +44,10 @@ export default function makePostService() {
       categoryNames.map((name) => ({ name })),
       repository.findOrCreateCategories,
       chain((categories) => repository.update({
-        categories,
         content,
         id,
         title,
-      })),
+      }, categories)),
     );
   }
 

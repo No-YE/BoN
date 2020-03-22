@@ -44,6 +44,18 @@ type CreatePostPayload = {
 
 export const createPost = (payload: CreatePostPayload): Promise<AxiosResponse> => axios.post('/post', payload);
 
+type PutPostPayload = {
+  title: string;
+  content: string;
+  thumbnail?: string;
+  categoryNames: Array<string>;
+};
+
+export const putPost = (
+  payload: PutPostPayload,
+  id: number,
+): Promise<AxiosResponse> => axios.put(`/post/${id}`, payload);
+
 export const deletePost = (id: number): Promise<AxiosResponse> => axios.delete(`/post/${id}`);
 
 export const getAllCategories = (): Promise<AxiosResponse> => axios.get('/category');
