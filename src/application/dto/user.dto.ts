@@ -12,3 +12,8 @@ export type DeleteUserDto = {
 export type SigninCallbackDto = {
   code: string;
 };
+
+export type CreateTokenDto = {
+  id: number;
+  role: UserRole;
+};

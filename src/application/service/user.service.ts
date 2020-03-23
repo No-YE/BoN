@@ -2,7 +2,7 @@ import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 import { UpdateResult } from 'typeorm';
-import { decode } from 'jsonwebtoken';
+import { decode, sign } from 'jsonwebtoken';
 import {
   TaskEither, left, right, chain, map, fromEither, tryCatch, fromOption,
 } from 'fp-ts/lib/TaskEither';
@@ -10,10 +10,10 @@ import { fromNullable } from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makeUserRepository from '~/domain/repository/user.repository';
 import {
-  UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto,
+  UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto, CreateTokenDto,
 } from '../dto/user.dto';
 import User from '~/domain/aggregate/user';
-import { GoogleEnv, getGoogleEnv } from '~/config/env';
+import { GoogleEnv, getGoogleEnv, getJwtSecret } from '~/config/env';
 import { UserSession, UserRole } from '~/type';
 import { Social } from '~/type/social.type';
 import Error from '~/lib/error';
@@ -102,10 +102,21 @@ export default function makeUserService() {
     );
   }
 
+  function createToken(dto: CreateTokenDto): TaskEither<Error, string> {
+    const { id, role } = dto;
+
+    return pipe(
+      getJwtSecret(),
+      fromEither,
+      map((secret) => sign({ id, role }, secret, { algorithm: 'HS512' })),
+    );
+  }
+
   return {
     updateUserRole,
     deleteUser,
     signin,
     signinCallback,
+    createToken,
   };
 }

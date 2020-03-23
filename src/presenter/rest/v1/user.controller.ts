@@ -7,6 +7,7 @@ import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makeUserService from '~/application/service/user.service';
 import * as validator from '../validator/user.validator';
+import authenticateMiddleware from '~/lib/middleware/authenticate.middleware';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeUserController() {
@@ -34,6 +35,19 @@ export default function makeUserController() {
     )();
   }
 
-  return router.get('/google', asyncHandler(googleSignin))
-    .get('/google/callback', asyncHandler(googleSigninCallback));
+  async function makeToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+    pipe(
+      validator.makeTokenValidate({ id: req.session?.user?.id, role: req.session?.user?.role }),
+      chain(userService.createToken),
+      fold(
+        (error) => of(next(error)),
+        (token) => of(res.status(201).json({ token }).end()),
+      ),
+    )();
+  }
+
+  return router
+    .get('/google', asyncHandler(googleSignin))
+    .get('/google/callback', asyncHandler(googleSigninCallback))
+    .get('/token', authenticateMiddleware, asyncHandler(makeToken));
 }

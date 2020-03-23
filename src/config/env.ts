@@ -84,3 +84,7 @@ export function getSentryDsn(): Either<Error, SentryEnv> {
     ap(getEnv('SENTRY_DSN')),
   );
 }
+
+export function getJwtSecret(): Either<Error, string> {
+  return getEnv('JWT_SECRET');
+}
