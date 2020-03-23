@@ -13,7 +13,7 @@ export default (err: Error, req: Request, res: Response, next: NextFunction): vo
     default:
       Sentry.captureException(err);
       console.log(err);
-      res.status(500).end();
+      res.status(500).end('internal server error');
   }
 
   return next();

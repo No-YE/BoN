@@ -1,4 +1,5 @@
-import { UserSession } from './user-session.type';
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { UserSession } from '../user-session.type';
 
 declare global {
   namespace Express {

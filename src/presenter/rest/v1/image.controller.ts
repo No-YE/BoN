@@ -17,7 +17,7 @@ export default function makeImageController(): Router {
       validator.createImageValidate({
         filename: req.query.filename,
         kind: req.query.kind,
-        userId: req.session!.user!.id,
+        userId: req.user?.id,
       }),
       chain(imageService.createPresignedUrl),
       fold(

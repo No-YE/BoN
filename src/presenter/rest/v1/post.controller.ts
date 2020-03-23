@@ -61,7 +61,7 @@ export default function makePostController(): Router {
 
   function getPostById(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
-      validator.getPostByIdValidate({ id: req.params.id, userRole: req.session?.user?.role }),
+      validator.getPostByIdValidate({ id: req.params.id, userRole: req.user?.role }),
       chain(postService.findPost),
       fold(
         (error) => of(next(error)),
@@ -77,12 +77,12 @@ export default function makePostController(): Router {
         content: req.body.content,
         categoryNames: req.body.categoryNames,
         thumbnail: req.body.thumbnail,
-        userId: req.session!.user!.id,
+        userId: req.user?.id,
       }),
       chain(postService.createPost),
       fold(
         (error) => of(next(error)),
-        (_) => of(res.status(201).end()),
+        () => of(res.status(201).end()),
       ),
     )();
   }
@@ -99,7 +99,7 @@ export default function makePostController(): Router {
       chain(postService.updatePost),
       fold(
         (error) => of(next(error)),
-        (_) => of(res.status(201).end()),
+        () => of(res.status(201).end()),
       ),
     )();
   }
@@ -110,7 +110,7 @@ export default function makePostController(): Router {
       chain(postService.deletePost),
       fold(
         (error) => of(next(error)),
-        (_) => of(res.status(204).end()),
+        () => of(res.status(204).end()),
       ),
     )();
   }

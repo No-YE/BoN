@@ -38,9 +38,9 @@ export default function makeUserController() {
   async function makeToken(req: Request, res: Response, next: NextFunction): Promise<void> {
     pipe(
       validator.makeTokenValidate({
-        id: req.session?.user?.id,
-        role: req.session?.user?.role,
-        email: req.session?.user?.email,
+        id: req.user?.id,
+        role: req.user?.role,
+        email: req.user?.email,
       }),
       chain(userService.createToken),
       fold(
