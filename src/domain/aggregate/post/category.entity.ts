@@ -1,4 +1,3 @@
-/*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
   Column, PrimaryGeneratedColumn, Entity, UpdateDateColumn, CreateDateColumn, ManyToMany, JoinTable, Index,
 } from 'typeorm';

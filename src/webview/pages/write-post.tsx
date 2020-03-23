@@ -59,7 +59,6 @@ const PageWritePost: CustomNextPage<Props> = ({
   };
 
   useEffect(() => {
-    //eslint-disable-next-line @typescript-eslint/no-unused-expressions
     id && (async (): Promise<void> => {
       const res = await getPostById(id);
       const { title, content, categories } = res.data;

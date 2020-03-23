@@ -16,4 +16,5 @@ export type SigninCallbackDto = {
 export type CreateTokenDto = {
   id: number;
   role: UserRole;
+  email: string;
 };

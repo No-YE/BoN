@@ -103,12 +103,10 @@ export default function makeUserService() {
   }
 
   function createToken(dto: CreateTokenDto): TaskEither<Error, string> {
-    const { id, role } = dto;
-
     return pipe(
       getJwtSecret(),
       fromEither,
-      map((secret) => sign({ id, role }, secret, { algorithm: 'HS512' })),
+      map((secret) => sign({ ...dto }, secret, { algorithm: 'HS512' })),
     );
   }
 

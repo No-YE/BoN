@@ -14,7 +14,6 @@ import { getSentryDsn } from './config/env';
 pipe(
   ormconfig,
   chain(connect),
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   chain((_) => fromEither(getSentryDsn())),
   map((env) => Sentry.init({ dsn: env.dsn, environment: env.nodeEnv })),
   chain(makeApp),

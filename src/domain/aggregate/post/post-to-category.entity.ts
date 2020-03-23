@@ -1,4 +1,3 @@
-/*eslint-disable @typescript-eslint/no-unused-vars*/
 import { Entity, ManyToOne, JoinColumn } from 'typeorm';
 import Post from '.';
 import Category from './category.entity';

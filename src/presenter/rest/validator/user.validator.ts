@@ -21,6 +21,7 @@ export function signinCallbackValidate(
 type MakeTokenSchema = {
   id: number;
   role: UserRole;
+  email: string;
 };
 
 export function makeTokenValidate(
@@ -29,6 +30,7 @@ export function makeTokenValidate(
   const schema = Joi.object({
     id: Joi.number().min(0).required(),
     role: Joi.string().valid('admin', 'operator', 'noRole').required(),
+    email: Joi.string().email(),
   });
 
   return validate<MakeTokenSchema>(schema, obj);

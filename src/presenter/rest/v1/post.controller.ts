@@ -1,4 +1,3 @@
-/*eslint-disable @typescript-eslint/no-unused-vars*/
 import {
   Request, Response, NextFunction, Router,
 } from 'express';

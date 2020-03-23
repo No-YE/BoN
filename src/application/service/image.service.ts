@@ -25,8 +25,7 @@ export default function makeImageService() {
 
     return pipe(
       repository.create({ kind: 'post', uri: realUri }),
-      //eslint-disable-next-line @typescript-eslint/no-unused-vars
-      map((_) => ({
+      map(() => ({
         uploadUri: s3.getSignedUrl('putObject', {
           Bucket: 'blog-of-noye',
           Key: path,

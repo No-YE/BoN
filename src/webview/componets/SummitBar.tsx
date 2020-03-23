@@ -71,7 +71,6 @@ const SubmitBar: React.FC<Props> = observer<Props>(({
 
     const image = getImage(content);
 
-    //eslint-disable-next-line @typescript-eslint/no-unused-expressions
     id ? update(title, content, tags, id, image?.src) : send(title, content, tags, image?.src);
   };
 
