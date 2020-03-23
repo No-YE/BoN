@@ -14,5 +14,33 @@ services:
       - 3306
     ports:
       - "3306:3306"
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    environment:
+      - NODE_ENV
+      - SENTRY_DSN=https://e03998b2a3284aa0aa973c2b6071628e@sentry.io/5017627
+
+      - SESSION_SECRET=uedEW3578NSMzMwrETJ7
+      - JWT_SECRET=emahrNuQeerCLM4ZJ5GV
+
+      - GOOGLE_CLIENT_ID=331942181133-po566glbdsp1dft3kodupbq7dq82ftbs.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=6aNThsiP1Xn3Lb9L62rQvsWm
+      - GOOGLE_REDIRECT_URI=http://localhost:3000/api/v1/user/google/callback
+
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=bon_test
+      - MYSQL_USERNAME=test
+      - MYSQL_PASSWORD=test
+
+      - AWS_ACCESS_KEY_ID=AKIAJ7CQSHOZERWA7LRQ
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_DEFAULT_REGION=ap-northeast-2
 volumes:
   db_data:
