@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+const typeorm = require('typeorm');
+
+(async () => {
+  try {
+    const connection = await typeorm.createConnection({
+      type: 'mysql',
+      host: process.env.MYSQL_HOST,
+      port: Number(process.env.MYSQL_PORT),
+      username: process.env.MYSQL_USERNAME,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+    });
+  
+    const queryRunner = connection.createQueryRunner();
+    await queryRunner.createDatabase(process.env.MYSQL_DATABASE, true); 
+
+    console.log('done');
+  } catch (error) {
+    console.log(error); 
+  } finally {
+    process.exit(0);
+  }
+})();
