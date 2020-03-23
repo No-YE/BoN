@@ -83,6 +83,10 @@
         {
           "valueFrom": "BON_SESSION_SECRET",
           "name": "SESSION_SECRET"
+        },
+        {
+          "valueFrom": "BON_JWT_SECRET",
+          "name": "JWT_SECRET"
         }
       ],
       "dockerSecurityOptions": null,
