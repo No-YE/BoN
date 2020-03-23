@@ -210,6 +210,7 @@ export default () => {
       id: number;
       title: string;
       content: string;
+      thumbnail?: string;
     },
     categories: Array<Category>,
     transactionManager?: EntityManager,

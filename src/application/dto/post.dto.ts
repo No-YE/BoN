@@ -13,6 +13,7 @@ export type UpdatePostDto = {
   title: string;
   content: string;
   categoryNames: Array<string>;
+  thumbnail?: string;
 };
 
 export type DeletePostDto = {

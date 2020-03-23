@@ -95,6 +95,7 @@ export default function makePostController(): Router {
         title: req.body.title,
         content: req.body.content,
         categoryNames: req.body.categoryNames,
+        thumbnail: req.body.thumbnail,
       }),
       chain(postService.updatePost),
       fold(
