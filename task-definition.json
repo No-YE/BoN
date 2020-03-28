@@ -23,7 +23,7 @@
       ],
       "command": null,
       "linuxParameters": null,
-      "cpu": 1024,
+      "cpu": 0,
       "environment": [
         {
           "name": "GOOGLE_REDIRECT_URI",
@@ -123,7 +123,7 @@
     "EC2"
   ],
   "networkMode": "bridge",
-  "cpu": "2048",
+  "cpu": "1024",
   "inferenceAccelerators": null,
   "proxyConfiguration": null,
   "volumes": []
