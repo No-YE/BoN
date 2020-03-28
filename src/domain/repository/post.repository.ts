@@ -205,6 +205,18 @@ export default () => {
     );
   }
 
+  function findAllIds(): TaskEither<Error, Array<Post>> {
+    return tryCatch(
+      () => manager.getRepository(Post).find({
+        select: ['id'],
+        where: [
+          { isActive: true },
+        ],
+      }),
+      Error.of,
+    );
+  }
+
   function update(
     post: {
       id: number;
@@ -263,5 +275,6 @@ export default () => {
     findByCategory,
     findAllCategories,
     findOrCreateCategories,
+    findAllIds,
   };
 };

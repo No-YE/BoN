@@ -5,6 +5,7 @@ import {
 import { fromNullable, Option } from 'fp-ts/lib/Option';
 import { fold as bFold } from 'fp-ts/lib/boolean';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { LeafObject } from 'express-sitemap-xml';
 import makePostRepository from '~/domain/repository/post.repository';
 import Post, { Category } from '~/domain/aggregate/post';
 import {
@@ -90,6 +91,13 @@ export default function makePostService() {
     return repository.findAllCategories();
   }
 
+  function findAllIdUrl(): TaskEither<Error, Array<LeafObject>> {
+    return pipe(
+      repository.findAllIds(),
+      map((posts) => posts.map((p) => ({ url: `/post/${p.id}` }))),
+    );
+  }
+
   return {
     createPost,
     updatePost,
@@ -99,5 +107,6 @@ export default function makePostService() {
     findPost,
     findByCategory,
     findAllCategories,
+    findAllIdUrl,
   };
 }
