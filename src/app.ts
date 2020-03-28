@@ -5,6 +5,7 @@ import path from 'path';
 import to from 'await-to-js';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Either, left, right } from 'fp-ts/lib/Either';
+import helmet from 'helmet';
 import makeRouter from './presenter/rest';
 import errorMiddleware from './presenter/rest/middleware/error.middleware';
 
@@ -24,6 +25,7 @@ export default (): TaskEither<Error, Express> => async (): Promise<Either<Error,
   const handle = nextApp.getRequestHandler();
 
   app
+    .use(helmet())
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use(expressSession({
