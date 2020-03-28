@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as Sentry from '@sentry/node';
-import { Error400, Error401 } from '../error';
+import { Error400, Error401 } from '../../../lib/error';
 
 export default (err: Error, req: Request, res: Response, next: NextFunction): void => {
   switch (true) {

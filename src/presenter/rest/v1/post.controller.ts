@@ -7,7 +7,7 @@ import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as validator from '../validator/post.validator';
 import makePostService from '~/application/service/post.service';
-import authenticate from '~/lib/middleware/authenticate.middleware';
+import authenticate from '~/presenter/rest/middleware/authenticate.middleware';
 
 export default function makePostController(): Router {
   const router = Router();

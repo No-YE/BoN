@@ -1,6 +1,6 @@
 import { Request, NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { Error401 } from '../error';
+import { Error401 } from '../../../lib/error';
 import { UserSession } from '~/type';
 
 function verifyToken(headerToken: string): UserSession | undefined {

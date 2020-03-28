@@ -6,7 +6,7 @@ import to from 'await-to-js';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Either, left, right } from 'fp-ts/lib/Either';
 import makeRouter from './presenter/rest';
-import errorMiddleware from './lib/middleware/error.middleware';
+import errorMiddleware from './presenter/rest/middleware/error.middleware';
 
 export default (): TaskEither<Error, Express> => async (): Promise<Either<Error, Express>> => {
   const dev = process.env.NODE_ENV !== 'production';

@@ -7,7 +7,7 @@ import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makeUserService from '~/application/service/user.service';
 import * as validator from '../validator/user.validator';
-import authenticateMiddleware from '~/lib/middleware/authenticate.middleware';
+import authenticateMiddleware from '~/presenter/rest/middleware/authenticate.middleware';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function makeUserController() {

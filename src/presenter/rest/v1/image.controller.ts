@@ -7,7 +7,7 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import { of } from 'fp-ts/lib/Task';
 import * as validator from '../validator/image.validator';
 import makeImageService from '~/application/service/image.service';
-import authenticateMiddleware from '~/lib/middleware/authenticate.middleware';
+import authenticateMiddleware from '~/presenter/rest/middleware/authenticate.middleware';
 
 export default function makeImageController(): Router {
   const router = Router();
