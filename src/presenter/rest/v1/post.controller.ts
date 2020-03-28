@@ -61,7 +61,7 @@ export default function makePostController(): Router {
 
   function getPostById(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
-      validator.getPostByIdValidate({ id: req.params.id, userRole: req.user?.role }),
+      validator.getPostByIdValidate({ id: req.params.id, userRole: req.session?.user?.role }),
       chain(postService.findPost),
       fold(
         (error) => of(next(error)),
