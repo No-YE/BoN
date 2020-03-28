@@ -18,7 +18,7 @@ export default class Comment {
   @Column()
   isActive?: boolean;
 
-  @ManyToOne((_) => Post)
+  @ManyToOne(() => Post)
   @JoinColumn()
   post?: Post;
 

@@ -14,7 +14,7 @@ import { getSentryDsn } from './config/env';
 pipe(
   ormconfig,
   chain(connect),
-  chain((_) => fromEither(getSentryDsn())),
+  chain(() => fromEither(getSentryDsn())),
   map((env) => Sentry.init({ dsn: env.dsn, environment: env.nodeEnv })),
   chain(makeApp),
   fold<Error, Express, number>(

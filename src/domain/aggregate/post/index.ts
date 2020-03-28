@@ -31,7 +31,7 @@ export default class Post {
   @Column()
   userId?: number;
 
-  @ManyToMany((_) => Category, (category) => category.post)
+  @ManyToMany(() => Category, (category) => category.post)
   @JoinTable({
     name: 'post_to_category',
     joinColumn: { name: 'postId', referencedColumnName: 'id' },
@@ -39,7 +39,7 @@ export default class Post {
   })
   categories?: Array<Category>;
 
-  @OneToMany((_) => Comment, (comment) => comment.post)
+  @OneToMany(() => Comment, (comment) => comment.post)
   @JoinColumn()
   comments?: Array<Comment>;
 

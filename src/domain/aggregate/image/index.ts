@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, Index,
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index,
 } from 'typeorm';
 import { ImageKind } from '~/type';
 

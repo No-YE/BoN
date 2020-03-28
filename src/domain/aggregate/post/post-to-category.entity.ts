@@ -8,11 +8,11 @@ export default class PostToCategory {
     return new this(postToCategory);
   }
 
-  @ManyToOne((_) => Post, { primary: true })
+  @ManyToOne(() => Post, { primary: true })
   @JoinColumn()
   post?: Post;
 
-  @ManyToOne((_) => Category, { primary: true })
+  @ManyToOne(() => Category, { primary: true })
   @JoinColumn()
   category?: Category;
 
