@@ -1,7 +1,9 @@
 import React from 'react';
 import { NextPage, NextPageContext } from 'next';
+import { NextSeo } from 'next-seo';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
+import { OpenGraphImages } from 'next-seo/lib/types';
 import Copy from '../componets/CategoryList';
 import Header from '../componets/Header';
 import { useStore } from '../store';
@@ -44,12 +46,31 @@ const PageIndex: NextPage<Props> = ({
     category.changeOpen(true);
   };
 
+  const openGraphImages: Array<OpenGraphImages> = store.feed?.items
+    .filter((f) => f)
+    .map((f) => ({ url: f.thumbnail as string }))
+      ?? [];
+
   return (
-    <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
-      <Header position="static" menuOnClick={menuOnClick} />
-      <Copy anchor="left" />
-      <FeedList page="/" count={feedsCount} currentPage={currentPage} />
-    </Box>
+    <>
+      <NextSeo
+        title="BoN"
+        description="NoYE's tech blog"
+        openGraph={{
+          type: 'website',
+          url: 'https://www.noye.xyz',
+          title: 'BoN',
+          images: openGraphImages,
+          description: 'NoYE\'s tech blog',
+          site_name: 'BoN',
+        }}
+      />
+      <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
+        <Header position="static" menuOnClick={menuOnClick} />
+        <Copy anchor="left" />
+        <FeedList page="/" count={feedsCount} currentPage={currentPage} />
+      </Box>
+    </>
   );
 };
 

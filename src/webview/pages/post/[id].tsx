@@ -2,7 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import { NextPage, NextPageContext } from 'next';
-import Head from 'next/head';
+import { NextSeo, BlogJsonLd } from 'next-seo';
+import { OpenGraphImages } from 'next-seo/lib/types';
 import CategoryList from '../../componets/CategoryList';
 import Header from '../../componets/Header';
 import { useStore } from '../../store';
@@ -42,17 +43,38 @@ const PagePost: NextPage<Props> = ({
     category.changeOpen(true);
   };
 
+  const openGraphImages: Array<OpenGraphImages> = post.thumbnail ? [{ url: post.thumbnail }] : [];
+
   return (
-    <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
-      <Head>
-        <title>{post.title}</title>
-        <meta name="keywords" content={post.categories.map((c: Category) => c.name).join(',')} />
-      </Head>
-      <Header position="static" menuOnClick={menuOnClick} />
-      <CategoryList anchor="left" />
-      <PostHead title={post.title} createdAt={post.createdAt} categories={post.categories} id={post.id} />
-      <MarkdownViewer content={post.content} />
-    </Box>
+    <>
+      <NextSeo
+        title={post.title}
+        description="NoYE's tech blog"
+        openGraph={{
+          type: 'website',
+          url: `https://www.noye.xyz/post/${post.id}`,
+          title: post.title,
+          images: openGraphImages,
+          description: 'NoYE\'s tech blog',
+          site_name: 'BoN',
+        }}
+      />
+      <BlogJsonLd
+        title={post.title}
+        description="NoYE's tech blog"
+        url="https://www.noye.xyz"
+        authorName="NoYE"
+        images={post.thumbnail ? [post.thumbnail] : []}
+        datePublished={post.createdAt}
+        dateModified={post.updatedAt}
+      />
+      <Box className={classes.root} display="flex" flexDirection="column" justifyContent="center">
+        <Header position="static" menuOnClick={menuOnClick} />
+        <CategoryList anchor="left" />
+        <PostHead title={post.title} createdAt={post.createdAt} categories={post.categories} id={post.id} />
+        <MarkdownViewer content={post.content} />
+      </Box>
+    </>
   );
 };
 

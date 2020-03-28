@@ -60,12 +60,8 @@ class NextApp extends App<any> {
     return (
       <>
         <Head>
-          <title>BoN</title>
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <meta charSet="UTF-8" />
-          <meta name="description" content="Blog of NoYE" />
-          <meta name="keywords" content="NoYE, Blog, development" />
-          <meta name="author" content="NoYE" />
           <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
           <meta name="google-site-verification" content="Ge4fzJOLWo1lt-Thagj3Ii9Pkx2dD_prg9JAEGZlgpo" />
         </Head>
