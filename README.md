@@ -80,3 +80,6 @@ $ node dist
 - AWS EC2(nginx, mysql)
 - AWS ECS
 - Github Actions
+
+## CLI
+[BoN-cli]("https://github.com/No-YE/BoN-cli")
