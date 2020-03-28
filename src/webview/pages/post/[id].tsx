@@ -4,6 +4,7 @@ import { Box } from '@material-ui/core';
 import { NextPage, NextPageContext } from 'next';
 import { NextSeo, BlogJsonLd } from 'next-seo';
 import { OpenGraphImages } from 'next-seo/lib/types';
+import removeMd from 'remove-markdown';
 import CategoryList from '../../componets/CategoryList';
 import Header from '../../componets/Header';
 import { useStore } from '../../store';
@@ -55,7 +56,7 @@ const PagePost: NextPage<Props> = ({
           url: `https://www.noye.xyz/post/${post.id}`,
           title: post.title,
           images: openGraphImages,
-          description: 'NoYE\'s tech blog',
+          description: removeMd(post.content.substring(0, 160)),
           site_name: 'BoN',
         }}
       />
