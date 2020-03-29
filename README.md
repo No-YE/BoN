@@ -1,4 +1,5 @@
 # Blog of NoYE
+![](https://github.com/No-YE/BoN/workflows/Deploy%20to%20Amazon%20ECS/badge.svg?branch=master)
 
 ## Description
 NoYE's personal tech blog
