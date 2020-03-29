@@ -95,6 +95,7 @@
     "react-markdown-editor-lite": "^1.0.1",
     "reflect-metadata": "^0.1.13",
     "remove-markdown": "^0.3.0",
+    "source-map-support": "^0.5.16",
     "tsconfig-paths": "^3.9.0",
     "typeorm": "^0.2.22",
     "typesafe-joi": "^2.1.0",

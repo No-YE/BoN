@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'source-map-support/register';
 import './config/ts-path';
 import { Express } from 'express';
 import * as Sentry from '@sentry/node';
