@@ -1,4 +1,4 @@
-import { TaskEither } from 'fp-ts/lib/TaskEither';
+import { Either } from 'fp-ts/lib/Either';
 import Joi from 'typesafe-joi';
 import validate from './validate';
 import { UserRole } from '~/type';
@@ -10,7 +10,7 @@ type GetRecentPostsSchema = {
 
 export function getRecentPostsValidate(
   obj: { [key in keyof GetRecentPostsSchema]: unknown },
-): TaskEither<Error, GetRecentPostsSchema> {
+): Either<Error, GetRecentPostsSchema> {
   const schema = Joi.object({
     skip: Joi.number().integer().min(0).default(0),
     take: Joi.number().integer().min(0).max(100)
@@ -28,7 +28,7 @@ type GetPostsByCategorySchema = {
 
 export function GetPostsByCategoryValidate(
   obj: { [key in keyof GetPostsByCategorySchema]: unknown },
-): TaskEither<Error, GetPostsByCategorySchema> {
+): Either<Error, GetPostsByCategorySchema> {
   const schema = Joi.object({
     skip: Joi.number().integer().min(0).default(0),
     take: Joi.number().integer().min(0).max(100)
@@ -47,7 +47,7 @@ type SearchPostsSchema = {
 
 export function SearchPostsValidate(
   obj: { [key in keyof SearchPostsSchema]: unknown },
-): TaskEither<Error, SearchPostsSchema> {
+): Either<Error, SearchPostsSchema> {
   const schema = Joi.object({
     skip: Joi.number().integer().min(0).default(0),
     take: Joi.number().integer().min(0).max(100)
@@ -65,7 +65,7 @@ type GetPostByIdSchema = {
 
 export function getPostByIdValidate(
   obj: { [key in keyof GetPostByIdSchema]: unknown },
-): TaskEither<Error, GetPostByIdSchema> {
+): Either<Error, GetPostByIdSchema> {
   const schema = Joi.object({
     id: Joi.number().integer().min(0).required(),
     userRole: Joi.valid('admin', 'operator', 'noRole').optional(),
@@ -84,7 +84,7 @@ type CreatePostSchema = {
 
 export function createPostValidate(
   obj: { [key in keyof CreatePostSchema]: unknown },
-): TaskEither<Error, CreatePostSchema> {
+): Either<Error, CreatePostSchema> {
   const schema = Joi.object({
     title: Joi.string().min(1).max(255).required(),
     content: Joi.string().min(1).required(),
@@ -106,7 +106,7 @@ type UpdatePostSchema = {
 
 export function updatePostValidate(
   obj: { [key in keyof UpdatePostSchema]: unknown },
-): TaskEither<Error, UpdatePostSchema> {
+): Either<Error, UpdatePostSchema> {
   const schema = Joi.object({
     id: Joi.number().integer().min(0),
     title: Joi.string().min(1).max(255).required(),
@@ -124,7 +124,7 @@ type DeletePostSchema = {
 
 export function deletePostValidate(
   obj: { [key in keyof DeletePostSchema]: unknown },
-): TaskEither<Error, DeletePostSchema> {
+): Either<Error, DeletePostSchema> {
   const schema = Joi.object({
     id: Joi.number().min(0).required(),
   });

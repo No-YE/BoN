@@ -2,7 +2,7 @@ import {
   Request, Response, NextFunction, Router,
 } from 'express';
 import asyncHandler from 'express-async-handler';
-import { fold, chain } from 'fp-ts/lib/TaskEither';
+import { fold, chain, fromEither } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import makeUserService from '~/application/service/user.service';
@@ -24,6 +24,7 @@ export default function makeUserController() {
   async function googleSigninCallback(req: Request, res: Response, next: NextFunction): Promise<void> {
     pipe(
       validator.signinCallbackValidate({ code: req.query.code }),
+      fromEither,
       chain(userService.signinCallback),
       fold(
         (error) => of(next(error)),
@@ -42,6 +43,7 @@ export default function makeUserController() {
         role: req.user?.role,
         email: req.user?.email,
       }),
+      fromEither,
       chain(userService.createToken),
       fold(
         (error) => of(next(error)),

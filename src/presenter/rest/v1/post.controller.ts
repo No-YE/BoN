@@ -2,7 +2,7 @@ import {
   Request, Response, NextFunction, Router,
 } from 'express';
 import asyncHandler from 'express-async-handler';
-import { fold, chain } from 'fp-ts/lib/TaskEither';
+import { fold, chain, fromEither } from 'fp-ts/lib/TaskEither';
 import { of } from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as validator from '../validator/post.validator';
@@ -19,6 +19,7 @@ export default function makePostController(): Router {
         skip: req.query.offset,
         take: req.query.limit,
       }),
+      fromEither,
       chain(postService.findNewPosts),
       fold(
         (error) => of(next(error)),
@@ -36,6 +37,7 @@ export default function makePostController(): Router {
         take: req.query.limit,
         categoryId: req.params.categoryId,
       }),
+      fromEither,
       chain(postService.findByCategory),
       fold(
         (error) => of(next(error)),
@@ -51,6 +53,7 @@ export default function makePostController(): Router {
         take: req.query.limit,
         query: req.query.q,
       }),
+      fromEither,
       chain(postService.searchPosts),
       fold(
         (error) => of(next(error)),
@@ -62,6 +65,7 @@ export default function makePostController(): Router {
   function getPostById(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.getPostByIdValidate({ id: req.params.id, userRole: req.session?.user?.role }),
+      fromEither,
       chain(postService.findPost),
       fold(
         (error) => of(next(error)),
@@ -79,6 +83,7 @@ export default function makePostController(): Router {
         thumbnail: req.body.thumbnail,
         userId: req.user?.id,
       }),
+      fromEither,
       chain(postService.createPost),
       fold(
         (error) => of(next(error)),
@@ -96,6 +101,7 @@ export default function makePostController(): Router {
         categoryNames: req.body.categoryNames,
         thumbnail: req.body.thumbnail,
       }),
+      fromEither,
       chain(postService.updatePost),
       fold(
         (error) => of(next(error)),
@@ -107,6 +113,7 @@ export default function makePostController(): Router {
   function deletePost(req: Request, res: Response, next: NextFunction): Promise<void> {
     return pipe(
       validator.deletePostValidate({ id: req.params.id }),
+      fromEither,
       chain(postService.deletePost),
       fold(
         (error) => of(next(error)),

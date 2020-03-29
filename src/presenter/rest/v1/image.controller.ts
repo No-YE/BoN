@@ -2,7 +2,7 @@ import {
   Router, Request, Response, NextFunction,
 } from 'express';
 import asyncHandler from 'express-async-handler';
-import { chain, fold } from 'fp-ts/lib/TaskEither';
+import { chain, fold, fromEither } from 'fp-ts/lib/TaskEither';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { of } from 'fp-ts/lib/Task';
 import * as validator from '../validator/image.validator';
@@ -20,6 +20,7 @@ export default function makeImageController(): Router {
         kind: req.query.kind,
         userId: req.user?.id,
       }),
+      fromEither,
       chain(imageService.createPresignedUrl),
       fold(
         (error) => of(next(error)),

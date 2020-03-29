@@ -1,5 +1,5 @@
 import Joi from 'typesafe-joi';
-import { TaskEither } from 'fp-ts/lib/TaskEither';
+import { Either } from 'fp-ts/lib/Either';
 import validate from './validate';
 import { UserRole } from '~/type';
 
@@ -10,7 +10,7 @@ type SigninCallbackSchema = {
 //eslint-disable-next-line import/prefer-default-export
 export function signinCallbackValidate(
   obj: { [key in keyof SigninCallbackSchema]: unknown },
-): TaskEither<Error, SigninCallbackSchema> {
+): Either<Error, SigninCallbackSchema> {
   const schema = Joi.object({
     code: Joi.string().required(),
   });
@@ -26,7 +26,7 @@ type MakeTokenSchema = {
 
 export function makeTokenValidate(
   obj: { [key in keyof MakeTokenSchema]: unknown },
-): TaskEither<Error, MakeTokenSchema> {
+): Either<Error, MakeTokenSchema> {
   const schema = Joi.object({
     id: Joi.number().min(0).required(),
     role: Joi.string().valid('admin', 'operator', 'noRole').required(),
