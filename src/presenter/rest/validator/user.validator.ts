@@ -1,6 +1,6 @@
 import Joi from 'typesafe-joi';
 import { Either } from 'fp-ts/lib/Either';
-import validate from './validate';
+import validate from '~/lib/validate';
 import { UserRole } from '~/type';
 
 type SigninCallbackSchema = {

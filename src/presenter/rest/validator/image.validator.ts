@@ -1,7 +1,7 @@
 import Joi from 'typesafe-joi';
 import { Either } from 'fp-ts/lib/Either';
 import { ImageKind } from '~/type';
-import validate from './validate';
+import validate from '~/lib/validate';
 
 type CreateImageSchema = {
   userId: number;
