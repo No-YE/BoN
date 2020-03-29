@@ -1,5 +1,6 @@
 # Blog of NoYE
 ![](https://github.com/No-YE/BoN/workflows/Deploy%20to%20Amazon%20ECS/badge.svg?branch=master)
+![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)
 
 ## Description
 NoYE's personal tech blog
