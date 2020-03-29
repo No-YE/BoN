@@ -91,7 +91,7 @@
       ],
       "dockerSecurityOptions": null,
       "memory": 512,
-      "memoryReservation": null,
+      "memoryReservation": 256,
       "volumesFrom": [],
       "stopTimeout": null,
       "image": "285218891720.dkr.ecr.ap-northeast-2.amazonaws.com/bon",
@@ -115,7 +115,6 @@
     }
   ],
   "placementConstraints": [],
-  "memory": "1024",
   "taskRoleArn": null,
   "family": "BoN",
   "pidMode": null,
