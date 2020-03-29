@@ -41,3 +41,18 @@ export class Error401 extends StaticError {
     this.name = 'Unauthorized';
   }
 }
+
+export class Error404 extends StaticError {
+  static of(error?: Error | string | unknown): Error404 {
+    const originError = super.of(error);
+    const error404 = new Error404(originError.message);
+    error404.stack = originError.stack;
+
+    return error404;
+  }
+
+  constructor(message?: string) {
+    super(message);
+    this.name = 'NotFound';
+  }
+}
