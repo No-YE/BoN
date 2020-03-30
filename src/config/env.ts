@@ -96,3 +96,26 @@ function jwtEnvValidate(jwt?: string): Either<Error, string> {
 export function getJwtSecret(): Either<Error, string> {
   return jwtEnvValidate(process.env.JWT_SECRET);
 }
+
+export type InitEnv = {
+  nodeEnv: string;
+  sessionSecret: string;
+};
+
+function initEnvValidate(
+  obj: { [key in keyof InitEnv]: unknown },
+): Either<Error, InitEnv> {
+  const schema = Joi.object({
+    nodeEnv: Joi.string().required(),
+    sessionSecret: Joi.string().required(),
+  });
+
+  return validate<InitEnv>(schema, obj);
+}
+
+export function getInitEnv(): Either<Error, InitEnv> {
+  return initEnvValidate({
+    nodeEnv: process.env.NODE_ENV,
+    sessionSecret: process.env.SESSION_SECRET,
+  });
+}

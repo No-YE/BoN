@@ -10,9 +10,10 @@ import expressAsyncHandler from 'express-async-handler';
 import makeRouter from './presenter/rest';
 import errorMiddleware from './presenter/rest/middleware/error.middleware';
 import sitemapMiddleware from './presenter/rest/middleware/sitemap.middleware';
+import { InitEnv } from './config/env';
 
-export default (): TaskEither<Error, Express> => async (): Promise<Either<Error, Express>> => {
-  const dev = process.env.NODE_ENV !== 'production';
+export default (env: InitEnv): TaskEither<Error, Express> => async (): Promise<Either<Error, Express>> => {
+  const dev = env.nodeEnv !== 'production';
   const dir = path.resolve(__dirname, './webview');
 
   const app = express();
@@ -31,7 +32,7 @@ export default (): TaskEither<Error, Express> => async (): Promise<Either<Error,
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use(expressSession({
-      secret: process.env.SESSION_SECRET ?? 'a',
+      secret: env.sessionSecret,
       saveUninitialized: true,
       resave: false,
     }))
