@@ -84,4 +84,4 @@ $ node dist
 - Github Actions
 
 ## CLI
-[BoN-cli]("https://github.com/No-YE/BoN-cli")
+[BoN-cli](https://github.com/No-YE/BoN-cli)
