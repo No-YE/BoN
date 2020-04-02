@@ -65,10 +65,11 @@ $ node dist
 ## Tech / framework used
 
 ### Backend
+- Node.js
 - Typescript
 - Express.js
-- fp-ts
-- typeorm
+- FP-TS
+- TypeORM
 
 ### Frontend
 - Typescript
@@ -78,10 +79,13 @@ $ node dist
 - Material UI
 
 ### Infra
-- AWS S3
-- AWS EC2(nginx, mysql)
-- AWS ECS
 - Github Actions
+- Nginx
+- MySQL
+- AWS
+  - S3
+  - AWS ECS
+  - EC2
 
 ## CLI
 [BoN-cli](https://github.com/No-YE/BoN-cli)
