@@ -1,3 +1,4 @@
 bin/
 migration/
 *.config.js
+*.d.ts
