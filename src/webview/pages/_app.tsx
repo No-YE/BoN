@@ -12,6 +12,7 @@ import '../styles/global.css';
 import 'highlight.js/styles/github.css';
 import Float from '../componets/Float';
 import Footer from '../componets/Footer';
+import { initGA, logPageView } from '../lib/google-analytics';
 
 export default class extends React.Component {
   static async getInitialProps(appContext: any): Promise<any> {
@@ -52,6 +53,15 @@ export default class extends React.Component {
 }
 
 class NextApp extends App<any> {
+  componentDidMount(): void {
+    if (!window.GA_INITIALIZED) {
+      initGA();
+      window.GA_INITIALIZED = true;
+    }
+
+    logPageView();
+  }
+
   render(): JSX.Element {
     const {
       Component, pageProps, router, store,
