@@ -77,6 +77,10 @@
           "name": "GOOGLE_CLIENT_SECRET"
         },
         {
+          "valueFrom": "BON_GOOGLE_ANALYTICS_CODE",
+          "name": "GOOGLE_ANALYTICS_CODE"
+        },
+        {
           "valueFrom": "BON_MYSQL_PASSWORD",
           "name": "MYSQL_PASSWORD"
         },
