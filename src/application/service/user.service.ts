@@ -12,7 +12,7 @@ import makeUserRepository from '~/domain/repository/user.repository';
 import {
   UpdateUserRoleDto, DeleteUserDto, SigninCallbackDto, CreateTokenDto,
 } from '../dto/user.dto';
-import User from '~/domain/aggregate/user';
+import { User } from '~/domain/aggregate/user';
 import { GoogleEnv, getGoogleEnv, getJwtSecret } from '~/config/env';
 import { UserSession, UserRole } from '~/type';
 import { Social } from '~/type/social.type';

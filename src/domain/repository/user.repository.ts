@@ -4,7 +4,7 @@ import {
   TaskEither, tryCatch, map, chain, right,
 } from 'fp-ts/lib/TaskEither';
 import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
-import User from '../aggregate/user';
+import { User, UserSchema } from '../aggregate/user';
 import { UserRole, Social } from '~/type';
 import Error from '~/lib/error';
 
@@ -24,14 +24,14 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save(User.of(user)),
+      () => usingManager.save<User>(user),
       Error.of,
     );
   }
 
   function findById(id: number): TaskEither<Error, User | undefined> {
     return tryCatch(
-      () => manager.findOne(User, id, {
+      () => manager.findOne<User>(UserSchema, id, {
         where: [
           { isActive: true },
         ],
@@ -42,7 +42,7 @@ export default () => {
 
   function findByEmail(email: string): TaskEither<Error, User | undefined> {
     return tryCatch(
-      () => manager.findOne(User, { email }, {
+      () => manager.findOne<User>(UserSchema, { email }, {
         where: [
           { isActive: true },
         ],
@@ -79,7 +79,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.update(User, user.id, user),
+      () => usingManager.update<User>(UserSchema, user.id, user),
       Error.of,
     );
   }
@@ -91,7 +91,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.update(User, id, { isActive: false }),
+      () => usingManager.update<User>(UserSchema, id, { isActive: false }),
       Error.of,
     );
   }

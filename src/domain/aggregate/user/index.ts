@@ -1,50 +1,49 @@
-import {
-  Entity, PrimaryGeneratedColumn, Column, Index, UpdateDateColumn, CreateDateColumn,
-} from 'typeorm';
+import { EntitySchema, EntitySchemaColumnOptions } from 'typeorm';
 import { UserRole } from '~/type';
 import { Social } from '~/type/social.type';
+import { baseSchema, BaseEntity } from '../base';
 
-@Entity()
-@Index(['email', 'social'], { unique: true })
-export default class User {
-  static of(user: Partial<User>): User {
-    return new this(user);
-  }
+type UserEntity = {
+  name: string;
+  email: string;
+  social?: Social;
+  role?: UserRole;
+};
 
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  name?: string;
-
-  @Index()
-  @Column()
-  email?: string;
-
-  @Column({
+const schemaColumn: { [id in keyof Required<UserEntity>]: EntitySchemaColumnOptions } = {
+  name: {
+    type: 'varchar',
+  },
+  email: {
+    type: 'varchar',
+  },
+  social: {
     type: 'enum',
     enum: ['google'],
     default: 'google',
-  })
-  social?: Social;
-
-  @Column({
+  },
+  role: {
     type: 'enum',
     enum: ['admin', 'operator', 'noRole'],
     default: 'noRole',
-  })
-  role?: UserRole;
+  },
+};
 
-  @Column({ default: true, nullable: true })
-  isActive?: boolean;
+export type User = UserEntity & BaseEntity;
 
-  @CreateDateColumn({ nullable: true })
-  createdAt?: Date;
-
-  @UpdateDateColumn({ nullable: true })
-  updatedAt?: Date;
-
-  constructor(user: Partial<User>) {
-    Object.assign(this, user);
-  }
-}
+export const UserSchema = new EntitySchema<User>({
+  name: 'user',
+  columns: {
+    ...baseSchema,
+    ...schemaColumn,
+  },
+  indices: [
+    {
+      unique: true,
+      columns: ['email', 'social'],
+    },
+    {
+      columns: ['email'],
+    },
+  ],
+});

@@ -1,11 +1,11 @@
 import { EntitySchemaColumnOptions } from 'typeorm';
 
-export type BaseEntity = {
-  id?: number;
-  isActive?: boolean;
-  createdAt?: Date;
+export type BaseEntity = Partial<{
+  id: number;
+  isActive: boolean;
+  createdAt: Date;
   updatedAt: Date;
-};
+}>;
 
 export const baseSchema: { [id in keyof Required<BaseEntity>]: EntitySchemaColumnOptions } = {
   id: {
