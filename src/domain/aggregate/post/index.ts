@@ -1,64 +1,73 @@
-import {
-  Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, Index, CreateDateColumn, UpdateDateColumn, ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { EntitySchemaColumnOptions, EntitySchema } from 'typeorm';
 import Category from './category.entity';
 import Comment from './comment.entity';
 import PostToCategory from './post-to-category.entity';
+import { BaseEntity, baseSchema } from '../base';
 
-@Entity()
-export default class Post {
-  static of(post: Partial<Post>): Post {
-    return new this(post);
-  }
-
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Index({ fulltext: true })
-  @Column()
-  title?: string;
-
-  @Column({ length: 20000 })
-  content?: string;
-
-  @Column({ nullable: true })
+type PostEntity = {
+  title: string;
+  content: string;
   thumbnail?: string;
-
-  @Column({ default: 0 })
   views?: number;
-
-  @Column()
-  userId?: number;
-
-  @ManyToMany(() => Category, (category) => category.post)
-  @JoinTable({
-    name: 'post_to_category',
-    joinColumn: { name: 'postId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
-  })
   categories?: Array<Category>;
-
-  @OneToMany(() => Comment, (comment) => comment.post)
-  @JoinColumn()
   comments?: Array<Comment>;
+};
 
-  @Column({ default: true, nullable: true })
-  isActive?: boolean;
+const schemaColumn: { [id in keyof PostEntity]: EntitySchemaColumnOptions } = {
+  title: {
+    type: 'varchar',
+  },
+  content: {
+    type: 'text',
+  },
+  thumbnail: {
+    type: 'varchar',
+    nullable: true,
+  },
+  views: {
+    type: 'int',
+    default: 0,
+  },
+};
 
-  @CreateDateColumn({ nullable: true })
-  createdAt?: Date;
+type Post = PostEntity & BaseEntity;
 
-  @UpdateDateColumn({ nullable: true })
-  updatedAt?: Date;
-
-  constructor(post: Partial<Post>) {
-    Object.assign(this, post);
-  }
-}
+const PostSchema = new EntitySchema<Post>({
+  name: 'post',
+  columns: {
+    ...baseSchema,
+    ...schemaColumn,
+  },
+  relations: {
+    categories: {
+      type: 'many-to-many',
+      target: 'category',
+      joinTable: {
+        name: 'post_to_category',
+        joinColumn: { name: 'postId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+      },
+    },
+    comments: {
+      type: 'one-to-many',
+      target: 'comment',
+    },
+  },
+  indices: [
+    {
+      fulltext: true,
+      columns: ['content'],
+    },
+  ],
+});
 
 export {
+  Post,
   Category,
   Comment,
   PostToCategory,
+};
+
+export {
+  PostSchema,
 };

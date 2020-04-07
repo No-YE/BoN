@@ -7,7 +7,7 @@ import { fold as bFold } from 'fp-ts/lib/boolean';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { LeafObject } from 'express-sitemap-xml';
 import makePostRepository from '~/domain/repository/post.repository';
-import Post, { Category } from '~/domain/aggregate/post';
+import { Post, Category } from '~/domain/aggregate/post';
 import {
   CraetePostDto, UpdatePostDto, DeletePostDto, SearchPostsDto, FindNewPostsDto, FindPostDto, FindByCategory,
 } from '../dto/post.dto';

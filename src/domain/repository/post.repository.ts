@@ -7,7 +7,9 @@ import {
 import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
 import { array } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
-import Post, { Category, PostToCategory } from '../aggregate/post';
+import {
+  Post, PostSchema, Category, PostToCategory,
+} from '../aggregate/post';
 import Error from '~/lib/error';
 
 //eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -28,7 +30,7 @@ export default () => {
 
     return pipe(
       tryCatch(
-        () => usingManager.save(Post.of(post)),
+        () => usingManager.save<Post>(post),
         Error.of,
       ),
       chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
@@ -80,7 +82,7 @@ export default () => {
     take: number;
   }): TaskEither<Error, [Array<Post>, number]> {
     return tryCatch(
-      () => manager.findAndCount(Post, {
+      () => manager.findAndCount<Post>(PostSchema, {
         ...options,
         order: { createdAt: 'DESC' },
         join: {
@@ -105,7 +107,7 @@ export default () => {
     query: string,
   ): TaskEither<Error, [Array<Post>, number]> {
     return tryCatch(
-      () => manager.findAndCount(Post, {
+      () => manager.findAndCount<Post>(PostSchema, {
         ...options,
         order: { createdAt: 'DESC' },
         join: {
@@ -127,7 +129,7 @@ export default () => {
 
   function findById(id: number): TaskEither<Error, Post | undefined> {
     return tryCatch(
-      () => manager.findOne(Post, id, {
+      () => manager.findOne<Post>(PostSchema, id, {
         relations: ['categories'],
         where: [
           { isActive: true },
@@ -146,7 +148,7 @@ export default () => {
   ): TaskEither<Error, [Array<Post>, number]> {
     return tryCatch(
       () => manager
-        .createQueryBuilder(Post, 'post')
+        .createQueryBuilder<Post>(PostSchema, 'post')
         .skip(options.skip)
         .take(options.take)
         .orderBy('post.createdAt', 'DESC')
@@ -176,7 +178,7 @@ export default () => {
     );
   }
 
-  function findCategoryByName(name: string): TaskEither<Error, Post | undefined> {
+  function findCategoryByName(name: string): TaskEither<Error, Category | undefined> {
     return tryCatch(
       () => manager.findOne(Category, { name }, {
         where: [
@@ -207,7 +209,7 @@ export default () => {
 
   function findAllIds(): TaskEither<Error, Array<Post>> {
     return tryCatch(
-      () => manager.getRepository(Post).find({
+      () => manager.getRepository<Post>(PostSchema).find({
         select: ['id'],
         where: [
           { isActive: true },
@@ -231,7 +233,7 @@ export default () => {
 
     return pipe(
       tryCatch(
-        () => usingManager.save(Post.of(post)),
+        () => usingManager.save<Post>(post),
         Error.of,
       ),
       chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
@@ -246,7 +248,7 @@ export default () => {
       async () => {
         usingManager
           .createQueryBuilder()
-          .update(Post)
+          .update<Post>(PostSchema)
           .set({ views: () => 'views + 1' })
           .where('id = :id', { id })
           .execute();
@@ -259,7 +261,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.update(Post, id, { isActive: false }),
+      () => usingManager.update<Post>(PostSchema, id, { isActive: false }),
       Error.of,
     );
   }
