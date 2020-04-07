@@ -8,7 +8,7 @@ import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
 import { array } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
 import {
-  Post, PostSchema, Category, PostToCategory,
+  Post, PostSchema, Category, PostToCategory, CategorySchema,
 } from '../aggregate/post';
 import Error from '~/lib/error';
 
@@ -72,7 +72,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save(Category.of(category)),
+      () => usingManager.save<Category>(category),
       Error.of,
     );
   }
@@ -169,7 +169,7 @@ export default () => {
 
   function findAllCategories(): TaskEither<Error, [Array<Category>, number]> {
     return tryCatch(
-      () => manager.findAndCount(Category, {
+      () => manager.findAndCount<Category>(CategorySchema, {
         where: [
           { isActive: true },
         ],
@@ -180,7 +180,7 @@ export default () => {
 
   function findCategoryByName(name: string): TaskEither<Error, Category | undefined> {
     return tryCatch(
-      () => manager.findOne(Category, { name }, {
+      () => manager.findOne<Category>(CategorySchema, { name }, {
         where: [
           { isActive: true },
         ],

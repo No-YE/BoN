@@ -1,5 +1,5 @@
 import { EntitySchemaColumnOptions, EntitySchema } from 'typeorm';
-import Category from './category.entity';
+import { Category, CategorySchema } from './category.entity';
 import Comment from './comment.entity';
 import PostToCategory from './post-to-category.entity';
 import { BaseEntity, baseSchema } from '../base';
@@ -70,4 +70,5 @@ export {
 
 export {
   PostSchema,
+  CategorySchema,
 };

@@ -1,39 +1,41 @@
-import {
-  Column, PrimaryGeneratedColumn, Entity, UpdateDateColumn, CreateDateColumn, ManyToMany, JoinTable, Index,
-} from 'typeorm';
-import Post from '.';
+import { EntitySchemaColumnOptions, EntitySchema } from 'typeorm';
+import { Post } from '.';
+import { BaseEntity, baseSchema } from '../base';
 
-@Entity()
-export default class Category {
-  static of(category: Partial<Category>): Category {
-    return new this(category);
-  }
-
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Index({ unique: true })
-  @Column()
-  name?: string;
-
-  @Column({ default: true, nullable: true })
-  isActive?: boolean;
-
-  @ManyToMany(() => Post, (post) => post.categories)
-  @JoinTable({
-    name: 'post_to_category',
-    joinColumn: { name: 'categoryId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'postId', referencedColumnName: 'id' },
-  })
+type CategoryEntity = {
+  name: string;
   post?: Array<Post>;
+};
 
-  @CreateDateColumn({ nullable: true })
-  createdAt?: Date;
+const schemaColumn: { [id in keyof CategoryEntity]: EntitySchemaColumnOptions } = {
+  name: {
+    type: 'varchar',
+  },
+};
 
-  @UpdateDateColumn({ nullable: true })
-  updatedAt?: Date;
+export type Category = CategoryEntity & BaseEntity;
 
-  constructor(category: Partial<Category>) {
-    Object.assign(this, category);
-  }
-}
+export const CategorySchema = new EntitySchema<Category>({
+  name: 'user',
+  columns: {
+    ...baseSchema,
+    ...schemaColumn,
+  },
+  relations: {
+    post: {
+      type: 'many-to-many',
+      target: 'post',
+      joinTable: {
+        name: 'post_to_category',
+        joinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'postId', referencedColumnName: 'id' },
+      },
+    },
+  },
+  indices: [
+    {
+      unique: true,
+      columns: ['name'],
+    },
+  ],
+});
