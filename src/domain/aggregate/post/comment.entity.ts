@@ -1,37 +1,34 @@
-import {
-  Column, PrimaryGeneratedColumn, Entity, ManyToOne, JoinColumn, UpdateDateColumn, CreateDateColumn,
-} from 'typeorm';
-import Post from '.';
+import { EntitySchemaColumnOptions, EntitySchema } from 'typeorm';
+import { Post } from '.';
+import { BaseEntity, baseSchema } from '../base';
 
-@Entity()
-export default class Comment {
-  static of(comment: Partial<Comment>): Comment {
-    return new this(comment);
-  }
-
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Column()
-  content?: string;
-
-  @Column()
-  isActive?: boolean;
-
-  @ManyToOne(() => Post)
-  @JoinColumn()
+type CommentEntity = {
+  content: string;
+  userId: number;
   post?: Post;
+};
 
-  @Column()
-  userId?: number;
+const schemaColumn: { [id in keyof CommentEntity]: EntitySchemaColumnOptions } = {
+  content: {
+    type: 'varchar',
+  },
+  userId: {
+    type: 'int64',
+  },
+};
 
-  @CreateDateColumn()
-  createdAt?: Date;
+export type Comment = CommentEntity & BaseEntity;
 
-  @UpdateDateColumn()
-  updatedAt?: Date;
-
-  constructor(comment: Partial<Comment>) {
-    Object.assign(this, comment);
-  }
-}
+export const CommentSchema = new EntitySchema<Comment>({
+  name: 'comment',
+  columns: {
+    ...baseSchema,
+    ...schemaColumn,
+  },
+  relations: {
+    post: {
+      type: 'many-to-one',
+      target: 'post',
+    },
+  },
+});

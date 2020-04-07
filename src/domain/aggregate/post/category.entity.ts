@@ -16,7 +16,7 @@ const schemaColumn: { [id in keyof CategoryEntity]: EntitySchemaColumnOptions } 
 export type Category = CategoryEntity & BaseEntity;
 
 export const CategorySchema = new EntitySchema<Category>({
-  name: 'user',
+  name: 'category',
   columns: {
     ...baseSchema,
     ...schemaColumn,
