@@ -8,7 +8,7 @@ import { fromNullable, fold as optionFold } from 'fp-ts/lib/Option';
 import { array } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
 import {
-  Post, PostSchema, Category, PostToCategory, CategorySchema,
+  Post, PostSchema, Category, PostToCategory, CategorySchema, PostToCategorySchema,
 } from '../aggregate/post';
 import Error from '~/lib/error';
 
@@ -46,7 +46,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save(PostToCategory.of({ post, category })),
+      () => usingManager.save<PostToCategory>({ post, category }),
       Error.of,
     );
   }
@@ -146,6 +146,12 @@ export default () => {
     },
     categoryId: number,
   ): TaskEither<Error, [Array<Post>, number]> {
+    const subQuery = manager
+      .createQueryBuilder(PostToCategorySchema, 'postToCategory')
+      .select('postToCategory.postId', 'postId')
+      .where('postToCategory.categoryId = :categoryId', { categoryId })
+      .getQuery();
+
     return tryCatch(
       () => manager
         .createQueryBuilder<Post>(PostSchema, 'post')
@@ -154,14 +160,7 @@ export default () => {
         .orderBy('post.createdAt', 'DESC')
         .innerJoinAndSelect('post.categories', 'category')
         .where('post.isActive = true')
-        .andWhere((qb) => {
-          const subQuery = qb.subQuery()
-            .select('postToCategory.postId', 'postId')
-            .from(PostToCategory, 'postToCategory')
-            .where('postToCategory.categoryId = :categoryId', { categoryId })
-            .getQuery();
-          return `post.id IN ${subQuery}`;
-        })
+        .andWhere(() => `post.id IN ${subQuery}`)
         .getManyAndCount(),
       Error.of,
     );

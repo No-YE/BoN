@@ -1,22 +1,28 @@
-import { Entity, ManyToOne, JoinColumn } from 'typeorm';
-import Post from '.';
-import Category from './category.entity';
+import { EntitySchema } from 'typeorm';
+import { Post } from '.';
+import { Category } from './category.entity';
+import { BaseEntity, baseSchema } from '../base';
 
-@Entity()
-export default class PostToCategory {
-  static of(postToCategory: Partial<PostToCategory>): PostToCategory {
-    return new this(postToCategory);
-  }
+type PostToCategoryEntity = {
+  post: Post;
+  category: Category;
+};
 
-  @ManyToOne(() => Post, { primary: true })
-  @JoinColumn()
-  post?: Post;
+export type PostToCategory = PostToCategoryEntity & BaseEntity;
 
-  @ManyToOne(() => Category, { primary: true })
-  @JoinColumn()
-  category?: Category;
-
-  constructor(postToCategory: Partial<PostToCategory>) {
-    Object.assign(this, postToCategory);
-  }
-}
+export const PostToCategorySchema = new EntitySchema<PostToCategory>({
+  name: 'comment',
+  columns: {
+    ...baseSchema,
+  },
+  relations: {
+    post: {
+      type: 'many-to-one',
+      target: 'post',
+    },
+    category: {
+      type: 'many-to-one',
+      target: 'category',
+    },
+  },
+});
