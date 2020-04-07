@@ -225,6 +225,7 @@ export default () => {
       title: string;
       content: string;
       thumbnail?: string;
+      userId: number;
     },
     categories: Array<Category>,
     transactionManager?: EntityManager,

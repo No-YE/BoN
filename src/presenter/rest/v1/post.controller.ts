@@ -100,6 +100,7 @@ export default function makePostController(): Router {
         content: req.body.content,
         categoryNames: req.body.categoryNames,
         thumbnail: req.body.thumbnail,
+        userId: req.user?.id,
       }),
       fromEither,
       chain(postService.updatePost),

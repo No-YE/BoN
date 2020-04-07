@@ -9,6 +9,7 @@ type PostEntity = {
   content: string;
   thumbnail?: string;
   views?: number;
+  userId: number;
   categories?: Array<Category>;
   comments?: Array<Comment>;
 };
@@ -27,6 +28,9 @@ const schemaColumn: { [id in keyof PostEntity]: EntitySchemaColumnOptions } = {
   views: {
     type: 'int',
     default: 0,
+  },
+  userId: {
+    type: 'bigint',
   },
 };
 

@@ -13,7 +13,7 @@ const schemaColumn: { [id in keyof CommentEntity]: EntitySchemaColumnOptions } =
     type: 'varchar',
   },
   userId: {
-    type: 'int64',
+    type: 'bigint',
   },
 };
 

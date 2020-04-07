@@ -38,7 +38,7 @@ export default function makePostService() {
 
   function updatePost(dto: UpdatePostDto): TaskEither<Error, Post> {
     const {
-      categoryNames, content, id, title, thumbnail,
+      categoryNames, content, id, title, thumbnail, userId,
     } = dto;
 
     return pipe(
@@ -49,6 +49,7 @@ export default function makePostService() {
         id,
         title,
         thumbnail,
+        userId,
       }, categories)),
     );
   }

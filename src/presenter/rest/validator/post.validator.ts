@@ -102,6 +102,7 @@ type UpdatePostSchema = {
   content: string;
   categoryNames: Array<string>;
   thumbnail?: string;
+  userId: number;
 };
 
 export function updatePostValidate(
@@ -113,6 +114,7 @@ export function updatePostValidate(
     content: Joi.string().min(1).required(),
     categoryNames: Joi.array().items(Joi.string()),
     thumbnail: Joi.string().uri(),
+    userId: Joi.number(),
   });
 
   return validate<UpdatePostSchema>(schema, obj);

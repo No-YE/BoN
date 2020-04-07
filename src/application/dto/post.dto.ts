@@ -14,6 +14,7 @@ export type UpdatePostDto = {
   content: string;
   categoryNames: Array<string>;
   thumbnail?: string;
+  userId: number;
 };
 
 export type DeletePostDto = {
