@@ -1,35 +1,35 @@
-import {
-  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Index,
-} from 'typeorm';
+import { EntitySchema, EntitySchemaColumnOptions } from 'typeorm';
 import { ImageKind } from '~/type';
+import { baseSchema, BaseEntity } from '../base';
 
-@Entity()
-export default class Image {
-  static of(postImage: Partial<Image>): Image {
-    return new this(postImage);
-  }
+type ImageEntity = {
+  uri: string;
+  kind: ImageKind;
+};
 
-  @PrimaryGeneratedColumn()
-  id?: number;
-
-  @Index({ unique: true })
-  @Column()
-  uri?: string;
-
-  @Column({
+const schemaColumn: { [id in keyof Required<ImageEntity>]: EntitySchemaColumnOptions } = {
+  uri: {
+    type: 'varchar',
+  },
+  kind: {
     type: 'enum',
     enum: ['post'],
     default: 'post',
-  })
-  kind?: ImageKind;
+  },
+};
 
-  @CreateDateColumn()
-  createdAt?: Date;
+export type Image = ImageEntity & BaseEntity;
 
-  @UpdateDateColumn()
-  updatedAt?: Date;
-
-  constructor(image: Partial<Image>) {
-    Object.assign(this, image);
-  }
-}
+export const ImageSchema = new EntitySchema<Image>({
+  name: 'image',
+  columns: {
+    ...baseSchema,
+    ...schemaColumn,
+  },
+  indices: [
+    {
+      unique: true,
+      columns: ['uri'],
+    },
+  ],
+});
