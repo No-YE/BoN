@@ -11,7 +11,7 @@ type PostToCategoryEntity = {
 export type PostToCategory = PostToCategoryEntity & BaseEntity;
 
 export const PostToCategorySchema = new EntitySchema<PostToCategory>({
-  name: 'comment',
+  name: 'post_to_category',
   columns: {
     ...baseSchema,
   },

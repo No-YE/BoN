@@ -18,11 +18,11 @@ export const baseSchema: { [id in keyof Required<BaseEntity>]: EntitySchemaColum
     default: true,
   },
   createdAt: {
-    type: 'timestamp with time zone',
+    type: 'timestamp',
     createDate: true,
   },
   updatedAt: {
-    type: 'timestamp with time zone',
+    type: 'timestamp',
     updateDate: true,
   },
 };

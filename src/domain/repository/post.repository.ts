@@ -149,8 +149,7 @@ export default () => {
     const subQuery = manager
       .createQueryBuilder(PostToCategorySchema, 'postToCategory')
       .select('postToCategory.postId', 'postId')
-      .where('postToCategory.categoryId = :categoryId', { categoryId })
-      .getQuery();
+      .where(`postToCategory.categoryId = ${categoryId}`);
 
     return tryCatch(
       () => manager
@@ -160,7 +159,7 @@ export default () => {
         .orderBy('post.createdAt', 'DESC')
         .innerJoinAndSelect('post.categories', 'category')
         .where('post.isActive = true')
-        .andWhere(() => `post.id IN ${subQuery}`)
+        .andWhere(() => `post.id IN (${subQuery.getQuery()})`)
         .getManyAndCount(),
       Error.of,
     );
