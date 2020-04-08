@@ -1,6 +1,6 @@
 import { getManager, EntityManager } from 'typeorm';
 import { tryCatch, TaskEither } from 'fp-ts/lib/TaskEither';
-import { Image } from '../aggregate/image';
+import { Image, ImageSchema } from '../aggregate/image';
 import { ImageKind } from '~/type';
 import Error from '~/lib/error';
 
@@ -18,7 +18,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save<Image>(image),
+      () => usingManager.getRepository<Image>(ImageSchema).save(image),
       Error.of,
     );
   }

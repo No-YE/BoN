@@ -30,7 +30,7 @@ export default () => {
 
     return pipe(
       tryCatch(
-        () => usingManager.save<Post>(post),
+        () => usingManager.getRepository<Post>(PostSchema).save(post),
         Error.of,
       ),
       chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),
@@ -46,7 +46,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save<PostToCategory>({ post, category }),
+      () => usingManager.getRepository<PostToCategory>(PostToCategorySchema).save({ post, category }),
       Error.of,
     );
   }
@@ -72,7 +72,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save<Category>(category),
+      () => usingManager.getRepository<Category>(CategorySchema).save(category),
       Error.of,
     );
   }
@@ -232,7 +232,7 @@ export default () => {
 
     return pipe(
       tryCatch(
-        () => usingManager.save<Post>(post),
+        () => usingManager.getRepository<Post>(PostSchema).save(post),
         Error.of,
       ),
       chain((savedPost) => createPostToCategories(savedPost, categories, usingManager)),

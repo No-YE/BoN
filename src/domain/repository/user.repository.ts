@@ -24,7 +24,7 @@ export default () => {
     const usingManager = transactionManager ?? manager;
 
     return tryCatch(
-      () => usingManager.save<User>(user),
+      () => usingManager.getRepository<User>(UserSchema).save(user),
       Error.of,
     );
   }
