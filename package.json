@@ -9,7 +9,7 @@
     "dev": "ts-node src/index.ts",
     "build": "next build ./src/webview && tsc",
     "lint": "./node_modules/.bin/eslint src/**/*.ts",
-    "typeorm": "ts-node ./node_modules/.bin/typeorm --config src/config/ormconfig.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config src/config/ormconfig.ts",
     "typeorm:create": "npm run typeorm migration:create -c default -- -n bon",
     "typeorm:run": "npm run typeorm migration:run -c default",
     "typeorm:generate": "npm run typeorm migration:generate -c default -- -n bon",
