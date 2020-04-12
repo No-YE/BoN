@@ -84,7 +84,7 @@ $ node dist
 - MySQL
 - AWS
   - S3
-  - AWS ECS
+  - ECS
   - EC2
 
 ## CLI
