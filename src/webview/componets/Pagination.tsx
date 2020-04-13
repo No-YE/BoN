@@ -27,7 +27,7 @@ const PaginationBar: React.FC<Props> = ({
   const limit = 10;
   const pageCount = Math.ceil(count / limit);
 
-  const onChange = (e: React.ChangeEvent, newPage: number): void => {
+  const onChange = (e: React.ChangeEvent<unknown>, newPage: number): void => {
     const query = queryString.stringify({ offset: (newPage - 1) * limit, limit });
     Router.push(`${page}?${query}`);
   };

@@ -12,7 +12,8 @@ export default types
     items: types.array(categoryItem),
   })
   .actions((self) => ({
-    changeOpen(isOpen: boolean) {
+    changeOpen(isOpen: boolean): void {
+      //eslint-disable-next-line no-param-reassign
       self.isOpen = isOpen;
     },
   }));
