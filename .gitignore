@@ -1,4 +1,8 @@
-node_modules/
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
+
 dist/
 .DS_STORE
 .env

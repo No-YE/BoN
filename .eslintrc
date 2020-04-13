@@ -23,9 +23,6 @@
     ],
     "settings": {
       "import/resolver": {
-        "node": {
-         "extensions": [".js", ".jsx", ".ts", ".tsx"]
-        },
         "typescript": {}
       }
     },
@@ -41,6 +38,14 @@
       "import/no-unresolved": 0,
       "@typescript-eslint/no-non-null-assertion": 0,
       "@typescript-eslint/no-use-before-define": 0,
-      "@typescript-eslint/no-unused-expressions": 0
+      "@typescript-eslint/no-unused-expressions": 0,
+      "import/extensions": ["error", "ignorePackages", {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never",
+        "mjs": "never",
+        "": "never"
+      }]
     }
 }
